@@ -9,4 +9,5 @@
     {{ form_start(form) }}
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
     {{ form_end(form) }}
+    <p class="small text-center">Don't have an account ? - <a href="{{ path('app_register') }}">Register now</a></p>
 {% endblock %}
