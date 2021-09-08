@@ -1,1 +1,9 @@
 @import "~bootstrap/scss/bootstrap";
+
+#body {
+  margin-top: 56px;
+}
+
+.my-container-sm {
+  max-width: 500px !important;
+}

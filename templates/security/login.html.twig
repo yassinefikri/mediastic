@@ -1,0 +1,13 @@
+{% extends 'security/security.base.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+
+{% block form %}
+    {% if error %}
+        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+    {{ form_start(form) }}
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+    {{ form_end(form) }}
+    <p class="small text-center">Don't have an account ? - <a href="{{ path('app_register') }}">Register now</a></p>
+{% endblock %}
