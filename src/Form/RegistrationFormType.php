@@ -21,6 +21,8 @@ class RegistrationFormType extends AbstractType
         $builder
             ->add('username')
             ->add('email')
+            ->add('firstName')
+            ->add('lastName')
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'The password fields must match.',
