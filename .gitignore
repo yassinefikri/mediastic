@@ -20,6 +20,8 @@
 ###< phpunit/phpunit ###
 
 /.idea
+/public/avatar
+/public/cover
 
 ###> symfony/webpack-encore-bundle ###
 /node_modules/

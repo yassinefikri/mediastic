@@ -5,4 +5,7 @@
     <li class="nav-item">
         <a class="nav-link {{ currentPill is same as('password') ? 'active' : '' }}" href="{{ path('user_account_password') }}">Password</a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link {{ currentPill is same as('avatar') ? 'active' : '' }}" href="{{ path('user_account_avatar') }}">Avatar</a>
+    </li>
 </ul>
