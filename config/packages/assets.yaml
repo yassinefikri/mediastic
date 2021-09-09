@@ -1,3 +1,14 @@
 framework:
     assets:
         json_manifest_path: '%kernel.project_dir%/public/build/manifest.json'
+        packages:
+            build:
+                base_path: 'build/'
+            icons:
+                base_path: 'build/icons/'
+            images:
+                base_path: 'build/images/'
+            avatars:
+                base_path: 'avatar/'
+            covers:
+                base_path: 'cover/'

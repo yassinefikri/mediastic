@@ -7,6 +7,7 @@
         {% include 'user/_account.sidebar.html.twig' with {'currentPill' : currentPill} %}
         <br>
         <br>
+        {% block account_extra %}{% endblock %}
         <div class="my-container-sm mx-auto">
             {{ form(form) }}
         </div>

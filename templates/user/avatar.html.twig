@@ -1,0 +1,12 @@
+{% extends 'user/index.html.twig' %}
+
+{% block account_extra %}
+    <div class="mb-5">
+        <div id="account_cover">
+            <img class="w-100 h-100" src="{{ app.user|cover }}"/>
+            <img class="rounded-circle" id="account_avatar" src="{{ app.user|avatar }}" >
+        </div>
+    </div>
+    <br>
+    <br>
+{% endblock %}

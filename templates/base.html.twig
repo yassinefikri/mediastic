@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}App{% endblock %}</title>
-        <link rel="icon" href="{{ asset('build/favicon.ico') }}">
+        <link rel="icon" href="{{ asset('favicon.ico', 'build') }}">
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
         {% endblock %}
@@ -27,6 +27,11 @@
                 </div>
             </div>
         </nav>
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }} mb-0 rounded-0" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endfor %}
         <div id="body">
             {% block body %}{% endblock %}
         </div>

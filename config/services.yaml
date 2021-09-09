@@ -4,7 +4,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-
+    avatars_directory: '%kernel.project_dir%/public/avatar'
+    covers_directory: '%kernel.project_dir%/public/cover'
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -23,3 +24,11 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Service\ImageUploader:
+        arguments:
+            $targetDirectories:
+                avatar:
+                    '%avatars_directory%'
+                cover:
+                    '%covers_directory%'

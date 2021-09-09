@@ -7,3 +7,18 @@
 .my-container-sm {
   max-width: 500px !important;
 }
+
+#account_cover {
+  width: 100%;
+  position: relative;
+  height: 300px;
+}
+
+#account_avatar {
+  z-index: 5;
+  width: 150px;
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translate(-50%, +50%);
+}
