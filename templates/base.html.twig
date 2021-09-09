@@ -1,37 +1,15 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{% block title %}App{% endblock %}</title>
-        <link rel="icon" href="{{ asset('favicon.ico', 'build') }}">
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-        {% endblock %}
-    </head>
+    {% include 'partials/head.html.twig' %}
     <body>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid">
-                <span class="navbar-brand mb-0 h1">App</span>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        {% if app.user %}
-                            <li class="nav-item">
-                                <a class="nav-link active" href="{{ path('default') }}">Home</a>
-                            </li>
-                        {% endif %}
-                    </ul>
+        {% block navbar %}
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <span class="navbar-brand mb-0 h1">App</span>
                 </div>
-            </div>
-        </nav>
-        {% for label, messages in app.flashes %}
-            {% for message in messages %}
-                <div class="alert alert-{{ label }} mb-0 rounded-0" role="alert">{{ message }}</div>
-            {% endfor %}
-        {% endfor %}
+            </nav>
+        {% endblock %}
+        {% include 'partials/alerts.html.twig' %}
         <div id="body">
             {% block body %}{% endblock %}
         </div>
