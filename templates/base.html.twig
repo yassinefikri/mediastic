@@ -2,10 +2,11 @@
 <html>
     {% include 'partials/head.html.twig' %}
     <body>
+    {% block real_body %}
         {% block navbar %}
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
-                    <span class="navbar-brand mb-0 h1">App</span>
+                    <a class="navbar-brand" href="#">App</a>
                 </div>
             </nav>
         {% endblock %}
@@ -13,8 +14,7 @@
         <div id="body">
             {% block body %}{% endblock %}
         </div>
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
+    {% endblock %}
+    {% block javascripts %}{% endblock %}
     </body>
 </html>

@@ -2,6 +2,12 @@
 
 {% block navbar %}{% endblock %}
 
-{% block body %}
+{% block real_body %}
     <div id="app"></div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
 {% endblock %}
