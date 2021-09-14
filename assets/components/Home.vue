@@ -1,6 +1,9 @@
 <template>
-  <div class="container mt-5">
+  <div class="container mt-3">
     <my-form :getUrl="$Routing.generate('post_add_front')" :postUrl="$Routing.generate('post_add')"/>
+    <div class="my-container-500 mx-auto">
+      <hr/>
+    </div>
   </div>
 </template>
 
