@@ -1,5 +1,5 @@
 <template>
-    <div ref="form-container" v-on:submit.prevent="formHandler"></div>
+    <div ref="form-container" v-on:submit.prevent="formHandler" class="my-container-sm mx-auto"></div>
 </template>
 
 <script>
