@@ -22,6 +22,8 @@
 /.idea
 /public/avatar
 /public/cover
+/public/js
+/assets/bundles
 
 ###> symfony/webpack-encore-bundle ###
 /node_modules/

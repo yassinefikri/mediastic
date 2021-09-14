@@ -21,7 +21,7 @@ export default {
   },
   mounted() {
     axios
-        .get(Routing.generate('user_infos'))
+        .get(this.$Routing.generate('user_infos'))
         .then(response => {
           this.$store.commit('setUserInfos', response.data)
         })

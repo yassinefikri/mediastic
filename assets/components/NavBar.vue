@@ -63,7 +63,7 @@ export default {
       routesMapping[name]['label'] = label;
     }
     for (const property in routesNames) {
-      makeRoute(routesMapping, property, Routing.generate(property), null, routesNames[property]);
+      makeRoute(routesMapping, property, this.$Routing.generate(property), null, routesNames[property]);
     }
     this.routes = {...routesMapping};
   },

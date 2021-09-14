@@ -1,5 +1,4 @@
 import './styles/app.scss';
-
 require('bootstrap');
 
 import Vue from 'vue'
@@ -15,6 +14,11 @@ import AccountPassword from './components/Account/AccountPassword';
 
 Vue.use(Vuex)
 Vue.use(VueRouter)
+
+import Routing from '../vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js/router.min.js';
+const FOSroutes = require('../public/js/fos_js_routes.json');
+Routing.setRoutingData(FOSroutes);
+Vue.prototype.$Routing = Routing
 
 const store = new Vuex.Store({
     state: {
