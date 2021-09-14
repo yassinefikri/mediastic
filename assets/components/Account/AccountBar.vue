@@ -27,7 +27,7 @@
 import NavLink from '../NavLink';
 
 export default {
-  name: "AccountBar",
+  name: "account-bar",
   components: {NavLink}
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div class="container text-center">
     <h1 class="my-5">Account</h1>
-    <AccountBar/>
+    <account-bar/>
     <router-view></router-view>
   </div>
 </template>

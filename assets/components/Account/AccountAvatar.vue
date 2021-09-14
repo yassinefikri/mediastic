@@ -2,17 +2,17 @@
   <div>
     <cover-avatar :cover-url="getCoverURL" :avatar-url="getAvatarUrl"/>
     <br/><br/><br/>
-    <div ref="form-container" v-on:submit.prevent="formHandler" class="my-container-sm mx-auto"></div>
+    <my-form :getUrl="getUrl" :postUrl="postUrl"/>
   </div>
 </template>
 
 <script>
-import axios, * as others from 'axios';
 import CoverAvatar from "../CoverAvatar";
+import MyForm from "../MyForm";
 
 export default {
-  name: "AccountAvatar",
-  components: {CoverAvatar},
+  name: "account-avatar",
+  components: {CoverAvatar, MyForm},
   computed: {
     getAvatarUrl(){
       return this.$store.state.userInfos['avatar_url'];
@@ -22,35 +22,6 @@ export default {
     }
   },
   props: ['getUrl', 'postUrl'],
-  mounted(){
-    axios
-        .get(this.getUrl)
-        .then(response => {
-          this.$refs['form-container'].innerHTML = response.data
-        })
-        .catch(error => {
-          console.log(error)
-        })
-  },
-  methods: {
-    formHandler() {
-      let form = this.$el.querySelector("#accountAvatarForm");
-      if(null !== form) {
-        let formData = new FormData(form);
-        axios
-            .post(this.postUrl, formData)
-            .then(response => {
-              if(200 === response.status){
-                this.$store.commit('setUserInfos', response.data)
-                this.$store.commit('addAlert', {type: 'success', message:'Your account has been updated'})
-              }
-            })
-            .catch(error => {
-              console.log(error)
-            })
-      }
-    },
-  }
 }
 </script>
 

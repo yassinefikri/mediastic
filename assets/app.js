@@ -26,10 +26,13 @@ const store = new Vuex.Store({
             state.userInfos = userInfos
         },
         addAlert(state, alert) {
+            state.alerts.push(alert)
+        },
+        setAlerts(state, alert) {
             state.alerts = [alert]
         },
         deleteAlert(state, index) {
-            state.alerts.splice(index,1)
+            state.alerts.splice(index, 1)
         }
     }
 })
@@ -39,13 +42,13 @@ const routes = [
         name: 'default',
         path: '/',
         component: Home,
-        meta: {'label' : 'App'}
+        meta: {'label': 'App'}
     },
     {
         name: 'user_account',
         path: '/account',
         component: Account,
-        meta: {'label' : 'Account'},
+        meta: {'label': 'Account'},
         children: [
             {
                 path: 'general',
@@ -55,7 +58,7 @@ const routes = [
                     getUrl: Routing.generate('user_account_general_front'),
                     postUrl: Routing.generate('user_account_general'),
                 },
-                meta: {'label' : 'General'},
+                meta: {'label': 'General'},
             },
             {
                 path: 'password',
@@ -65,13 +68,13 @@ const routes = [
                     getUrl: Routing.generate('user_account_password_front'),
                     postUrl: Routing.generate('user_account_password'),
                 },
-                meta: {'label' : 'Password'},
+                meta: {'label': 'Password'},
             },
             {
                 path: 'avatar',
                 name: 'user_account_avatar',
                 component: AccountAvatar,
-                meta: {'label' : 'Avatar'},
+                meta: {'label': 'Avatar'},
                 props: {
                     getUrl: Routing.generate('user_account_avatar_front'),
                     postUrl: Routing.generate('user_account_avatar'),
