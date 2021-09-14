@@ -1,13 +1,6 @@
 <template>
   <div>
-    <div class="d-flex profile-images-container mb-5">
-      <div class="cover-container">
-        <img :src="getCoverURL" class="w-100 h-100"/>
-      </div>
-      <div class="avatar-container">
-        <img :src="getAvatarUrl" class="rounded-circle w-100 h-100"/>
-      </div>
-    </div>
+    <cover-avatar :cover-url="getCoverURL" :avatar-url="getAvatarUrl"/>
     <br/><br/><br/>
     <div ref="form-container" v-on:submit.prevent="formHandler"></div>
   </div>
@@ -15,9 +8,11 @@
 
 <script>
 import axios, * as others from 'axios';
+import CoverAvatar from "../CoverAvatar";
 
 export default {
   name: "AccountAvatar",
+  components: {CoverAvatar},
   computed: {
     getAvatarUrl(){
       return this.$store.state.userInfos['avatar_url'];
