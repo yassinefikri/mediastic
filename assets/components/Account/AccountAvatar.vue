@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import CoverAvatar from "../CoverAvatar";
-import MyForm from "../MyForm";
+import CoverAvatar from "../Partials/CoverAvatar";
+import MyForm from "../Partials/MyForm";
 
 export default {
   name: "account-avatar",

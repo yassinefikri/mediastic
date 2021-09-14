@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import MyForm from "./MyForm";
+import MyForm from "./Partials/MyForm";
 export default {
   name: 'Home',
   components: {MyForm},
