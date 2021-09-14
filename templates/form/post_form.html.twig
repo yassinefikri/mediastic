@@ -1,0 +1,16 @@
+{{ form_start(form) }}
+<div class="row">
+    <div class="col">
+        {{ form_widget(form.content) }}
+    </div>
+</div>
+<div class="row my-3">
+    <div class="col-sm">
+        {{ form_widget(form.postImages) }}
+    </div>
+    <div class="col-sm-4">
+        {{ form_widget(form.confidentiality) }}
+    </div>
+</div>
+{{ form_widget(form.submit) }}
+{{ form_end(form) }}

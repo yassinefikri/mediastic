@@ -5,24 +5,17 @@ declare(strict_types=1);
 namespace App\Twig;
 
 use App\Entity\User;
-use Symfony\Component\Asset\PackageInterface;
+use App\Resolver\UserInfosResolver;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
 class AvatarCoverExtension extends AbstractExtension
 {
-    private const DEFAULT_AVATAR = 'default_avatar.png';
-    private const DEFAULT_COVER  = 'default_cover.jpg';
+    private UserInfosResolver $infosResolver;
 
-    private PackageInterface $avatarsPackage;
-    private PackageInterface $imagesPackage;
-    private PackageInterface $coversPackage;
-
-    public function __construct(PackageInterface $avatarsPackage, PackageInterface $imagesPackage, PackageInterface $coversPackage)
+    public function __construct(UserInfosResolver $infosResolver)
     {
-        $this->avatarsPackage = $avatarsPackage;
-        $this->imagesPackage  = $imagesPackage;
-        $this->coversPackage  = $coversPackage;
+        $this->infosResolver = $infosResolver;
     }
 
     public function getFilters(): array
@@ -35,11 +28,11 @@ class AvatarCoverExtension extends AbstractExtension
 
     public function avatarAsset(User $user): string
     {
-        return null !== $user->getAvatar() ? $this->avatarsPackage->getUrl($user->getAvatar()) : $this->imagesPackage->getUrl(self::DEFAULT_AVATAR);
+        return $this->infosResolver->getAvatarAsset($user);
     }
 
     public function coverAsset(User $user): string
     {
-        return null !== $user->getCover() ? $this->coversPackage->getUrl($user->getCover()) : $this->imagesPackage->getUrl(self::DEFAULT_COVER);
+        return $this->infosResolver->getCoverAsset($user);
     }
 }

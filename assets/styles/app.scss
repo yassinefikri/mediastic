@@ -4,8 +4,35 @@
   margin-top: 56px;
 }
 
-.my-container-sm {
+.my-container-500 {
   max-width: 500px !important;
+}
+
+.my-container-600 {
+  max-width: 600px !important;
+}
+
+button.close {
+  background: transparent;
+  -webkit-appearance: none;
+  border: 0;
+  float: right;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  text-shadow: 0 1px 0 #fff;
+  opacity: .5;
+  font-family: inherit;
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: .75rem 1.25rem;
+  color: inherit;
+  height: 100%;
+}
+
+button.close:hover {
+  color: #000
 }
 
 #account_cover {
@@ -17,6 +44,52 @@
 #account_avatar {
   z-index: 5;
   width: 150px;
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translate(-50%, +50%);
+}
+
+#navbarDarkDropdownMenuLink {
+  width: 50px;
+  height: 50px;
+}
+
+#navbar-avatar-dropdown {
+  right: 0;
+  left: auto;
+}
+
+.navbar-avatar {
+  width: 40px;
+  height: 40px;
+}
+
+#avatar-navlink #navbarDropdown::after {
+  margin: auto auto auto 0.255em;
+}
+
+#avatar-navlink .dropdown-menu {
+  right: 0;
+  left: auto;
+}
+
+.navbar-brand {
+  margin-right: auto;
+}
+
+.profile-images-container {
+  position: relative;
+}
+
+.cover-container {
+  width: 100%;
+  height: 350px;
+}
+
+.avatar-container {
+  width: 150px;
+  height: 150px;
   position: absolute;
   left: 50%;
   bottom: 0;

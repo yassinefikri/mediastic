@@ -30,6 +30,10 @@ Encore
         from: './assets/images',
         to: 'images/[path][name].[ext]'
     })
+    .copyFiles({
+        from: './assets/icons',
+        to: 'icons/[path][name].[ext]'
+    })
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
@@ -76,6 +80,7 @@ Encore
 
     // uncomment if you're having problems with a jQuery plugin
     //.autoProvidejQuery()
+    .enableVueLoader(() => {}, { runtimeCompilerBuild: false })
 ;
 
 module.exports = Encore.getWebpackConfig();
