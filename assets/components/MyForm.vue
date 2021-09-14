@@ -1,5 +1,5 @@
 <template>
-  <div ref="form-container" v-on:submit.prevent="formHandler" class="my-container-sm mx-auto"></div>
+  <div ref="form-container" @submit.prevent="formHandler" class="my-container-600 mx-auto" v-html="form"></div>
 </template>
 
 <script>
@@ -8,11 +8,16 @@ import axios from "axios";
 export default {
   name: "my-form",
   props: ['getUrl', 'postUrl'],
+  data(){
+    return {
+      form : null
+    }
+  },
   mounted(){
     axios
         .get(this.getUrl)
         .then(response => {
-          this.$refs['form-container'].innerHTML = response.data
+          this.form = response.data
         })
         .catch(error => {
           console.log(error)
@@ -20,7 +25,6 @@ export default {
   },
   methods: {
     formHandler() {
-      //let form = this.$el.querySelector("#accountGeneralForm");
       let form = this.$refs['form-container'].querySelector('form');
       if(null !== form) {
         let formData = new FormData(form);

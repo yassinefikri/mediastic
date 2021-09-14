@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <my-form :getUrl="post_form_getUrl" :postUrl="post_form_postUrl" />
+  <div class="container mt-5">
+    <my-form :getUrl="$Routing.generate('post_add_front')" :postUrl="$Routing.generate('post_add')"/>
   </div>
 </template>
 
@@ -9,15 +9,6 @@ import MyForm from "./MyForm";
 export default {
   name: 'Home',
   components: {MyForm},
-  data() {
-    return {
-      post_form_getUrl : this.$Routing.generate('post_front'),
-      post_form_postUrl : null
-    }
-  },
-  mounted() {
-
-  }
 }
 </script>
 
