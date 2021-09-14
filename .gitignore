@@ -24,6 +24,7 @@
 /public/cover
 /public/js
 /assets/bundles
+/private/
 
 ###> symfony/webpack-encore-bundle ###
 /node_modules/

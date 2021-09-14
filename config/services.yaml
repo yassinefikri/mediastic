@@ -6,6 +6,7 @@
 parameters:
     avatars_directory: '%kernel.project_dir%/public/avatar'
     covers_directory: '%kernel.project_dir%/public/cover'
+    posts_directory: '%kernel.project_dir%/private/posts'
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -32,3 +33,5 @@ services:
                     '%avatars_directory%'
                 cover:
                     '%covers_directory%'
+                post:
+                    '%posts_directory%'
