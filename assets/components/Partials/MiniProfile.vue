@@ -9,18 +9,22 @@
           <img :src="user.avatar_url" class="rounded-circle w-100 h-100"/>
         </div>
       </div>
-      <div class="mini-profile-infos my-3 text-center d-flex flex-column">
-        <span class="h6 mb-0">{{ user.firstName }} {{ user.lastName }}</span>
-        <span class="text-muted">@{{ user.username }}</span>
-      </div>
+      <mini-profile-infos
+          :username="user.firstName"
+          :first-name="user.username"
+          :last-name="user.lastName"
+      />
     </div>
   </div>
 </template>
 
 <script>
+import MiniProfileInfos from "./MiniProfileInfos";
+
 export default {
   name: "mini-profile",
   props: ['user'],
+  components: {MiniProfileInfos}
 }
 </script>
 
