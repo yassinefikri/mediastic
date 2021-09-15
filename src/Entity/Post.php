@@ -7,6 +7,7 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
@@ -17,32 +18,38 @@ class Post
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("json")
      */
     private ?int $id = null;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups("json")
      */
     private string $content;
 
     /**
      * @ORM\Column(type="datetime_immutable")
+     * @Groups("json")
      */
     private DateTimeImmutable $createdAt;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="posts")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups("json")
      */
     private ?User $createdBy;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("json")
      */
     private string $confidentiality;
 
     /**
      * @ORM\OneToMany(targetEntity=PostImage::class, mappedBy="post", orphanRemoval=true)
+     * @Groups("json")
      */
     private Collection $postImages;
 

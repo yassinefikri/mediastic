@@ -1,20 +1,20 @@
 <template>
-  <div class="container mt-3">
+  <div>
+    <cover-avatar/>
     <new-post-form @new-post="fetchPosts"/>
     <hr/>
-    <div class="my-container-600 mx-auto">
-      <post-list :posts="posts"/>
-    </div>
+    <post-list :posts="posts"/>
   </div>
 </template>
 
 <script>
-import axios from "axios";
 import PostList from "./Post/PostList";
+import axios from "axios";
+import CoverAvatar from "./Partials/CoverAvatar";
 import NewPostForm from "./Post/NewPostForm";
 export default {
-  name: 'Home',
-  components: {NewPostForm,PostList},
+  name: "Profile",
+  components: {CoverAvatar,NewPostForm,PostList},
   data(){
     return {
       posts : [],
@@ -26,7 +26,7 @@ export default {
   methods: {
     fetchPosts(){
       axios
-          .get(this.$Routing.generate('home'))
+          .get(this.$Routing.generate('profile'))
           .then(response => {
             this.posts = response.data
           })

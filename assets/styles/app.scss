@@ -1,4 +1,12 @@
 @import "~bootstrap/scss/bootstrap";
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css");
+
+hr {
+  margin: 1rem auto;
+  max-width: 400px;
+  height: 5px !important;
+  border-radius: 5px;
+}
 
 #body {
   margin-top: 56px;
@@ -10,6 +18,10 @@
 
 .my-container-600 {
   max-width: 600px !important;
+}
+
+.my-container-800 {
+  max-width: 800px !important;
 }
 
 button.close {
@@ -74,8 +86,20 @@ button.close:hover {
   left: auto;
 }
 
+#navbar-logout {
+  padding-left: 1.2rem;
+}
+
 .navbar-brand {
   margin-right: auto;
+}
+
+.profile-cover-avatar {
+  margin-bottom: 100px;
+}
+
+.mini-profile .profile-cover-avatar {
+  margin-bottom: auto;
 }
 
 .profile-images-container {
@@ -87,6 +111,10 @@ button.close:hover {
   height: 350px;
 }
 
+.mini-profile .cover-container {
+  height: auto;
+}
+
 .avatar-container {
   width: 150px;
   height: 150px;
@@ -94,4 +122,27 @@ button.close:hover {
   left: 50%;
   bottom: 0;
   transform: translate(-50%, +50%);
+}
+
+.mini-profile .avatar-container {
+  width: 100px;
+  height: 100px;
+  transform: translate(-50%, 0%);
+}
+
+.post-figure {
+  width: 100%;
+}
+
+.post-radius {
+  border-radius: 2%;
+}
+
+.post-avatar {
+  width: 60px;
+  height: 60px;
+}
+
+.popover-body {
+  padding: 0;
 }

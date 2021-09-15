@@ -7,6 +7,14 @@ parameters:
     avatars_directory: '%kernel.project_dir%/public/avatar'
     covers_directory: '%kernel.project_dir%/public/cover'
     posts_directory: '%kernel.project_dir%/private/posts'
+    targetDirectories:
+        avatar:
+            '%avatars_directory%'
+        cover:
+            '%covers_directory%'
+        post:
+            '%posts_directory%'
+
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -26,12 +34,6 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    App\Service\ImageUploader:
+    App\Manager\ImagesManager:
         arguments:
-            $targetDirectories:
-                avatar:
-                    '%avatars_directory%'
-                cover:
-                    '%covers_directory%'
-                post:
-                    '%posts_directory%'
+            $targetDirectories: '%targetDirectories%'

@@ -1,8 +1,13 @@
 <template>
   <div>
-    <cover-avatar :cover-url="getCoverURL" :avatar-url="getAvatarUrl"/>
-    <br/><br/><br/>
-    <my-form :getUrl="getUrl" :postUrl="postUrl"/>
+    <cover-avatar/>
+    <my-form
+        :getUrl="getUrl"
+        :postUrl="postUrl"
+        :message="'Your account has been updated'"
+        :clearFormAfterSubmit="true"
+        @form-posted="reloadUserInfos"
+    />
   </div>
 </template>
 
@@ -13,15 +18,12 @@ import MyForm from "../Partials/MyForm";
 export default {
   name: "account-avatar",
   components: {CoverAvatar, MyForm},
-  computed: {
-    getAvatarUrl(){
-      return this.$store.state.userInfos['avatar_url'];
-    },
-    getCoverURL(){
-      return this.$store.state.userInfos['cover_url'];
-    }
-  },
   props: ['getUrl', 'postUrl'],
+  methods: {
+    reloadUserInfos(data){
+      this.$store.commit('setUserInfos', data)
+    }
+  }
 }
 </script>
 

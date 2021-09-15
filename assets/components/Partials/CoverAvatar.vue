@@ -1,10 +1,12 @@
 <template>
-  <div class="d-flex profile-images-container mb-5">
-    <div class="cover-container">
-      <img :src="coverUrl" class="w-100 h-100"/>
-    </div>
-    <div class="avatar-container">
-      <img :src="avatarUrl" class="rounded-circle w-100 h-100"/>
+  <div>
+    <div class="d-flex profile-images-container profile-cover-avatar">
+      <div class="cover-container">
+        <img :src="getCoverURL" class="w-100 h-100"/>
+      </div>
+      <div class="avatar-container">
+        <img :src="getAvatarUrl" class="rounded-circle w-100 h-100"/>
+      </div>
     </div>
   </div>
 </template>
@@ -12,7 +14,14 @@
 <script>
 export default {
   name: "CoverAvatar",
-  props: ['coverUrl', 'avatarUrl']
+  computed: {
+    getAvatarUrl(){
+      return this.$store.state.userInfos['avatar_url'];
+    },
+    getCoverURL(){
+      return this.$store.state.userInfos['cover_url'];
+    }
+  },
 }
 </script>
 

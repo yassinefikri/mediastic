@@ -7,7 +7,7 @@ import axios from "axios";
 
 export default {
   name: "my-form",
-  props: ['getUrl', 'postUrl'],
+  props: ['getUrl', 'postUrl', 'message', 'clearFormAfterSubmit'],
   data(){
     return {
       form : null
@@ -32,17 +32,25 @@ export default {
             .post(this.postUrl, formData)
             .then(response => {
               if(200 === response.status){
-                this.$el.querySelectorAll("input[type=password]").forEach(function(input){
+                this.$el.querySelectorAll("input[type=password], input[type=file]").forEach(function(input){
                   input.value='';
                 })
-                this.$store.commit('setUserInfos', response.data)
-                this.$store.commit('setAlerts', {type: 'success', message:'Your account has been updated'})
+                this.$emit('form-posted', response.data);
+                this.$store.commit('setAlerts', {type: 'success', message: this.message})
+                if(true === this.clearFormAfterSubmit) {
+                  this.clearInputs();
+                }
               }
             })
             .catch(error => {
               console.log(error)
             })
       }
+    },
+    clearInputs(){
+      this.$el.querySelectorAll("input:not([type='hidden']),textarea").forEach(function(input){
+        input.value='';
+      })
     },
   },
 }

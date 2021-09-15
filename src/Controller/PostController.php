@@ -6,7 +6,7 @@ use App\Entity\Post;
 use App\Entity\PostImage;
 use App\Entity\User;
 use App\Form\PostType;
-use App\Service\ImageUploader;
+use App\Manager\ImagesManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +21,7 @@ class PostController extends AbstractController
     /**
      * @Route("/add", name="post_add", options={"expose"=true})
      */
-    public function index(Request $request, ImageUploader $imageUploader): Response
+    public function index(Request $request, ImagesManager $imagesManager): Response
     {
         $post = new Post();
         $form = $this->createForm(PostType::class, $post);
@@ -31,7 +31,7 @@ class PostController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             foreach ($form->get('postImages')->getData() as $image) {
                 if ($image) {
-                    $imageName = $imageUploader->upload($image, 'post');
+                    $imageName = $imagesManager->uploadPostImage($image);
                     if (null !== $imageName) {
                         $postImage = new PostImage($imageName);
                         $post->addPostImage($postImage);
