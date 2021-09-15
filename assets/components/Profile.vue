@@ -69,8 +69,11 @@ export default {
   },
   watch: {
     '$route.params.username': function (username) {
-      this.init()
-      this.fetchPosts()
+      let array = [undefined, this.$store.state.userInfos['username']]
+      if(false === array.includes(this.userInfos['username']) || false === array.includes(username)){
+        this.init()
+        this.fetchPosts()
+      }
     }
   },
 }
