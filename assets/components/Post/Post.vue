@@ -1,19 +1,24 @@
 <template>
   <div class="bg-light p-4 my-3 post-radius">
     <div class="post-owner mb-4">
-      <div class="d-flex align-items-center" :id="'post-'+post.id">
+      <div class="d-flex" >
         <b-popover :target="'post-'+post.id" triggers="hover" :placement="'left'">
             <mini-profile :user="post.createdBy"/>
         </b-popover>
-        <div class="post-avatar me-2">
-          <img :src="post.createdBy.avatar_url" :alt="post.createdBy.firstName + ' avatar'" class="rounded-circle w-100 h-100"/>
-        </div>
-        <div class="d-flex flex-grow-1">
-          <div class="d-flex flex-column flex-grow-1">
+        <div class="d-flex" :id="'post-'+post.id">
+          <b-popover :target="'post-'+post.id" triggers="hover" :placement="'left'">
+            <mini-profile :user="post.createdBy"/>
+          </b-popover>
+          <div class="post-avatar me-2">
+            <img :src="post.createdBy.avatar_url" :alt="post.createdBy.firstName + ' avatar'" class="rounded-circle w-100 h-100"/>
+          </div>
+          <div class="d-flex flex-column flex-grow-1 justify-content-center">
             <span class="text-st">{{ post.createdBy.firstName }} {{ post.createdBy.lastName }}</span>
             <i class="bi" style="font-size: 1.25rem" :class="[post.confidentiality === 'public' ? 'bi bi-globe fw-bold' : post.confidentiality === 'friends' ? 'bi-people-fill' : 'bi-shield-lock-fill']"></i>
           </div>
-          <span class="text-muted">
+        </div>
+        <div class="d-flex flex-grow-1">
+          <span class="text-muted ms-auto">
             {{ post.createdAt | moment-ago }}
           </span>
         </div>
