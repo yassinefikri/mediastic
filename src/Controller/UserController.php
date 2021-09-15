@@ -97,6 +97,14 @@ class UserController extends AbstractController
     }
 
     /**
+     * @route("/infos/{username}", name="user_infos_username", options={"expose"=true})
+     */
+    public function whois(User $user): JsonResponse
+    {
+        return $this->json($user, Response::HTTP_OK, [], ['groups' => 'json']);
+    }
+
+    /**
      * @Route("/general/front", name="user_account_general_front", options={"expose"=true})
      * @Route("/password/front", name="user_account_password_front", options={"expose"=true})
      * @Route("/avatar/front", name="user_account_avatar_front", options={"expose"=true})

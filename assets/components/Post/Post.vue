@@ -13,7 +13,7 @@
             <img :src="post.createdBy.avatar_url" :alt="post.createdBy.firstName + ' avatar'" class="rounded-circle w-100 h-100"/>
           </div>
           <div class="d-flex flex-column flex-grow-1 justify-content-center">
-            <span class="text-st">{{ post.createdBy.firstName }} {{ post.createdBy.lastName }}</span>
+            <router-link :to="{ name: 'user_profile', params: { username: post.createdBy.username }}">{{ post.createdBy.firstName }} {{ post.createdBy.lastName }}</router-link>
             <i class="bi" style="font-size: 1.25rem" :class="[post.confidentiality === 'public' ? 'bi bi-globe fw-bold' : post.confidentiality === 'friends' ? 'bi-people-fill' : 'bi-shield-lock-fill']"></i>
           </div>
         </div>

@@ -14,12 +14,13 @@
 <script>
 export default {
   name: "CoverAvatar",
+  props: ['avatar', 'cover'],
   computed: {
     getAvatarUrl(){
-      return this.$store.state.userInfos['avatar_url'];
+      return this.avatar ?? this.$store.state.userInfos['avatar_url'];
     },
     getCoverURL(){
-      return this.$store.state.userInfos['cover_url'];
+      return this.cover ?? this.$store.state.userInfos['cover_url'];
     }
   },
 }

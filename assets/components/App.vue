@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="loaded">
     <navbar/>
     <router-view></router-view>
   </div>
@@ -17,13 +17,15 @@ export default {
   data() {
     return {
       alerts: [],
+      loaded: false,
     }
   },
-  mounted() {
+  beforeMount() {
     axios
         .get(this.$Routing.generate('user_infos'))
         .then(response => {
           this.$store.commit('setUserInfos', response.data)
+          this.loaded = true
         })
         .catch(error => {
           console.log(error)

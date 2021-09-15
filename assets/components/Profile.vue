@@ -1,13 +1,18 @@
 <template>
-  <div>
-    <cover-avatar/>
-    <mini-profile-infos
-        :username="getUserName"
-        :first-name="getFirstName"
-        :last-name="getLastName"
+  <div v-if="userInfos">
+    <cover-avatar
+        :avatar="userInfos['avatar_url']"
+        :cover="userInfos['cover_url']"
     />
-    <new-post-form @new-post="fetchPosts"/>
-    <hr/>
+    <mini-profile-infos
+        :username="userInfos['username']"
+        :first-name="userInfos['firstName']"
+        :last-name="userInfos['lastName']"
+    />
+    <div v-if="userInfos['username'] === $store.state.userInfos['username']">
+      <new-post-form @new-post="fetchPosts"/>
+      <hr/>
+    </div>
     <post-list :posts="posts"/>
   </div>
 </template>
@@ -21,9 +26,25 @@ import MiniProfileInfos from "./Partials/MiniProfileInfos";
 export default {
   name: "Profile",
   components: {CoverAvatar,MiniProfileInfos,NewPostForm,PostList},
+  props: ['username'],
   data(){
     return {
       posts : [],
+      userInfos: null
+    }
+  },
+  beforeMount() {
+    if(undefined !== this.username) {
+      axios
+          .get(this.$Routing.generate('user_infos_username', {'username': this.username}))
+          .then(response => {
+            this.userInfos = response.data
+          })
+          .catch(error => {
+            console.log(error)
+          })
+    } else {
+      this.userInfos = this.$store.state.userInfos
     }
   },
   mounted() {
@@ -31,8 +52,9 @@ export default {
   },
   methods: {
     fetchPosts(){
+      let route = undefined === this.username ? this.$Routing.generate('profile') : this.$Routing.generate('user_profile', {'username' : this.username})
       axios
-          .get(this.$Routing.generate('profile'))
+          .get(route)
           .then(response => {
             this.posts = response.data
           })
@@ -40,17 +62,6 @@ export default {
             console.log(error)
           })
     }
-  },
-  computed: {
-    getUserName(){
-      return this.$store.state.userInfos['username'];
-    },
-    getFirstName(){
-      return this.$store.state.userInfos['firstName'];
-    },
-    getLastName(){
-      return this.$store.state.userInfos['lastName'];
-    },
   }
 }
 </script>

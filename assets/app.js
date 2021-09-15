@@ -101,6 +101,13 @@ const routes = [
         component: Profile,
         meta: {'label': 'Profile'}
     },
+    {
+        name: 'user_profile',
+        path: '/profile/:username',
+        component: Profile,
+        props: true,
+        meta: {'label': 'Profile'}
+    },
 ]
 const router = new VueRouter({
     routes

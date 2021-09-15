@@ -146,3 +146,12 @@ button.close:hover {
 .popover-body {
   padding: 0;
 }
+
+.post-owner a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.post-owner a:hover {
+  text-decoration: underline;
+}
