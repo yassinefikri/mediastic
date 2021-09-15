@@ -41,7 +41,7 @@ class PostRepository extends ServiceEntityRepository
          */
         $currentUser = $this->security->getUser();
         if ($currentUser->getUserIdentifier() !== $user->getUserIdentifier()) {
-            $criteria['visibility'] = ConfidentialityMapping::STATUS_PUBLIC;
+            $criteria['confidentiality'] = ConfidentialityMapping::STATUS_PUBLIC;
         }
 
         return $this->findBy($criteria, ['createdAt' => 'DESC']);
@@ -60,7 +60,7 @@ class PostRepository extends ServiceEntityRepository
          */
         $currentUser = $this->security->getUser();
         if ($currentUser->getUserIdentifier() !== $user->getUserIdentifier()) {
-            $criteria['visibility'] = ConfidentialityMapping::STATUS_PUBLIC;
+            $criteria['confidentiality'] = ConfidentialityMapping::STATUS_PUBLIC;
         }
 
         return $this->findBy($criteria, ['createdAt' => 'DESC']);
