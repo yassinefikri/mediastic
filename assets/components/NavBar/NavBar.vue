@@ -6,7 +6,7 @@
             :to="{name: 'default'}"
             custom
             v-slot="{ href, route, navigate, isExactActive }">
-          <NavLink :brand="true" :href="href" @click="navigate" :label="route['meta']['label']">{{ route.fullPath }}</NavLink>
+          <nav-link :brand="true" :href="href" @click="navigate" :label="route['meta']['label']">{{ route.fullPath }}</nav-link>
         </router-link>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,16 +18,16 @@
                 :to="{name: 'user_account'}"
                 custom
                 v-slot="{ href, route, navigate, isActive, isExactActive }">
-              <NavLink :active="isActive" :href="href" @click="navigate" :label="route['meta']['label']">{{ route.fullPath }}</NavLink>
+              <nav-link :active="isActive" :href="href" @click="navigate" :label="route['meta']['label']">{{ route.fullPath }}</nav-link>
             </router-link>
-            <li id="avatar-navlink" class="nav-item dropdown ms-auto d-flex align-items-center">
-              <p class="me-2 mb-0">{{ getUserFirstName }}</p>
-              <div class="navbar-avatar">
-                <img class="w-100 h-100 rounded-circle" :src="getAvatarUrl" alt="avatar"/>
-              </div>
-            </li>
-            <li class="nav-item d-flex align-content-center ms-2">
-              <a class="nav-link my-auto" :href="routes['app_logout']['path']"><img src="/build/icons/logout.png"/></a>
+            <router-link
+                :to="{name: 'profile'}"
+                custom
+                v-slot="{ href, route, navigate, isActive, isExactActive }">
+              <navbar-profile-link :active="isActive" :href="href" @click="navigate" :label="route['meta']['label']" :userFirstName="getUserFirstName" :userAvatar="getAvatarUrl">{{ route.fullPath }}</navbar-profile-link>
+            </router-link>
+            <li class="nav-item d-flex align-content-center ms-2 border-start" id="navbar-logout">
+              <a class="nav-link my-auto" :href="$Routing.generate('app_logout')"><i class="bi bi-box-arrow-right" style="font-size: 1.5rem"></i></a>
             </li>
           </ul>
         </div>
@@ -44,29 +44,11 @@
 
 <script>
 import NavLink from './NavLink';
+import NavbarProfileLink from './NavbarProfileLink';
 
 export default {
   name: 'navbar',
-  components: {NavLink},
-  data() {
-    return {
-      routes: {},
-    }
-  },
-  beforeMount() {
-    let routesNames = {'app_logout': 'Log out'};
-    let routesMapping = {};
-    function makeRoute(routesMapping, name, path, component, label){
-      routesMapping[name] = {};
-      routesMapping[name]['path'] = path;
-      routesMapping[name]['component'] = component;
-      routesMapping[name]['label'] = label;
-    }
-    for (const property in routesNames) {
-      makeRoute(routesMapping, property, this.$Routing.generate(property), null, routesNames[property]);
-    }
-    this.routes = {...routesMapping};
-  },
+  components: {NavLink, NavbarProfileLink},
   computed: {
     getAvatarUrl(){
       return this.$store.state.userInfos['avatar_url'];

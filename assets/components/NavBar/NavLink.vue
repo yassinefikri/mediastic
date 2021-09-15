@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: 'Navlink',
+  name: "nav-link",
   props: ['active', 'href', 'label', 'brand'],
 }
 </script>

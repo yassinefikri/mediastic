@@ -1,12 +1,21 @@
-import './styles/app.scss';
-require('bootstrap');
-
 import Vue from 'vue'
-import App from './components/App'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
 
+import './styles/app.scss';
+require('bootstrap');
+
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+Vue.use(BootstrapVue)
+Vue.use(IconsPlugin)
+
+import moment from "moment";
+
+import App from './components/App'
 import Home from './components/Home'
+import Profile from './components/Profile';
 import Account from './components/Account'
 import AccountGeneral from './components/Account/AccountGeneral';
 import AccountAvatar from './components/Account/AccountAvatar';
@@ -16,8 +25,8 @@ Vue.use(Vuex)
 Vue.use(VueRouter)
 
 import Routing from '../vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js/router.min.js';
-const FOSroutes = require('../public/js/fos_js_routes.json');
-Routing.setRoutingData(FOSroutes);
+const FOSroutes = require('../public/js/fos_js_routes.json')
+Routing.setRoutingData(FOSroutes)
 Vue.prototype.$Routing = Routing
 
 const store = new Vuex.Store({
@@ -86,9 +95,26 @@ const routes = [
             }
         ]
     },
+    {
+        name: 'profile',
+        path: '/profile',
+        component: Profile,
+        meta: {'label': 'Profile'}
+    },
+    {
+        name: 'user_profile',
+        path: '/profile/:username',
+        component: Profile,
+        props: true,
+        meta: {'label': 'Profile'}
+    },
 ]
 const router = new VueRouter({
     routes
+})
+
+Vue.filter('moment-ago', function (date) {
+    return moment(date).fromNow();
 })
 
 Vue.config.productionTip = false

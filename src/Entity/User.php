@@ -33,7 +33,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *      minMessage = "Your username must be at least {{ limit }} characters long",
      *      maxMessage = "Your username cannot be longer than {{ limit }} characters"
      * )
-     * @Groups("whoami")
+     * @Groups("json")
      */
     private string $username;
 
@@ -59,25 +59,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups("whoami")
+     * @Groups("json")
      */
     private string $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups("whoami")
+     * @Groups("json")
      */
     private string $lastName;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups("whoami")
      */
     private ?string $avatar;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups("whoami")
      */
     private ?string $cover;
 
@@ -101,7 +99,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->username;
+        return (string)$this->username;
     }
 
     public function setUsername(string $username): self
@@ -118,7 +116,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->username;
+        return (string)$this->username;
     }
 
     /**

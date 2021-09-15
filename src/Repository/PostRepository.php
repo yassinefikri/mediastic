@@ -1,10 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Post;
+use App\Entity\User;
+use App\Mapping\ConfidentialityMapping;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @method Post|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,37 +19,50 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class PostRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private Security $security;
+
+    public function __construct(ManagerRegistry $registry, Security $security)
     {
         parent::__construct($registry, Post::class);
+
+        $this->security = $security;
     }
 
-    // /**
-    //  * @return Post[] Returns an array of Post objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @param User $user
+     *
+     * @return Post[]
+     */
+    public function getUserPosts(User $user): array
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $criteria = ['createdBy' => $user];
+        /**
+         * @var User $currentUser
+         */
+        $currentUser = $this->security->getUser();
+        if ($currentUser->getUserIdentifier() !== $user->getUserIdentifier()) {
+            $criteria['confidentiality'] = ConfidentialityMapping::STATUS_PUBLIC;
+        }
 
-    /*
-    public function findOneBySomeField($value): ?Post
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $this->findBy($criteria, ['createdAt' => 'DESC']);
     }
-    */
+
+    /**
+     * @param User $user
+     *
+     * @return Post[]
+     */
+    public function getHomePosts(User $user): array
+    {
+        $criteria = ['createdBy' => $user];
+        /**
+         * @var User $currentUser
+         */
+        $currentUser = $this->security->getUser();
+        if ($currentUser->getUserIdentifier() !== $user->getUserIdentifier()) {
+            $criteria['confidentiality'] = ConfidentialityMapping::STATUS_PUBLIC;
+        }
+
+        return $this->findBy($criteria, ['createdAt' => 'DESC']);
+    }
 }

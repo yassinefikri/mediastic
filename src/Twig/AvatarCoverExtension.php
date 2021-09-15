@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace App\Twig;
 
 use App\Entity\User;
-use App\Resolver\UserInfosResolver;
+use App\Resolver\UserAssetsResolver;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
 class AvatarCoverExtension extends AbstractExtension
 {
-    private UserInfosResolver $infosResolver;
+    private UserAssetsResolver $infosResolver;
 
-    public function __construct(UserInfosResolver $infosResolver)
+    public function __construct(UserAssetsResolver $infosResolver)
     {
         $this->infosResolver = $infosResolver;
     }

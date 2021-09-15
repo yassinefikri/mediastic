@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\PostImageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=PostImageRepository::class)
@@ -14,6 +15,7 @@ class PostImage
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("json")
      */
     private ?int $id = null;
 
@@ -50,7 +52,7 @@ class PostImage
         return $this;
     }
 
-    public function getImageName(): ?string
+    public function getImageName(): string
     {
         return $this->imageName;
     }
