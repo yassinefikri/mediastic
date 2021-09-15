@@ -15,12 +15,6 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0 w-100">
             <router-link
-                :to="{name: 'user_account'}"
-                custom
-                v-slot="{ href, route, navigate, isActive, isExactActive }">
-              <nav-link :active="isActive" :href="href" @click="navigate" :label="route['meta']['label']">{{ route.fullPath }}</nav-link>
-            </router-link>
-            <router-link
                 :to="{name: 'profile'}"
                 custom
                 v-slot="{ href, route, navigate, isActive, isExactActive }">

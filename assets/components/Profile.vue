@@ -10,9 +10,16 @@
         :last-name="userInfos['lastName']"
     />
     <div v-if="userInfos['username'] === $store.state.userInfos['username']">
-      <new-post-form @new-post="fetchPosts"/>
+      <div class="my-container-600 mx-auto">
+        <div class="mx-auto d-flex justify-content-center align-items-center profile-sett btn btn-secondary" id="profile-setting-btn">
+          <i class="bi bi-gear-fill me-2" style="font-size: 1.25rem"></i>
+          <router-link :to="{ name: 'user_account'}">Account</router-link>
+        </div>
+      </div>
       <hr/>
+      <new-post-form @new-post="fetchPosts"/>
     </div>
+    <hr/>
     <post-list :posts="posts"/>
   </div>
 </template>
@@ -23,10 +30,11 @@ import axios from "axios";
 import CoverAvatar from "./Partials/CoverAvatar";
 import NewPostForm from "./Post/NewPostForm";
 import MiniProfileInfos from "./Partials/MiniProfileInfos";
+import NavLink from "./NavBar/NavLink";
 
 export default {
   name: "Profile",
-  components: {CoverAvatar, MiniProfileInfos, NewPostForm, PostList},
+  components: {CoverAvatar, MiniProfileInfos, NewPostForm, PostList, NavLink},
   props: ['username'],
   data() {
     return {

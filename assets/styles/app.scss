@@ -147,11 +147,15 @@ button.close:hover {
   padding: 0;
 }
 
-.post-owner a {
+.post-owner a, .profile-sett a {
   color: inherit;
   text-decoration: none;
 }
 
 .post-owner a:hover {
   text-decoration: underline;
+}
+
+#profile-setting-btn {
+  width: 125px;
 }
