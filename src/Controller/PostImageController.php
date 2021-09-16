@@ -12,7 +12,7 @@ class PostImageController extends AbstractController
 {
     /**
      * @Route("/post/image/{id}", name="post_image", options={"expose"=true})
-     * @IsGranted("POST_IMAGE_VIEW", postImage)
+     * @IsGranted("POST_IMAGE_VIEW", subject="postImage")
      */
     public function index(PostImage $postImage): BinaryFileResponse
     {

@@ -27,7 +27,7 @@
         </div>
       </div>
     </nav>
-    <div v-for="(alert,index) in getAlerts" class="alert alert-dismissible fade show text-center rounded-0" :class="'alert-'+alert.type" role="alert">
+    <div v-for="(alert,index) in getAlerts" class="alert alert-dismissible fade show text-center rounded-0 mb-0" :class="'alert-'+alert.type" role="alert">
       {{ alert.message }}
       <button type="button" class="close" data-dismiss="alert" aria-label="Close" @click="$store.commit('deleteAlert', index)">
         <span aria-hidden="true">&times;</span>
