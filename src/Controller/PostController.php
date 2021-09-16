@@ -18,6 +18,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class PostController extends AbstractController
 {
+    use ControllerTrait;
+
     /**
      * @Route("/add", name="post_add", options={"expose"=true})
      */
@@ -50,7 +52,7 @@ class PostController extends AbstractController
             return new JsonResponse(null, Response::HTTP_OK);
         }
 
-        return new JsonResponse(null, Response::HTTP_BAD_REQUEST);
+        return new JsonResponse($this->formGetErrors($form), Response::HTTP_BAD_REQUEST);
     }
 
     /**

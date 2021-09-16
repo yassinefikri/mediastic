@@ -6,11 +6,24 @@
 </div>
 <div class="row">
     <div class="col-sm mb-3">
-        {{ form_widget(form.postImages) }}
+        <ul id="post-images-fields-list"
+            class="ps-0 mb-0"
+            data-prototype="{{ form_widget(form.postImages.vars.prototype)|e }}"
+            data-widget-tags="{{ '<li></li>'|e }}"
+            data-widget-counter="{{ form.postImages|length }}">
+            {% for postImageField in form.postImages %}
+                <li>
+                    {{ form_errors(postImageField) }}
+                    {{ form_widget(postImageField) }}
+                </li>
+            {% endfor %}
+        </ul>
+        <button type="button" class="add-another-collection-widget btn btn-primary" data-list-selector="#post-images-fields-list">Add Image</button>
     </div>
     <div class="col-sm-4 mb-3">
         {{ form_widget(form.confidentiality) }}
     </div>
 </div>
 {{ form_widget(form.submit) }}
-{{ form_end(form) }}
+{{ form_widget(form._token) }}
+{{ form_end(form, {'render_rest': false}) }}

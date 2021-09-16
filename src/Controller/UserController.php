@@ -20,6 +20,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class UserController extends AbstractController
 {
+    use ControllerTrait;
+
     /**
      * @Route("/general", name="user_account_general", options={"expose"=true})
      */
@@ -34,7 +36,7 @@ class UserController extends AbstractController
             return $this->forward('App\Controller\UserController::whoami');
         }
 
-        return new JsonResponse(null, Response::HTTP_BAD_REQUEST);
+        return new JsonResponse($this->formGetErrors($form), Response::HTTP_BAD_REQUEST);
     }
 
     /**
@@ -60,7 +62,7 @@ class UserController extends AbstractController
             return $this->forward('App\Controller\UserController::whoami');
         }
 
-        return new JsonResponse(null, Response::HTTP_BAD_REQUEST);
+        return new JsonResponse($this->formGetErrors($form), Response::HTTP_BAD_REQUEST);
     }
 
     /**
@@ -85,7 +87,7 @@ class UserController extends AbstractController
             return $this->forward('App\Controller\UserController::whoami');
         }
 
-        return new JsonResponse(null, Response::HTTP_BAD_REQUEST);
+        return new JsonResponse($this->formGetErrors($form), Response::HTTP_BAD_REQUEST);
     }
 
     /**

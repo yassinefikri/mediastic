@@ -15,12 +15,6 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0 w-100">
             <router-link
-                :to="{name: 'user_account'}"
-                custom
-                v-slot="{ href, route, navigate, isActive, isExactActive }">
-              <nav-link :active="isActive" :href="href" @click="navigate" :label="route['meta']['label']">{{ route.fullPath }}</nav-link>
-            </router-link>
-            <router-link
                 :to="{name: 'profile'}"
                 custom
                 v-slot="{ href, route, navigate, isActive, isExactActive }">
@@ -33,7 +27,7 @@
         </div>
       </div>
     </nav>
-    <div v-for="(alert,index) in getAlerts" class="alert alert-dismissible fade show text-center rounded-0" :class="'alert-'+alert.type" role="alert">
+    <div v-for="(alert,index) in getAlerts" class="alert alert-dismissible fade show text-center rounded-0 mb-0" :class="'alert-'+alert.type" role="alert">
       {{ alert.message }}
       <button type="button" class="close" data-dismiss="alert" aria-label="Close" @click="$store.commit('deleteAlert', index)">
         <span aria-hidden="true">&times;</span>

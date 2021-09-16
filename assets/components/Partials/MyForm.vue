@@ -8,12 +8,12 @@ import axios from "axios";
 export default {
   name: "my-form",
   props: ['getUrl', 'postUrl', 'message', 'clearFormAfterSubmit'],
-  data(){
+  data() {
     return {
-      form : null
+      form: null
     }
   },
-  mounted(){
+  mounted() {
     axios
         .get(this.getUrl)
         .then(response => {
@@ -26,32 +26,72 @@ export default {
   methods: {
     formHandler() {
       let form = this.$refs['form-container'].querySelector('form');
-      if(null !== form) {
+      if (null !== form) {
         let formData = new FormData(form);
+        this.toogleForm(form, true)
         axios
             .post(this.postUrl, formData)
             .then(response => {
-              if(200 === response.status){
-                this.$el.querySelectorAll("input[type=password], input[type=file]").forEach(function(input){
-                  input.value='';
+              if (200 === response.status) {
+                form.querySelectorAll("input[type=password], input[type=file]").forEach(function (input) {
+                  input.value = '';
                 })
+                this.removeErrors(form)
                 this.$emit('form-posted', response.data);
                 this.$store.commit('setAlerts', {type: 'success', message: this.message})
-                if(true === this.clearFormAfterSubmit) {
-                  this.clearInputs();
+                if (true === this.clearFormAfterSubmit) {
+                  this.clearInputs(form);
                 }
               }
             })
             .catch(error => {
-              console.log(error)
+              if (400 === error.response.status) {
+                this.fillErrors(form, error.response.data)
+              }
+            })
+            .finally(() => {
+              this.toogleForm(form, false)
             })
       }
     },
-    clearInputs(){
-      this.$el.querySelectorAll("input:not([type='hidden']),textarea").forEach(function(input){
-        input.value='';
+    clearInputs(form) {
+      form.querySelectorAll("input:not([type='hidden']),textarea").forEach(function (input) {
+        input.value = '';
       })
     },
+    fillErrors(form, errors, isRoot = true) {
+      if (true === isRoot) {
+        this.removeErrors(form)
+      }
+      for (const [key, value] of Object.entries(errors)) {
+        if (true === Array.isArray(value)) {
+          let input = form.querySelector('#' + key)
+          input.classList.add('is-invalid')
+          value.forEach(function (error) {
+            input.parentElement.insertAdjacentHTML('beforeend', '<div class="invalid-feedback">' + error + '</div>')
+          })
+        } else {
+          this.fillErrors(form, value, false)
+        }
+      }
+    },
+    removeErrors(form) {
+      form.querySelectorAll("input.is-invalid,textarea.is-invalid").forEach(function (input) {
+        input.classList.remove('is-invalid')
+      })
+      form.querySelectorAll(".invalid-feedback").forEach(function (input) {
+        input.remove()
+      })
+    },
+    toogleForm(form, status) {
+      form.querySelectorAll("input,textarea").forEach(function (input) {
+        if (true === status) {
+          input.setAttribute('disabled', status)
+        } else {
+          input.removeAttribute('disabled')
+        }
+      })
+    }
   },
 }
 </script>
