@@ -33,7 +33,7 @@ services:
             context: ./docker
             dockerfile: Dockerfile
             args:
-                - HOST_UID=${UID}
+                - HOST_UID=${HOST_UID}
         environment:
             - "APACHE_RUN_USER=app"
         hostname: app-apache
@@ -57,7 +57,7 @@ services:
             context: ./docker
             dockerfile: WebpackDockerFile
             args:
-                - HOST_UID=${UID}
+                - HOST_UID=${HOST_UID}
         restart: unless-stopped
         volumes:
             - ./:/var/www/html
