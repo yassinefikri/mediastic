@@ -32,6 +32,10 @@ services:
         build:
             context: ./docker
             dockerfile: Dockerfile
+            args:
+                - HOST_UID=${UID}
+        environment:
+            - "APACHE_RUN_USER=app"
         hostname: app-apache
         restart: unless-stopped
         ports:
@@ -48,11 +52,12 @@ services:
             - PMA_POST=3361
             - PMA_USER=root
             - PMA_PASSWORD=root
-            # - PMA_ARBITRARY=1
     webpack:
         build:
             context: ./docker
             dockerfile: WebpackDockerFile
+            args:
+                - HOST_UID=${UID}
         restart: unless-stopped
         volumes:
             - ./:/var/www/html
