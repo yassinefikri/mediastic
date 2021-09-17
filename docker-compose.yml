@@ -4,20 +4,60 @@ services:
     caddy:
         image: dunglas/mercure
         restart: unless-stopped
+        hostname: app-mercure
         environment:
-            # Uncomment the following line to disable HTTPS
             SERVER_NAME: ':80'
             MERCURE_PUBLISHER_JWT_KEY: '!ChangeMe!'
             MERCURE_SUBSCRIBER_JWT_KEY: '!ChangeMe!'
-        # Uncomment the following line to enable the development mode
         command: /usr/bin/caddy run -config /etc/caddy/Caddyfile.dev
         ports:
             - "8081:80"
-            # - "443:443"
         volumes:
             - caddy_data:/data
             - caddy_config:/config
+    mysql:
+        image: mysql
+        restart: unless-stopped
+        hostname: app-mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: symfony-vue
+        ports:
+            - "3361:3306"
+        volumes:
+            - mysql_data:/var/lib/mysql
+        cap_add:
+            - SYS_NICE
+    php-apache2:
+        build:
+            context: ./docker
+            dockerfile: Dockerfile
+        hostname: app-apache
+        restart: unless-stopped
+        ports:
+            - "8082:80"
+        volumes:
+            - ./:/var/www/html
+    phpmyadmin:
+        image: phpmyadmin
+        restart: unless-stopped
+        ports:
+            - 8083:80
+        environment:
+            - PMA_HOST=app-mysql
+            - PMA_POST=3361
+            - PMA_USER=root
+            - PMA_PASSWORD=root
+            # - PMA_ARBITRARY=1
+    webpack:
+        build:
+            context: ./docker
+            dockerfile: WebpackDockerFile
+        restart: unless-stopped
+        volumes:
+            - ./:/var/www/html
 
 volumes:
     caddy_data:
     caddy_config:
+    mysql_data:

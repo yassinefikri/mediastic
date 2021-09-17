@@ -1,0 +1,10 @@
+FROM node
+
+WORKDIR /var/www/html
+
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN apt update
+RUN apt -y install --no-install-recommends yarn
+
+ENTRYPOINT ["tail", "-f", "/dev/null"]
