@@ -30,7 +30,7 @@ services:
             - SYS_NICE
     php-apache2:
         build:
-            context: ./docker
+            context: ./docker/app
             dockerfile: Dockerfile
             args:
                 - HOST_UID=${HOST_UID}
@@ -54,8 +54,8 @@ services:
             - PMA_PASSWORD=root
     webpack:
         build:
-            context: ./docker
-            dockerfile: WebpackDockerFile
+            context: ./docker/webpack
+            dockerfile: Dockerfile
             args:
                 - HOST_UID=${HOST_UID}
         restart: unless-stopped
