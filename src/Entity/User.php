@@ -84,9 +84,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private Collection $posts;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Friendship::class, mappedBy="sender", orphanRemoval=true)
+     */
+    private Collection $sentFriendships;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Friendship::class, mappedBy="receiver", orphanRemoval=true)
+     */
+    private Collection $receivedFriendships;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
+        $this->sentFriendships = new ArrayCollection();
+        $this->receivedFriendships = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -260,6 +272,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($post->getCreatedBy() === $this) {
                 $post->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Friendship[]
+     */
+    public function getSentFriendships(): Collection
+    {
+        return $this->sentFriendships;
+    }
+
+    public function addSentFriendship(Friendship $sentFriendship): self
+    {
+        if (!$this->sentFriendships->contains($sentFriendship)) {
+            $this->sentFriendships[] = $sentFriendship;
+            $sentFriendship->setSender($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSentFriendship(Friendship $sentFriendship): self
+    {
+        if ($this->sentFriendships->removeElement($sentFriendship)) {
+            // set the owning side to null (unless already changed)
+            if ($sentFriendship->getSender() === $this) {
+                $sentFriendship->setSender(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Friendship[]
+     */
+    public function getReceivedFriendships(): Collection
+    {
+        return $this->receivedFriendships;
+    }
+
+    public function addReceivedFriendship(Friendship $receivedFriendship): self
+    {
+        if (!$this->receivedFriendships->contains($receivedFriendship)) {
+            $this->receivedFriendships[] = $receivedFriendship;
+            $receivedFriendship->setReceiver($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReceivedFriendship(Friendship $receivedFriendship): self
+    {
+        if ($this->receivedFriendships->removeElement($receivedFriendship)) {
+            // set the owning side to null (unless already changed)
+            if ($receivedFriendship->getReceiver() === $this) {
+                $receivedFriendship->setReceiver(null);
             }
         }
 

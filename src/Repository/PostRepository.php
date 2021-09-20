@@ -7,7 +7,9 @@ namespace App\Repository;
 use App\Entity\Post;
 use App\Entity\User;
 use App\Mapping\ConfidentialityMapping;
+use App\Mapping\FriendshipMapping;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Security;
 
@@ -19,13 +21,20 @@ use Symfony\Component\Security\Core\Security;
  */
 class PostRepository extends ServiceEntityRepository
 {
-    private Security $security;
+    private Security             $security;
+    private UserRepository       $userRepository;
+    private FriendshipRepository $friendshipRepository;
 
-    public function __construct(ManagerRegistry $registry, Security $security)
-    {
+    public function __construct(ManagerRegistry      $registry,
+                                Security             $security,
+                                UserRepository       $userRepository,
+                                FriendshipRepository $friendshipRepository
+    ) {
         parent::__construct($registry, Post::class);
 
-        $this->security = $security;
+        $this->security             = $security;
+        $this->userRepository       = $userRepository;
+        $this->friendshipRepository = $friendshipRepository;
     }
 
     /**
@@ -40,8 +49,10 @@ class PostRepository extends ServiceEntityRepository
          * @var User $currentUser
          */
         $currentUser = $this->security->getUser();
-        if ($currentUser->getUserIdentifier() !== $user->getUserIdentifier()) {
-            $criteria['confidentiality'] = ConfidentialityMapping::STATUS_PUBLIC;
+        if ($currentUser !== $user) {
+            $criteria['confidentiality'] = $this->friendshipRepository->isFriends($user, $currentUser)
+                ? [ConfidentialityMapping::STATUS_PUBLIC, ConfidentialityMapping::STATUS_FRIENDS]
+                : ConfidentialityMapping::STATUS_PUBLIC;
         }
 
         return $this->findBy($criteria, ['createdAt' => 'DESC']);
@@ -54,15 +65,16 @@ class PostRepository extends ServiceEntityRepository
      */
     public function getHomePosts(User $user): array
     {
-        $criteria = ['createdBy' => $user];
-        /**
-         * @var User $currentUser
-         */
-        $currentUser = $this->security->getUser();
-        if ($currentUser->getUserIdentifier() !== $user->getUserIdentifier()) {
-            $criteria['confidentiality'] = ConfidentialityMapping::STATUS_PUBLIC;
-        }
+        $friends = $this->userRepository->getUserFriends($user);
 
-        return $this->findBy($criteria, ['createdAt' => 'DESC']);
+        return $this->createQueryBuilder('p')
+            ->where('p.createdBy = :user')
+            ->orWhere('p.createdBy IN (:friends) AND p.confidentiality IN (:confs)')
+            ->setParameter('user', $user)
+            ->setParameter('friends', $friends)
+            ->setParameter('confs', [ConfidentialityMapping::STATUS_PUBLIC, ConfidentialityMapping::STATUS_FRIENDS])
+            ->orderBy('p.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
     }
 }

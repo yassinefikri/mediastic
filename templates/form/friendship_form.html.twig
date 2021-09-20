@@ -1,0 +1,12 @@
+{{ form_start(form) }}
+<div class="row">
+    <div class="col mb-3">
+        {% if form.add is defined %}
+        {{ form_widget(form.add) }}
+        {% endif %}
+        {% if form.remove is defined %}
+        {{ form_widget(form.remove) }}
+        {% endif %}
+    </div>
+</div>
+{{ form_end(form) }}

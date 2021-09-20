@@ -10,7 +10,7 @@ use Symfony\Component\Asset\PackageInterface;
 class UserAssetsResolver
 {
     private const DEFAULT_AVATAR = 'default_avatar.png';
-    private const DEFAULT_COVER  = 'default_cover.jpeg';
+    private const DEFAULT_COVER  = 'default_cover.jpg';
 
     private PackageInterface $avatarsPackage;
     private PackageInterface $imagesPackage;
