@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form;
 
 use App\Entity\Friendship;
@@ -19,9 +21,9 @@ class AnswerFriendFormType extends AbstractType
         $this->security = $security;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        if($builder->getData()->getReceiver() === $this->security->getUser()){
+        if ($builder->getData()->getReceiver() === $this->security->getUser()) {
             $builder
                 ->add('add', SubmitType::class, [
                     'label'      => FriendshipMapping::ICON_ACCEPT,
@@ -41,7 +43,7 @@ class AnswerFriendFormType extends AbstractType
             ]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Friendship::class,

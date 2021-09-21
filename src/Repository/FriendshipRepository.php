@@ -6,7 +6,9 @@ use App\Entity\Friendship;
 use App\Entity\User;
 use App\Mapping\FriendshipMapping;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -59,5 +61,24 @@ class FriendshipRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
 
         return null !== $friendship;
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return User[]
+     */
+    public function getUserFriends(User $user): array
+    {
+        $entityManager = $this->getEntityManager();
+        $rsm           = new ResultSetMappingBuilder($entityManager);
+        $rsm->addRootEntityFromClassMetadata(User::class, 'u');
+
+        $sql   = 'SELECT * from `user` u where id in 
+                         (SELECT IFNULL(sf.receiver_id, rf.sender_id) FROM `user` u LEFT JOIN friendship sf ON sf.sender_id = u.id AND sf.status = :status LEFT JOIN friendship rf ON rf.receiver_id = u.id AND rf.status = :status WHERE u.id = :id);';
+        $query = $entityManager->createNativeQuery($sql, $rsm);
+        $query->setParameter('status', FriendshipMapping::ACCEPTED, Types::STRING);
+        $query->setParameter('id', $user->getId(), Types::INTEGER);
+        return $query->getResult();
     }
 }

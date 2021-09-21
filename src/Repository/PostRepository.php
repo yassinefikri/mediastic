@@ -22,18 +22,16 @@ use Symfony\Component\Security\Core\Security;
 class PostRepository extends ServiceEntityRepository
 {
     private Security             $security;
-    private UserRepository       $userRepository;
     private FriendshipRepository $friendshipRepository;
 
     public function __construct(ManagerRegistry      $registry,
                                 Security             $security,
-                                UserRepository       $userRepository,
                                 FriendshipRepository $friendshipRepository
-    ) {
+    )
+    {
         parent::__construct($registry, Post::class);
 
         $this->security             = $security;
-        $this->userRepository       = $userRepository;
         $this->friendshipRepository = $friendshipRepository;
     }
 
@@ -65,7 +63,7 @@ class PostRepository extends ServiceEntityRepository
      */
     public function getHomePosts(User $user): array
     {
-        $friends = $this->userRepository->getUserFriends($user);
+        $friends = $this->friendshipRepository->getUserFriends($user);
 
         return $this->createQueryBuilder('p')
             ->where('p.createdBy = :user')

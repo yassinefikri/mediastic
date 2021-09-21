@@ -12,6 +12,7 @@ use App\Form\PendingFriendFormType;
 use App\Form\RemoveFriendFormType;
 use App\Mapping\FriendshipMapping;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 
@@ -28,9 +29,11 @@ class FriendshipManager
 
     /**
      * @param Friendship|null      $friendship
+     * @param User                 $user
+     * @param User                 $currentUser
      * @param array<string,string> $options
      *
-     * @return FormInterface
+     * @return FormInterface<string|FormInterface>
      */
     public function getForm(?Friendship $friendship, User $user, User $currentUser, array $options = []): FormInterface
     {
@@ -52,13 +55,16 @@ class FriendshipManager
     }
 
     /**
-     * @param FormInterface   $form
-     * @param Friendship|null $friendship
-     * @param User            $user
-     * @param User            $currentUser
+     * @param FormInterface<string|FormInterface> $form
+     * @param Friendship|null                     $friendship
+     * @param User                                $user
+     * @param User                                $currentUser
      */
-    public function handleForm(FormInterface $form, ?Friendship $friendship, User $user, User $currentUser)
+    public function handleForm(FormInterface $form, ?Friendship $friendship, User $user, User $currentUser): void
     {
+        /**
+         * @var Form $form
+         */
         $clickedButton = $form->getClickedButton();
         if (null === $friendship) {
             if ($clickedButton === $form->get('add')) {
@@ -82,7 +88,9 @@ class FriendshipManager
                     break;
             }
         }
-        $this->entityManager->persist($friendship);
-        $this->entityManager->flush();
+        if (null !== $friendship) {
+            $this->entityManager->persist($friendship);
+            $this->entityManager->flush();
+        }
     }
 }

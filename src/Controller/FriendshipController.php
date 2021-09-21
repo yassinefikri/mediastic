@@ -27,12 +27,15 @@ class FriendshipController extends AbstractController
      */
     public function index(User $user, Request $request, FriendshipManager $friendshipManager): JsonResponse
     {
-        $entityManager = $this->getDoctrine()->getManager();
+        /**
+         * @var FriendshipRepository $friendshipRepository
+         */
+        $friendshipRepository = $this->getDoctrine()->getManager()->getRepository(Friendship::class);
         /**
          * @var User $currentUser
          */
         $currentUser = $this->getUser();
-        $friendship  = $entityManager->getRepository(Friendship::class)->getFriendship($user, $currentUser, true);
+        $friendship  = $friendshipRepository->getFriendship($user, $currentUser, true);
         $form        = $friendshipManager->getForm($friendship, $user, $currentUser);
 
         $form->handleRequest($request);
@@ -50,12 +53,15 @@ class FriendshipController extends AbstractController
      */
     public function front(User $user, FriendshipManager $friendshipManager): JsonResponse
     {
-        $entityManager = $this->getDoctrine()->getManager();
+        /**
+         * @var FriendshipRepository $friendshipRepository
+         */
+        $friendshipRepository = $this->getDoctrine()->getManager()->getRepository(Friendship::class);
         /**
          * @var User $currentUser
          */
         $currentUser = $this->getUser();
-        $friendship  = $entityManager->getRepository(Friendship::class)->getFriendship($user, $currentUser, true);
+        $friendship  = $friendshipRepository->getFriendship($user, $currentUser, true);
         $form        = $friendshipManager->getForm($friendship, $user, $currentUser);
 
         return new JsonResponse($this->renderView('form/friendship_form.html.twig', [
