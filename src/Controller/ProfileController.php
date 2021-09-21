@@ -15,25 +15,25 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProfileController extends AbstractController
 {
     /**
-     * @Route("/", name="profile", options={"expose"=true})
+     * @Route("/{page}", name="profile", options={"expose"=true}, requirements={"page"="^[1-9]\d*$"})
      */
-    public function profile(PostRepository $postRepository): JsonResponse
+    public function profile(PostRepository $postRepository, int $page = 1): JsonResponse
     {
         /**
          * @var User $user
          */
         $user = $this->getUser();
-        $posts = $postRepository->getUserPosts($user);
+        $posts = $postRepository->getUserPosts($user, $page);
 
         return $this->json($posts, Response::HTTP_OK, [], ['groups' => 'json']);
     }
 
     /**
-     * @Route("/{username}", name="user_profile", options={"expose"=true})
+     * @Route("/{username}/{page}", name="user_profile", options={"expose"=true}, requirements={"page"="^[1-9]\d*$"})
      */
-    public function index(PostRepository $postRepository, User $user): JsonResponse
+    public function index(PostRepository $postRepository, User $user, int $page = 1): JsonResponse
     {
-        $posts = $postRepository->getUserPosts($user);
+        $posts = $postRepository->getUserPosts($user, $page);
 
         return $this->json($posts, Response::HTTP_OK, [], ['groups' => 'json']);
     }
