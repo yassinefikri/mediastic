@@ -162,3 +162,21 @@ button.close:hover {
 #profile-setting-btn {
   width: 125px;
 }
+
+.small-avatar {
+  width: 50px;
+  height: 50px;
+}
+
+#search_results {
+  min-width: 250px;
+}
+
+#search_results a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.navbar-search-link {
+  cursor: pointer;
+}

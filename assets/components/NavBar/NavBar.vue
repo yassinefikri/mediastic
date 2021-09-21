@@ -14,6 +14,16 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0 w-100">
+            <div class="w-100 d-flex justify-content-center align-items-center">
+              <div class="me-2">
+                <navbar-search/>
+              </div>
+              <div>
+                <i class="bi bi-people-fill mx-2" style="font-size: 25px"></i>
+                <i class="bi bi-chat-fill mx-2" style="font-size: 25px"></i>
+                <i class="bi bi-bell-fill mx-2" style="font-size: 25px"></i>
+              </div>
+            </div>
             <router-link
                 :to="{name: 'profile'}"
                 custom
@@ -39,10 +49,11 @@
 <script>
 import NavLink from './NavLink';
 import NavbarProfileLink from './NavbarProfileLink';
+import NavbarSearch from "./NavbarSearch";
 
 export default {
   name: 'navbar',
-  components: {NavLink, NavbarProfileLink},
+  components: {NavLink, NavbarProfileLink, NavbarSearch},
   computed: {
     getAvatarUrl(){
       return this.$store.state.userInfos['avatar_url'];
@@ -54,6 +65,11 @@ export default {
       return this.$store.state.alerts;
     }
   },
+  watch: {
+    '$route': function () {
+      this.$store.commit('removeAlerts')
+    }
+  }
 }
 </script>
 
