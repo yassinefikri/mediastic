@@ -2,7 +2,7 @@
   <div class="mini-profile">
     <div class="d-flex flex-column profile-images-container profile-cover-avatar">
       <div class="images-container position-relative">
-        <div class="cover-container mb-5">
+        <div class="cover-container mini-profile">
           <img :src="user.cover_url" class="w-100 h-100"/>
         </div>
         <div class="avatar-container">

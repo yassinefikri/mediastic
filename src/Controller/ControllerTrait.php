@@ -10,7 +10,7 @@ use Symfony\Component\Form\FormInterface;
 trait ControllerTrait
 {
     /**
-     * @param FormInterface $form
+     * @param FormInterface<string|FormInterface> $form
      * @param string|null   $formName
      *
      * @return array <int|string,mixed>

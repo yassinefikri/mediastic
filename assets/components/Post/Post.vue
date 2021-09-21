@@ -2,9 +2,6 @@
   <div class="bg-light p-4 my-3 post-radius">
     <div class="post-owner mb-4">
       <div class="d-flex" >
-        <b-popover :target="'post-'+post.id" triggers="hover" :placement="'left'">
-            <mini-profile :user="post.createdBy"/>
-        </b-popover>
         <div class="d-flex" :id="'post-'+post.id">
           <b-popover :target="'post-'+post.id" triggers="hover" :placement="'left'">
             <mini-profile :user="post.createdBy"/>

@@ -19,6 +19,9 @@
       <hr/>
       <new-post-form @new-post="fetchPosts"/>
     </div>
+    <div v-else >
+      <profile-friendship :username="userInfos['username']"/>
+    </div>
     <hr/>
     <post-list :posts="posts"/>
   </div>
@@ -31,10 +34,11 @@ import CoverAvatar from "./Partials/CoverAvatar";
 import NewPostForm from "./Post/NewPostForm";
 import MiniProfileInfos from "./Partials/MiniProfileInfos";
 import NavLink from "./NavBar/NavLink";
+import ProfileFriendship from "./Partials/ProfileFriendship";
 
 export default {
   name: "Profile",
-  components: {CoverAvatar, MiniProfileInfos, NewPostForm, PostList, NavLink},
+  components: {CoverAvatar, MiniProfileInfos, NewPostForm, PostList, NavLink, ProfileFriendship},
   props: ['username'],
   data() {
     return {

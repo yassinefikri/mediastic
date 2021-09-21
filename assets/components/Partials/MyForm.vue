@@ -24,10 +24,13 @@ export default {
         })
   },
   methods: {
-    formHandler() {
+    formHandler(event) {
       let form = this.$refs['form-container'].querySelector('form');
       if (null !== form) {
         let formData = new FormData(form);
+        if (undefined !== event.submitter) {
+          formData.append(event.submitter.name, '')
+        }
         this.toogleForm(form, true)
         axios
             .post(this.postUrl, formData)

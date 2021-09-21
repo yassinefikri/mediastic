@@ -112,8 +112,10 @@ button.close:hover {
   height: 350px;
 }
 
-.mini-profile .cover-container {
-  height: auto;
+.mini-profile.cover-container {
+  width: 275px;
+  height: 150px;
+  margin-bottom: 2.5rem;
 }
 
 .avatar-container {
@@ -128,7 +130,7 @@ button.close:hover {
 .mini-profile .avatar-container {
   width: 100px;
   height: 100px;
-  transform: translate(-50%, 0%);
+  transform: translate(-50%, 0.5rem);
 }
 
 .post-figure {

@@ -2,7 +2,7 @@
   <div class="container mt-3">
     <new-post-form @new-post="fetchPosts"/>
     <hr/>
-    <div class="my-container-600 mx-auto">
+    <div class="my-container-800 mx-auto">
       <post-list :posts="posts"/>
     </div>
   </div>
