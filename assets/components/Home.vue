@@ -1,40 +1,58 @@
 <template>
   <div class="container mt-3">
-    <new-post-form @new-post="fetchPosts"/>
+    <new-post-form @new-post="initAndFetchPosts"/>
     <hr/>
     <div class="my-container-800 mx-auto">
-      <post-list :posts="posts"/>
+      <post-list
+          ref="child-list"
+          @finished-fetching="handleFetch"
+      />
     </div>
   </div>
 </template>
 
 <script>
-import axios from "axios";
 import PostList from "./Post/PostList";
 import NewPostForm from "./Post/NewPostForm";
+
 export default {
-  name: 'Home',
-  components: {NewPostForm,PostList},
-  data(){
+  name: 'home',
+  components: {NewPostForm, PostList},
+  data() {
     return {
-      posts : [],
+      page: 1,
+      lastPage: false,
     }
   },
   mounted() {
     this.fetchPosts()
+    window.onscroll = () => {
+      let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
+      if (true === bottomOfWindow && false === this.lastPage) {
+        this.fetchPosts()
+      }
+    };
   },
   methods: {
-    fetchPosts(){
-      axios
-          .get(this.$Routing.generate('home'))
-          .then(response => {
-            this.posts = response.data
-          })
-          .catch(error => {
-            console.log(error)
-          })
+    fetchPosts() {
+      this.$refs['child-list'].fetchPosts(this.$Routing.generate('home', {'page': this.page}))
+    },
+    handleFetch(payload) {
+      this.lastPage = payload['lastPage']
+      if (true === payload['success']) {
+        this.page++
+      }
+    },
+    init() {
+      this.page = 1
+      this.lastPage = false
+    },
+    initAndFetchPosts() {
+      this.init()
+      this.$refs['child-list'].initList()
+      this.fetchPosts()
     }
-  }
+  },
 }
 </script>
 
