@@ -12,15 +12,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class HomeController extends AbstractController
 {
     /**
-     * @Route("/home", name="home", options={"expose"=true})
+     * @Route("/home/{page}", name="home", options={"expose"=true}, requirements={"page"="^[1-9]\d*$"})
      */
-    public function home(PostRepository $postRepository): JsonResponse
+    public function home(PostRepository $postRepository, int $page = 1): JsonResponse
     {
         /**
          * @var User $user
          */
         $user = $this->getUser();
-        $posts = $postRepository->getHomePosts($user);
+        $posts = $postRepository->getHomePosts($user, $page);
 
         return $this->json($posts, Response::HTTP_OK, [], ['groups' => 'json']);
     }

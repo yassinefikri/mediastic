@@ -38,7 +38,12 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
-    public function searchUsers(string $search)
+    /**
+     * @param string $search
+     *
+     * @return User[]
+     */
+    public function searchUsers(string $search): array
     {
         $entityManager = $this->getEntityManager();
         $rsm           = new ResultSetMappingBuilder($entityManager);
