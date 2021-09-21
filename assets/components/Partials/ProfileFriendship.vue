@@ -5,6 +5,7 @@
         :get-url="$Routing.generate('friendship_front', {'username': username})"
         :post-url="$Routing.generate('friendship', {'username': username})"
         @form-posted="refreshForm"
+        :message="'Friendship updated'"
     />
   </div>
 </template>
