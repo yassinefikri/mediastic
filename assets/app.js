@@ -46,6 +46,9 @@ const store = new Vuex.Store({
         },
         deleteAlert(state, index) {
             state.alerts.splice(index, 1)
+        },
+        removeAlerts(state) {
+            state.alerts = []
         }
     }
 })

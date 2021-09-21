@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -34,5 +36,18 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $user->setPassword($newHashedPassword);
         $this->_em->persist($user);
         $this->_em->flush();
+    }
+
+    public function searchUsers(string $search)
+    {
+        $entityManager = $this->getEntityManager();
+        $rsm           = new ResultSetMappingBuilder($entityManager);
+        $rsm->addRootEntityFromClassMetadata(User::class, 'u');
+
+        $sql   = 'SELECT * from `user` u where username REGEXP :query';
+        $query = $entityManager->createNativeQuery($sql, $rsm);
+        $query->setParameter('query', $search, Types::STRING);
+
+        return $query->getResult();
     }
 }
