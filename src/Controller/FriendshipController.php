@@ -4,14 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Friendship;
 use App\Entity\User;
-use App\Form\AddFriendFormType;
-use App\Form\AnswerFriendFormType;
-use App\Form\RemoveFriendFormType;
-use App\Form\SendFriendshipType;
 use App\Manager\FriendshipManager;
-use App\Mapping\FriendshipMapping;
 use App\Repository\FriendshipRepository;
-use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,7 +30,7 @@ class FriendshipController extends AbstractController
          */
         $currentUser = $this->getUser();
         $friendship  = $friendshipRepository->getFriendship($user, $currentUser, true);
-        $form        = $friendshipManager->getForm($friendship, $user, $currentUser);
+        $form        = $friendshipManager->getForm($friendship);
 
         $form->handleRequest($request);
         if (true === $form->isSubmitted() && true === $form->isValid()) {
@@ -62,7 +56,7 @@ class FriendshipController extends AbstractController
          */
         $currentUser = $this->getUser();
         $friendship  = $friendshipRepository->getFriendship($user, $currentUser, true);
-        $form        = $friendshipManager->getForm($friendship, $user, $currentUser);
+        $form        = $friendshipManager->getForm($friendship);
 
         return new JsonResponse($this->renderView('form/friendship_form.html.twig', [
             'form' => $form->createView()

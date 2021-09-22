@@ -11,41 +11,51 @@ use App\Form\AnswerFriendFormType;
 use App\Form\PendingFriendFormType;
 use App\Form\RemoveFriendFormType;
 use App\Mapping\FriendshipMapping;
+use App\Resolver\UserTopicsResolver;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Mercure\HubInterface;
+use Symfony\Component\Mercure\Update;
+use Symfony\Component\Security\Core\Security;
 
 class FriendshipManager
 {
     private FormFactoryInterface   $formFactory;
     private EntityManagerInterface $entityManager;
+    private UserTopicsResolver     $topicsResolver;
+    private HubInterface           $hub;
+    private Security               $security;
 
-    public function __construct(FormFactoryInterface $formFactory, EntityManagerInterface $entityManager)
-    {
-        $this->formFactory   = $formFactory;
-        $this->entityManager = $entityManager;
+    public function __construct(
+        FormFactoryInterface   $formFactory,
+        EntityManagerInterface $entityManager,
+        HubInterface           $hub,
+        UserTopicsResolver     $topicsResolver,
+        Security               $security
+    ) {
+        $this->formFactory    = $formFactory;
+        $this->entityManager  = $entityManager;
+        $this->hub            = $hub;
+        $this->topicsResolver = $topicsResolver;
+        $this->security       = $security;
     }
 
     /**
      * @param Friendship|null      $friendship
-     * @param User                 $user
-     * @param User                 $currentUser
      * @param array<string,string> $options
      *
      * @return FormInterface<string|FormInterface>
      */
-    public function getForm(?Friendship $friendship, User $user, User $currentUser, array $options = []): FormInterface
+    public function getForm(?Friendship $friendship, array $options = []): FormInterface
     {
         $formClass = AddFriendFormType::class;
         if (null !== $friendship) {
-            switch ($friendship->getStatus()) {
-                case FriendshipMapping::ACCEPTED:
-                    $formClass = RemoveFriendFormType::class;
-                    break;
-                case FriendshipMapping::PENDING:
-                    $formClass = ($friendship->getSender() !== $currentUser) ? AnswerFriendFormType::class : PendingFriendFormType::class;
-                    break;
+            if (FriendshipMapping::ACCEPTED === $friendship->getStatus()) {
+                $formClass = RemoveFriendFormType::class;
+            } elseif (FriendshipMapping::PENDING === $friendship->getStatus()) {
+                $formClass = ($friendship->getSender() !== $this->security->getUser()) ? AnswerFriendFormType::class : PendingFriendFormType::class;
             }
         } else {
             $formClass = AddFriendFormType::class;
@@ -68,29 +78,102 @@ class FriendshipManager
         $clickedButton = $form->getClickedButton();
         if (null === $friendship) {
             if ($clickedButton === $form->get('add')) {
-                $friendship = new Friendship();
-                $friendship->setSender($currentUser);
-                $friendship->setReceiver($user);
+                $this->addNewFriendship($user, $currentUser);
             }
         } else {
-            switch ($friendship->getStatus()) {
-                case FriendshipMapping::PENDING:
-                    if ($clickedButton === $form->get('remove')) {
-                        $friendship->setStatus(FriendshipMapping::REFUSED);
-                    } elseif ($clickedButton === $form->get('add')) {
-                        $friendship->setStatus(FriendshipMapping::ACCEPTED);
-                    }
-                    break;
-                case FriendshipMapping::ACCEPTED:
-                    if ($clickedButton === $form->get('remove')) {
-                        $friendship->setStatus(FriendshipMapping::REMOVED);
-                    }
-                    break;
+            if (FriendshipMapping::PENDING === $friendship->getStatus()) {
+                if ($clickedButton === $form->get('remove')) {
+                    $this->refuseFriendship($friendship);
+                } elseif ($clickedButton === $form->get('add')) {
+                    $this->acceptFriendship($friendship);
+                }
+            } elseif (FriendshipMapping::ACCEPTED === $friendship->getStatus()) {
+                if ($clickedButton === $form->get('remove')) {
+                    $this->removeFriendship($friendship);
+                }
             }
         }
-        if (null !== $friendship) {
-            $this->entityManager->persist($friendship);
-            $this->entityManager->flush();
-        }
+    }
+
+    private function addNewFriendship(User $user, User $currentUser): void
+    {
+        $friendship = new Friendship();
+        $friendship->setSender($currentUser);
+        $friendship->setReceiver($user);
+        $this->entityManager->persist($friendship);
+        $this->entityManager->flush();
+        $this->publishNewFriendshipUpdate($friendship);
+    }
+
+    private function refuseFriendship(Friendship $friendship): void
+    {
+        $friendship->setStatus(FriendshipMapping::REFUSED);
+        $this->entityManager->flush();
+        $this->publishRefusedFriendshipUpdate($friendship);
+    }
+
+    private function acceptFriendship(Friendship $friendship): void
+    {
+        $friendship->setStatus(FriendshipMapping::ACCEPTED);
+        $this->entityManager->flush();
+        $this->publishAcceptedFriendshipUpdate($friendship);
+    }
+
+    private function removeFriendship(Friendship $friendship): void
+    {
+        $friendship->setStatus(FriendshipMapping::REMOVED);
+        $this->entityManager->flush();
+        $this->publishRemovedFriendshipUpdate($friendship);
+    }
+
+    private function publishNewFriendshipUpdate(Friendship $friendship): void
+    {
+        /**
+         * @var User $user
+         */
+        $user = $friendship->getReceiver();
+        $this->hub->publish($this->buildUpdate($user, ['status' => 'newFriendship']));
+    }
+
+    private function publishRefusedFriendshipUpdate(Friendship $friendship): void
+    {
+        /**
+         * @var User $user
+         */
+        $user = $friendship->getSender();
+        $this->hub->publish($this->buildUpdate($user, ['status' => 'refusedFriendship']));
+    }
+
+    private function publishAcceptedFriendshipUpdate(Friendship $friendship): void
+    {
+        /**
+         * @var User $user
+         */
+        $user = $friendship->getSender();
+        $this->hub->publish($this->buildUpdate($user, ['status' => 'acceptedFriendship']));
+    }
+
+    private function publishRemovedFriendshipUpdate(Friendship $friendship): void
+    {
+        /**
+         * @var User $user
+         */
+        $user = $friendship->getSender() === $this->security->getUser() ? $friendship->getReceiver() : $friendship->getSender();
+        $this->hub->publish($this->buildUpdate($user, ['status' => 'removedFriendship']));
+    }
+
+    /**
+     * @param User  $user
+     * @param array<string,mixed> $data
+     *
+     * @return Update
+     */
+    private function buildUpdate(User $user, array $data): Update
+    {
+        return new Update(
+            $this->topicsResolver->getFriendshipTopic($user),
+            (string)json_encode($data),
+            true
+        );
     }
 }
