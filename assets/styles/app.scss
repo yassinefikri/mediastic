@@ -9,6 +9,12 @@ hr {
   opacity: 0.2;
 }
 
+.button-unstyled {
+  border: 0px transparent !important;
+  background-color: transparent;
+  color: inherit;
+}
+
 #body {
   margin-top: 56px;
 }

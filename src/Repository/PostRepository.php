@@ -9,7 +9,6 @@ use App\Entity\User;
 use App\Mapping\ConfidentialityMapping;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use LogicException;
 use Symfony\Component\Security\Core\Security;
 
 /**
@@ -20,6 +19,8 @@ use Symfony\Component\Security\Core\Security;
  */
 class PostRepository extends ServiceEntityRepository
 {
+    use RepositoryTrait;
+
     private const PAGE_SIZE = 10;
 
     private Security             $security;
@@ -80,12 +81,5 @@ class PostRepository extends ServiceEntityRepository
             ->setMaxResults(self::PAGE_SIZE)
             ->getQuery()
             ->getResult();
-    }
-
-    private function validatePageNumber(int $page): void
-    {
-        if ($page < 1) {
-            throw new LogicException('Page number should be positive');
-        }
     }
 }

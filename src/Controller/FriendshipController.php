@@ -62,4 +62,18 @@ class FriendshipController extends AbstractController
             'form' => $form->createView()
         ]));
     }
+
+    /**
+     * @Route("/friendships/{page}", name="friendships", options={"expose"=true}, requirements={"page"="^[1-9]\d*$"})
+     */
+    public function getUserFriendships(FriendshipRepository $friendshipRepository, int $page): JsonResponse
+    {
+        /**
+         * @var User $currentUser
+         */
+        $currentUser = $this->getUser();
+        $friendships = $friendshipRepository->getUserFriendships($currentUser, $page);
+
+        return $this->json($friendships, Response::HTTP_OK, [], ['groups' => 'friendship']);
+    }
 }

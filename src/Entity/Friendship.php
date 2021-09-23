@@ -6,6 +6,7 @@ use App\Mapping\FriendshipMapping;
 use App\Repository\FriendshipRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=FriendshipRepository::class)
@@ -22,17 +23,20 @@ class Friendship
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="sentFriendships")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups("friendship")
      */
     private ?User $sender;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="receivedFriendships")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups("friendship")
      */
     private ?User $receiver;
 
     /**
      * @ORM\Column(type="datetime_immutable")
+     * @Groups("friendship")
      */
     private DateTimeImmutable $sentAt;
 
@@ -48,13 +52,26 @@ class Friendship
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("friendship")
      */
     private string $status;
+
+    /**
+     * @ORM\Column(type="boolean")
+     * @Groups("friendship")
+     */
+    private bool $isSeen;
+
+    /**
+     * @ORM\Column(type="datetime_immutable", nullable=true)
+     */
+    private DateTimeImmutable $seenAt;
 
     public function __construct()
     {
         $this->sentAt = new DateTimeImmutable();
         $this->status = FriendshipMapping::PENDING;
+        $this->isSeen = false;
     }
 
     public function getId(): ?int
@@ -135,6 +152,38 @@ class Friendship
         }
         $this->editedAt = $dateTime;
         $this->status   = $status;
+
+        return $this;
+    }
+
+    public function getIsSeen(): ?bool
+    {
+        return $this->isSeen;
+    }
+
+    public function setIsSeen(bool $isSeen): self
+    {
+        $this->isSeen = $isSeen;
+
+        return $this;
+    }
+
+    public function setSeen(): self
+    {
+        $this->setIsSeen(true);
+        $this->setSeenAt(new DateTimeImmutable());
+
+        return $this;
+    }
+
+    public function getSeenAt(): ?DateTimeImmutable
+    {
+        return $this->seenAt;
+    }
+
+    public function setSeenAt(DateTimeImmutable $seenAt): self
+    {
+        $this->seenAt = $seenAt;
 
         return $this;
     }

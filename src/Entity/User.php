@@ -33,7 +33,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *      minMessage = "Your username must be at least {{ limit }} characters long",
      *      maxMessage = "Your username cannot be longer than {{ limit }} characters"
      * )
-     * @Groups("json")
+     * @Groups({"json","friendship"})
      */
     private string $username;
 
@@ -59,13 +59,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups("json")
+     * @Groups({"json","friendship"})
      */
     private string $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups("json")
+     * @Groups({"json","friendship"})
      */
     private string $lastName;
 
