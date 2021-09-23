@@ -19,6 +19,8 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
+    private const SEARCH_RESULT_MAX = 5;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
@@ -49,7 +51,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $rsm           = new ResultSetMappingBuilder($entityManager);
         $rsm->addRootEntityFromClassMetadata(User::class, 'u');
 
-        $sql   = 'SELECT * from `user` u where username REGEXP :query';
+        $sql   = 'SELECT * from `user` u where username REGEXP :query LIMIT '.self::SEARCH_RESULT_MAX;
         $query = $entityManager->createNativeQuery($sql, $rsm);
         $query->setParameter('query', $search, Types::STRING);
 
