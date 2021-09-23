@@ -40,7 +40,7 @@ export default {
 
           // Append the topic(s) to subscribe as query parameter
           const hub = new URL(hubUrl, window.origin);
-          response.data.forEach(function(topic){
+          response.data.forEach(function (topic) {
             hub.searchParams.append('topic', topic);
           })
 
@@ -48,13 +48,16 @@ export default {
           const eventSource = new EventSource(hub, {
             withCredentials: true
           });
-          eventSource.onmessage = event => console.log(event.data);
+          eventSource.onmessage = event => this.handleMercureMessage(event.data);
         });
   },
   methods: {
     goBack() {
       window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/')
     },
+    handleMercureMessage(data) {
+      console.log(data)
+    }
   },
   computed: {
     getUsername() {
