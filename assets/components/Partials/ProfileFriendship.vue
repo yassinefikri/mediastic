@@ -25,7 +25,7 @@ export default {
   methods: {
     refreshForm() {
       this.childKey++
-      this.$parent.fetchPosts();
+      this.$parent.fetchPosts()
     }
   }
 }

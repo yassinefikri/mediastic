@@ -22,7 +22,7 @@
         <new-post-form @new-post="initAndFetchPosts"/>
       </div>
       <div v-else>
-        <profile-friendship :username="userInfos['username']"/>
+        <profile-friendship :username="username" ref="profile-friendship-form"/>
       </div>
       <hr/>
     </div>
@@ -108,6 +108,9 @@ export default {
       if (false === array.includes(this.userInfos['username']) || false === array.includes(username)) {
         this.init()
         this.initAndFetchPosts()
+        if(undefined !== this.$refs['profile-friendship-form']) {
+          this.$refs['profile-friendship-form'].refreshForm()
+        }
       }
     }
   },
