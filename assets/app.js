@@ -3,11 +3,13 @@ import VueRouter from 'vue-router'
 import Vuex from 'vuex'
 
 import './styles/app.scss';
+
 require('bootstrap');
 
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import {BootstrapVue, IconsPlugin} from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 
@@ -25,6 +27,7 @@ Vue.use(Vuex)
 Vue.use(VueRouter)
 
 import Routing from '../vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js/router.min.js';
+
 const FOSroutes = require('../public/js/fos_js_routes.json')
 Routing.setRoutingData(FOSroutes)
 Vue.prototype.$Routing = Routing
@@ -33,22 +36,29 @@ const store = new Vuex.Store({
     state: {
         userInfos: {},
         alerts: [],
+        friendships: [],
     },
     mutations: {
         setUserInfos(state, userInfos) {
             state.userInfos = userInfos
         },
-        addAlert(state, alert) {
-            state.alerts.push(alert)
+        addAlerts(state, alerts) {
+            state.alerts = state.alerts.concat(alerts)
         },
-        setAlerts(state, alert) {
-            state.alerts = [alert]
+        setAlerts(state, alerts) {
+            state.alerts = alerts
         },
         deleteAlert(state, index) {
             state.alerts.splice(index, 1)
         },
         removeAlerts(state) {
             state.alerts = []
+        },
+        addFriendships(state, friendships) {
+            state.friendships = state.friendships.concat(friendships)
+        },
+        removeFriendship(state, index) {
+            state.friendships.splice(index, 1)
         }
     }
 })
