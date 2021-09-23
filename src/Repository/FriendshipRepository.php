@@ -97,8 +97,7 @@ class FriendshipRepository extends ServiceEntityRepository
         $this->validatePageNumber($page);
 
         return $this->createQueryBuilder('f')
-            ->where('f.sender = :user')
-            ->orWhere('f.receiver = :user')
+            ->where('f.sender = :user OR f.receiver = :user')
             ->andWhere('f.status IN (:statuses)')
             ->orderBy('f.sentAt', 'DESC')
             ->setParameter('user', $user)
