@@ -102,7 +102,7 @@ class FriendshipRepository extends ServiceEntityRepository
             ->andWhere('f.status IN (:statuses)')
             ->orderBy('f.sentAt', 'DESC')
             ->setParameter('user', $user)
-            ->setParameter('statuses', [FriendshipMapping::ACCEPTED, FriendshipMapping::PENDING])
+            ->setParameter('statuses', [FriendshipMapping::PENDING])
             ->setFirstResult(self::PAGE_SIZE * ($page - 1))
             ->setMaxResults(self::PAGE_SIZE)
             ->getQuery()
