@@ -31,7 +31,7 @@ class UserTopicsResolver
         return [
             $this->getChatTopic($user),
             $this->getNotificationsTopic($user),
-            $this->getNotificationsTopic($user)
+            $this->getFriendshipTopic($user)
         ];
     }
 
