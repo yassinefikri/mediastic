@@ -19,6 +19,10 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class FriendshipRepository extends ServiceEntityRepository
 {
+    use RepositoryTrait;
+
+    private const PAGE_SIZE = 10;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Friendship::class);
@@ -80,5 +84,27 @@ class FriendshipRepository extends ServiceEntityRepository
         $query->setParameter('status', FriendshipMapping::ACCEPTED, Types::STRING);
         $query->setParameter('id', $user->getId(), Types::INTEGER);
         return $query->getResult();
+    }
+
+    /**
+     * @param User $user
+     * @param int  $page
+     *
+     * @return Friendship[]
+     */
+    public function getUserFriendships(User $user, int $page): array
+    {
+        $this->validatePageNumber($page);
+
+        return $this->createQueryBuilder('f')
+            ->where('f.sender = :user OR f.receiver = :user')
+            ->andWhere('f.status IN (:statuses)')
+            ->orderBy('f.sentAt', 'DESC')
+            ->setParameter('user', $user)
+            ->setParameter('statuses', [FriendshipMapping::PENDING])
+            ->setFirstResult(self::PAGE_SIZE * ($page - 1))
+            ->setMaxResults(self::PAGE_SIZE)
+            ->getQuery()
+            ->getResult();
     }
 }

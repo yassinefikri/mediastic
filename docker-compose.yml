@@ -9,6 +9,9 @@ services:
             SERVER_NAME: ':80'
             MERCURE_PUBLISHER_JWT_KEY: '!ChangeMe!'
             MERCURE_SUBSCRIBER_JWT_KEY: '!ChangeMe!'
+            MERCURE_EXTRA_DIRECTIVES: |-
+              cors_origins "http://localhost:8082"
+              anonymous
         command: /usr/bin/caddy run -config /etc/caddy/Caddyfile.dev
         ports:
             - "8081:80"

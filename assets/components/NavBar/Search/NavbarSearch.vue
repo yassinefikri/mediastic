@@ -2,17 +2,12 @@
   <div>
     <div ref="form-container" id="navbar-search-form-container" class="mx-auto" v-html="form" @submit.prevent></div>
     <input type="text" form="navbar-search-form" id="navbar_search_query" name="navbar_search[query]"
-           class="form-control" placeholder="search" v-model:is="username">
-    <b-popover :show.sync="show" target="navbar_search_query" triggers="" placement="bottom">
+           class="form-control" placeholder="search" v-model:is="username" autocomplete="off">
+    <b-popover :show.sync="show" target="navbar_search_query" triggers="input focus" placement="bottom">
       <div id="search_results">
         <ul class="list-group">
           <li v-for="(user,index) in result" class="list-group-item">
-            <router-link
-                :to="{ name: 'user_profile', params: { username: user.username }}"
-                custom
-                v-slot="{ href, route, navigate, isExactActive }">
-              <navbar-search-link :brand="true" :href="href" @click="navigate" :label="route['meta']['label']" :user="user">{{ route.fullPath }}</navbar-search-link>
-            </router-link>
+            <navbar-search-link-container :user="user" :key="index"/>
           </li>
         </ul>
       </div>
@@ -22,11 +17,11 @@
 
 <script>
 import axios from "axios";
-import NavbarSearchLink from "./NavbarSearchLink";
+import NavbarSearchLinkContainer from "./NavbarSearchLinkContainer";
 
 export default {
   name: "navbar-search",
-  components: {NavbarSearchLink},
+  components: {NavbarSearchLinkContainer},
   data() {
     return {
       form: null,

@@ -6,6 +6,7 @@ use App\Mapping\FriendshipMapping;
 use App\Repository\FriendshipRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=FriendshipRepository::class)
@@ -16,23 +17,27 @@ class Friendship
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("friendship")
      */
     private ?int $id = null;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="sentFriendships")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups("friendship")
      */
     private ?User $sender;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="receivedFriendships")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups("friendship")
      */
     private ?User $receiver;
 
     /**
      * @ORM\Column(type="datetime_immutable")
+     * @Groups("friendship")
      */
     private DateTimeImmutable $sentAt;
 
@@ -48,6 +53,7 @@ class Friendship
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("friendship")
      */
     private string $status;
 

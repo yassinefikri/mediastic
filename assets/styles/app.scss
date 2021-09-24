@@ -1,4 +1,5 @@
-@import "~bootstrap/scss/bootstrap";
+@import '~bootstrap';
+//@import '~bootstrap-vue';
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css");
 
 hr {
@@ -7,6 +8,12 @@ hr {
   height: 3px !important;
   border-radius: 3px;
   opacity: 0.2;
+}
+
+.button-unstyled {
+  border: 0px transparent !important;
+  background-color: transparent;
+  color: inherit;
 }
 
 #body {
@@ -179,4 +186,12 @@ button.close:hover {
 
 .navbar-search-link {
   cursor: pointer;
+}
+
+.bi.bi-20::before {
+  font-size: 20px
+}
+
+.bi.bi-25::before {
+  font-size: 25px
 }

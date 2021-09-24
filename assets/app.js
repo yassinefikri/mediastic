@@ -3,11 +3,9 @@ import VueRouter from 'vue-router'
 import Vuex from 'vuex'
 
 import './styles/app.scss';
-require('bootstrap');
 
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
+import {BootstrapVue, IconsPlugin} from 'bootstrap-vue'
+
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 
@@ -25,6 +23,7 @@ Vue.use(Vuex)
 Vue.use(VueRouter)
 
 import Routing from '../vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js/router.min.js';
+
 const FOSroutes = require('../public/js/fos_js_routes.json')
 Routing.setRoutingData(FOSroutes)
 Vue.prototype.$Routing = Routing
@@ -32,23 +31,63 @@ Vue.prototype.$Routing = Routing
 const store = new Vuex.Store({
     state: {
         userInfos: {},
-        alerts: [],
+        alert: null,
+        friendships: {},
+        friends: {},
+        unreadMessagesCount: 0,
+        unreadNotificationsCount: 0
     },
     mutations: {
         setUserInfos(state, userInfos) {
             state.userInfos = userInfos
         },
-        addAlert(state, alert) {
-            state.alerts.push(alert)
+        setAlert(state, alert) {
+            state.alert = alert
         },
-        setAlerts(state, alert) {
-            state.alerts = [alert]
+        deleteAlert(state) {
+            state.alert = null
         },
-        deleteAlert(state, index) {
-            state.alerts.splice(index, 1)
+        addFriendships(state, friendships) {
+            this.commit('addToObject', {object: 'friendships', data: friendships, key: 'id'})
         },
-        removeAlerts(state) {
-            state.alerts = []
+        removeFriendship(state, friendship) {
+            this.commit('removeFromObject', {object: 'friendships', data: friendship, key: 'id'})
+        },
+        addFriend(state, friends) {
+            this.commit('addToObject', {object: 'friends', data: friends, key: 'username'})
+        },
+        removeFriend(state, friend) {
+            this.commit('removeFromObject', {object: 'friends', data: friend, key: 'username'})
+        },
+        addToObject(state, payload) {
+            let obj = {...state[payload.object]}
+            payload.data.forEach(function (item) {
+                Object.assign(obj, {[item[payload.key]]: item})
+            })
+            state[payload.object] = obj
+        },
+        removeFromObject(state, payload) {
+            let obj = {...state[payload.object]}
+            delete obj[payload.data[payload.key]]
+            state[payload.object] = obj
+        },
+        incrementUnreadMessagesCount(state) {
+            state.unreadMessagesCount++
+        },
+        setUnreadMessagesCount(state, value) {
+            state.unreadMessagesCount = value
+        },
+        resetUnreadMessagesCount(state) {
+            state.unreadMessagesCount = 0
+        },
+        incrementUnreadNotificationsCount(state) {
+            state.unreadNotificationsCount++
+        },
+        setUnreadNotificationsCount(state, value) {
+            state.unreadNotificationsCount = value
+        },
+        resetUnreadNotificationsCount(state) {
+            state.unreadNotificationsCount = 0
         }
     }
 })
@@ -116,8 +155,17 @@ const router = new VueRouter({
     routes
 })
 
-Vue.filter('moment-ago', function (date) {
+Vue.filter('momentAgo', function (date) {
     return moment(date).fromNow();
+})
+Vue.filter('arrayDifference', function (arr1, arr2) {
+    return [
+        ...arr1.filter(x => !arr2.includes(x)),
+        ...arr2.filter(x => !arr1.includes(x))
+    ];
+})
+Vue.filter('objectDifference', function (obj1, obj2) {
+    return this.arrayDifference(Object.keys(obj1), Object.keys(obj2))
 })
 
 Vue.config.productionTip = false

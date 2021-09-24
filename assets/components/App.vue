@@ -18,6 +18,20 @@ export default {
     return {
       alerts: [],
       loaded: false,
+      mercureActionsMapping: {
+        'friendship': {
+          'regex': /^\/(.+)\/friendship/,
+          'handler': this.handleMercureFriendship
+        },
+        'chat': {
+          'regex': /^\/(.+)\/chat/,
+          'handler': this.handleMercureChat
+        },
+        'notification': {
+          'regex': /^\/(.+)\/notification/,
+          'handler': this.handleMercureNotification
+        }
+      }
     }
   },
   beforeMount() {
@@ -31,11 +45,91 @@ export default {
           console.log(error)
         })
   },
+  mounted() {
+    axios
+        .get(this.$Routing.generate('user_friends'))
+        .then(response => {
+          this.$store.commit('addFriend', response.data)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    axios
+        .get(this.$Routing.generate('discover'))
+        .then(response => {
+          // Extract the hub URL from the Link header
+          const hubUrl = response.headers['link'].match(/<([^>]+)>;\s+rel=(?:mercure|"[^"]*mercure[^"]*")/)[1];
+
+          // Append the topic(s) to subscribe as query parameter
+          const hub = new URL(hubUrl, window.origin);
+          response.data.forEach(function (topic) {
+            hub.searchParams.append('topic', topic);
+          })
+
+          // Subscribe to updates
+          const eventSource = new EventSource(hub, {
+            withCredentials: true
+          });
+          eventSource.onmessage = event => this.handleMercureMessage(JSON.parse(event.data));
+        })
+        .catch(error => {
+          console.log(error)
+        })
+  },
   methods: {
     goBack() {
       window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/')
     },
-  }
+    handleMercureMessage(data) {
+      for (const property in this.mercureActionsMapping) {
+        if (true === this.mercureActionsMapping[property]['regex'].test(data.topic)) {
+          this.mercureActionsMapping[property]['handler'](data)
+        }
+      }
+    },
+    handleMercureFriendship(data) {
+      if ('newFriendship' === data.status) {
+        this.handleNewFriendship(data)
+      } else if ('refusedFriendship' === data.status) {
+        this.handleRefusedFriendship(data)
+      } else if ('acceptedFriendship' === data.status) {
+        this.handleAcceptedFriendship(data)
+      } else if ('removedFriendship' === data.status) {
+        this.handleRemovedFriendship(data)
+      }
+    },
+    handleMercureChat(data) {
+
+    },
+    handleMercureNotification(data) {
+
+    },
+    handleNewFriendship(data) {
+      let friendship = JSON.parse(data.friendship)
+      this.$store.commit('addFriendships', [friendship])
+    },
+    handleRefusedFriendship(data) {
+      let friendship = JSON.parse(data.friendship)
+      this.$store.commit('removeFriendship', friendship)
+    },
+    handleAcceptedFriendship(data) {
+      let friendship = JSON.parse(data.friendship)
+      this.$store.commit('removeFriendship', friendship)
+      let user = friendship.sender.username === this.getUsername ? friendship.receiver : friendship.sender
+      this.$store.commit('addFriend', [user])
+    },
+    handleRemovedFriendship(data) {
+      let friendship = JSON.parse(data.friendship)
+      this.$store.commit('removeFriendship', friendship)
+      let user = friendship.sender.username === this.getUsername ? friendship.receiver : friendship.sender
+      this.$store.commit('removeFriend', user)
+    }
+  },
+  computed: {
+    getUsername() {
+      return this.$store.state.userInfos['username'];
+    }
+  },
 }
 </script>
 

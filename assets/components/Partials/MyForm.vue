@@ -41,7 +41,9 @@ export default {
                 })
                 this.removeErrors(form)
                 this.$emit('form-posted', response.data);
-                this.$store.commit('setAlerts', {type: 'success', message: this.message})
+                if(undefined !== this.message){
+                  this.$store.commit('setAlert', {type: 'success', message: this.message})
+                }
                 if (true === this.clearFormAfterSubmit) {
                   this.clearInputs(form);
                 }

@@ -4,14 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Friendship;
 use App\Entity\User;
-use App\Form\AddFriendFormType;
-use App\Form\AnswerFriendFormType;
-use App\Form\RemoveFriendFormType;
-use App\Form\SendFriendshipType;
 use App\Manager\FriendshipManager;
-use App\Mapping\FriendshipMapping;
 use App\Repository\FriendshipRepository;
-use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,7 +30,7 @@ class FriendshipController extends AbstractController
          */
         $currentUser = $this->getUser();
         $friendship  = $friendshipRepository->getFriendship($user, $currentUser, true);
-        $form        = $friendshipManager->getForm($friendship, $user, $currentUser);
+        $form        = $friendshipManager->getForm($friendship);
 
         $form->handleRequest($request);
         if (true === $form->isSubmitted() && true === $form->isValid()) {
@@ -62,10 +56,37 @@ class FriendshipController extends AbstractController
          */
         $currentUser = $this->getUser();
         $friendship  = $friendshipRepository->getFriendship($user, $currentUser, true);
-        $form        = $friendshipManager->getForm($friendship, $user, $currentUser);
+        $form        = $friendshipManager->getForm($friendship);
 
         return new JsonResponse($this->renderView('form/friendship_form.html.twig', [
             'form' => $form->createView()
         ]));
+    }
+
+    /**
+     * @Route("/friendships/{page}", name="friendships", options={"expose"=true}, requirements={"page"="^[1-9]\d*$"})
+     */
+    public function getUserFriendships(FriendshipRepository $friendshipRepository, int $page): JsonResponse
+    {
+        /**
+         * @var User $currentUser
+         */
+        $currentUser = $this->getUser();
+        $friendships = $friendshipRepository->getUserFriendships($currentUser, $page);
+
+        return $this->json($friendships, Response::HTTP_OK, [], ['groups' => 'friendship']);
+    }
+
+    /**
+     * @Route("/friends", name="user_friends", options={"expose"=true})
+     */
+    public function getUserFriends(FriendshipRepository $friendshipRepository): JsonResponse
+    {
+        /**
+         * @var User $user
+         */
+        $user = $this->getUser();
+
+        return $this->json($friendshipRepository->getUserFriends($user), Response::HTTP_OK, [], ['groups' => 'json']);
     }
 }
