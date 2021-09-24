@@ -76,4 +76,17 @@ class FriendshipController extends AbstractController
 
         return $this->json($friendships, Response::HTTP_OK, [], ['groups' => 'friendship']);
     }
+
+    /**
+     * @Route("/friends", name="user_friends", options={"expose"=true})
+     */
+    public function getUserFriends(FriendshipRepository $friendshipRepository): JsonResponse
+    {
+        /**
+         * @var User $user
+         */
+        $user = $this->getUser();
+
+        return $this->json($friendshipRepository->getUserFriends($user), Response::HTTP_OK, [], ['groups' => 'json']);
+    }
 }

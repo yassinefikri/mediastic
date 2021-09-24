@@ -5,7 +5,6 @@
         :get-url="$Routing.generate('friendship_front', {'username': username})"
         :post-url="$Routing.generate('friendship', {'username': username})"
         @form-posted="refreshForm"
-        :message="'Friendship updated'"
     />
   </div>
 </template>
@@ -25,7 +24,7 @@ export default {
   methods: {
     refreshForm() {
       this.childKey++
-      this.$parent.fetchPosts()
+      window.scrollTo(0,0);
     }
   },
   computed: {
@@ -34,22 +33,14 @@ export default {
     }
   },
   watch: {
-    '$store.state.friendships': {
-      deep: true,
-      handler: function (val, oldVal) {
-        let arr1 = Object.keys(val)
-        let arr2 = Object.keys(oldVal)
-        let difference = [
-          ...arr1.filter(x => !arr2.includes(x)),
-          ...arr2.filter(x => !arr1.includes(x))
-        ];
-        let users = [this.username, this.getCurrentUserUsername]
-        difference = val[difference] ?? oldVal[difference]
-        if(undefined !== difference && true === users.includes(difference.sender.username) && true === users.includes(difference.receiver.username)) {
-          this.refreshForm()
-        }
+    '$store.state.friendships': function (val, oldVal) {
+      let difference = this.$options.filters.objectDifference(val, oldVal)
+      let users = [this.username, this.getCurrentUserUsername]
+      difference = val[difference] ?? oldVal[difference]
+      if(undefined !== difference && true === users.includes(difference.sender.username) && true === users.includes(difference.receiver.username)) {
+        this.refreshForm()
       }
-    }
+    },
   }
 
 }

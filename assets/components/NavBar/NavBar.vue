@@ -113,7 +113,6 @@ export default {
     },
     getFriendships() {
       return Object.values(this.$store.state.friendships)
-      //return this.$store.state.friendships;
     },
     getFriendshipsCount() {
       return this.getFriendships.filter(friendship => friendship.sender.username !== this.getUsername).length;
@@ -130,22 +129,6 @@ export default {
       this.$store.commit('deleteAlert')
       this.$root.$emit('bv::hide::popover')
     },
-    '$store.state.friendships': {
-      deep: true,
-      handler: function (val, oldVal) {
-        let arr1 = Object.keys(val)
-        let arr2 = Object.keys(oldVal)
-        let difference = [
-          ...arr1.filter(x => !arr2.includes(x)),
-          ...arr2.filter(x => !arr1.includes(x))
-        ];
-        let users = [this.username, this.getCurrentUserUsername]
-        difference = val[difference] ?? oldVal[difference]
-        if(undefined !== difference && true === users.includes(difference.sender.username) && true === users.includes(difference.receiver.username)) {
-          this.refreshForm()
-        }
-      }
-    }
   }
 }
 </script>

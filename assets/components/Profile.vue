@@ -115,6 +115,14 @@ export default {
         this.initAndFetchPosts()
         this.initFriendshipForm()
       }
+    },
+    '$store.state.friends': function (val, oldVal) {
+      let difference = this.$options.filters.objectDifference(val, oldVal)
+      difference = val[difference] ?? oldVal[difference]
+      if(undefined !== difference && this.username === difference.username) {
+        this.initAndFetchPosts()
+        this.initFriendshipForm()
+      }
     }
   },
 }

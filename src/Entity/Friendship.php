@@ -57,22 +57,10 @@ class Friendship
      */
     private string $status;
 
-    /**
-     * @ORM\Column(type="boolean")
-     * @Groups("friendship")
-     */
-    private bool $isSeen;
-
-    /**
-     * @ORM\Column(type="datetime_immutable", nullable=true)
-     */
-    private DateTimeImmutable $seenAt;
-
     public function __construct()
     {
         $this->sentAt = new DateTimeImmutable();
         $this->status = FriendshipMapping::PENDING;
-        $this->isSeen = false;
     }
 
     public function getId(): ?int
@@ -153,38 +141,6 @@ class Friendship
         }
         $this->editedAt = $dateTime;
         $this->status   = $status;
-
-        return $this;
-    }
-
-    public function getIsSeen(): ?bool
-    {
-        return $this->isSeen;
-    }
-
-    public function setIsSeen(bool $isSeen): self
-    {
-        $this->isSeen = $isSeen;
-
-        return $this;
-    }
-
-    public function setSeen(): self
-    {
-        $this->setIsSeen(true);
-        $this->setSeenAt(new DateTimeImmutable());
-
-        return $this;
-    }
-
-    public function getSeenAt(): ?DateTimeImmutable
-    {
-        return $this->seenAt;
-    }
-
-    public function setSeenAt(DateTimeImmutable $seenAt): self
-    {
-        $this->seenAt = $seenAt;
 
         return $this;
     }

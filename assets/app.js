@@ -48,16 +48,28 @@ const store = new Vuex.Store({
             state.alert = null
         },
         addFriendships(state, friendships) {
-            let obj = {...state.friendships}
-            friendships.forEach(function(friendship){
-                Object.assign(obj, {[friendship.id]: friendship})
-            })
-            state.friendships = obj
+            this.commit('addToObject', {object: 'friendships', data: friendships, key: 'id'})
         },
         removeFriendship(state, friendship) {
-            let obj = {...state.friendships}
-            delete obj[friendship.id]
-            state.friendships = obj
+            this.commit('removeFromObject', {object: 'friendships', data: friendship, key: 'id'})
+        },
+        addFriend(state, friends) {
+            this.commit('addToObject', {object: 'friends', data: friends, key: 'username'})
+        },
+        removeFriend(state, friend) {
+            this.commit('removeFromObject', {object: 'friends', data: friend, key: 'username'})
+        },
+        addToObject(state, payload) {
+            let obj = {...state[payload.object]}
+            payload.data.forEach(function (item) {
+                Object.assign(obj, {[item[payload.key]]: item})
+            })
+            state[payload.object] = obj
+        },
+        removeFromObject(state, payload) {
+            let obj = {...state[payload.object]}
+            delete obj[payload.data[payload.key]]
+            state[payload.object] = obj
         },
         incrementUnreadMessagesCount(state) {
             state.unreadMessagesCount++
@@ -145,6 +157,15 @@ const router = new VueRouter({
 
 Vue.filter('momentAgo', function (date) {
     return moment(date).fromNow();
+})
+Vue.filter('arrayDifference', function (arr1, arr2) {
+    return [
+        ...arr1.filter(x => !arr2.includes(x)),
+        ...arr2.filter(x => !arr1.includes(x))
+    ];
+})
+Vue.filter('objectDifference', function (obj1, obj2) {
+    return this.arrayDifference(Object.keys(obj1), Object.keys(obj2))
 })
 
 Vue.config.productionTip = false
