@@ -19,6 +19,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class FriendshipManager
 {
@@ -27,19 +28,22 @@ class FriendshipManager
     private UserTopicsResolver     $topicsResolver;
     private HubInterface           $hub;
     private Security               $security;
+    private SerializerInterface    $serializer;
 
     public function __construct(
         FormFactoryInterface   $formFactory,
         EntityManagerInterface $entityManager,
         HubInterface           $hub,
         UserTopicsResolver     $topicsResolver,
-        Security               $security
+        Security               $security,
+        SerializerInterface    $serializer
     ) {
         $this->formFactory    = $formFactory;
         $this->entityManager  = $entityManager;
         $this->hub            = $hub;
         $this->topicsResolver = $topicsResolver;
         $this->security       = $security;
+        $this->serializer     = $serializer;
     }
 
     /**
@@ -95,6 +99,10 @@ class FriendshipManager
         }
     }
 
+    /**
+     * @param User $user
+     * @param User $currentUser
+     */
     private function addNewFriendship(User $user, User $currentUser): void
     {
         $friendship = new Friendship();
@@ -105,6 +113,9 @@ class FriendshipManager
         $this->publishNewFriendshipUpdate($friendship);
     }
 
+    /**
+     * @param Friendship $friendship
+     */
     private function refuseFriendship(Friendship $friendship): void
     {
         $friendship->setStatus(FriendshipMapping::REFUSED);
@@ -112,6 +123,9 @@ class FriendshipManager
         $this->publishRefusedFriendshipUpdate($friendship);
     }
 
+    /**
+     * @param Friendship $friendship
+     */
     private function acceptFriendship(Friendship $friendship): void
     {
         $friendship->setStatus(FriendshipMapping::ACCEPTED);
@@ -119,6 +133,9 @@ class FriendshipManager
         $this->publishAcceptedFriendshipUpdate($friendship);
     }
 
+    /**
+     * @param Friendship $friendship
+     */
     private function removeFriendship(Friendship $friendship): void
     {
         $friendship->setStatus(FriendshipMapping::REMOVED);
@@ -126,40 +143,62 @@ class FriendshipManager
         $this->publishRemovedFriendshipUpdate($friendship);
     }
 
+    /**
+     * @param Friendship $friendship
+     */
     private function publishNewFriendshipUpdate(Friendship $friendship): void
     {
-        /**
-         * @var User $user
-         */
-        $user = $friendship->getReceiver();
-        $this->hub->publish($this->buildUpdate($user, ['status' => 'newFriendship']));
+        $this->publishUpdates($this->buildUpdates($friendship, ['status' => 'newFriendship']));
     }
 
+    /**
+     * @param Friendship $friendship
+     */
     private function publishRefusedFriendshipUpdate(Friendship $friendship): void
     {
-        /**
-         * @var User $user
-         */
-        $user = $friendship->getSender();
-        $this->hub->publish($this->buildUpdate($user, ['status' => 'refusedFriendship']));
+        $this->publishUpdates($this->buildUpdates($friendship, ['status' => 'refusedFriendship']));
     }
 
+    /**
+     * @param Friendship $friendship
+     */
     private function publishAcceptedFriendshipUpdate(Friendship $friendship): void
     {
-        /**
-         * @var User $user
-         */
-        $user = $friendship->getSender();
-        $this->hub->publish($this->buildUpdate($user, ['status' => 'acceptedFriendship']));
+        $this->publishUpdates($this->buildUpdates($friendship, ['status' => 'acceptedFriendship']));
     }
 
+    /**
+     * @param Friendship $friendship
+     */
     private function publishRemovedFriendshipUpdate(Friendship $friendship): void
     {
+        $this->publishUpdates($this->buildUpdates($friendship, ['status' => 'removedFriendship']));
+    }
+
+    /**
+     * @param Friendship          $friendship
+     * @param array<string,mixed> $data
+     *
+     * @return Update[]
+     */
+    private function buildUpdates(Friendship $friendship, array $data): array
+    {
+        $updates            = [];
+        $friendshipData     = $this->serializer->serialize($friendship, 'json', ['groups' => 'friendship']);
+        $data['friendship'] = $friendshipData;
+
         /**
-         * @var User $user
+         * @var User $sender
          */
-        $user = $friendship->getSender() === $this->security->getUser() ? $friendship->getReceiver() : $friendship->getSender();
-        $this->hub->publish($this->buildUpdate($user, ['status' => 'removedFriendship']));
+        $sender    = $friendship->getSender();
+        $updates[] = $this->buildSingleUpdate($sender, $data);
+        /**
+         * @var User $receiver
+         */
+        $receiver  = $friendship->getReceiver();
+        $updates[] = $this->buildSingleUpdate($receiver, $data);
+
+        return $updates;
     }
 
     /**
@@ -168,12 +207,21 @@ class FriendshipManager
      *
      * @return Update
      */
-    private function buildUpdate(User $user, array $data): Update
+    private function buildSingleUpdate(User $user, array $data): Update
     {
-        return new Update(
-            $this->topicsResolver->getFriendshipTopic($user),
-            (string)json_encode($data),
-            true
-        );
+        $topic         = $this->topicsResolver->getFriendshipTopic($user);
+        $data['topic'] = $topic;
+
+        return new Update($topic, (string)json_encode($data), true);
+    }
+
+    /**
+     * @param Update[] $buildUpdates
+     */
+    private function publishUpdates(array $buildUpdates): void
+    {
+        foreach ($buildUpdates as $update) {
+            $this->hub->publish($update);
+        }
     }
 }

@@ -100,6 +100,11 @@ export default {
       this.initPostList()
       this.$refs['child-list'].initList()
       this.fetchPosts()
+    },
+    initFriendshipForm() {
+      if (undefined !== this.$refs['profile-friendship-form']) {
+        this.$refs['profile-friendship-form'].refreshForm()
+      }
     }
   },
   watch: {
@@ -108,9 +113,7 @@ export default {
       if (false === array.includes(this.userInfos['username']) || false === array.includes(username)) {
         this.init()
         this.initAndFetchPosts()
-        if(undefined !== this.$refs['profile-friendship-form']) {
-          this.$refs['profile-friendship-form'].refreshForm()
-        }
+        this.initFriendshipForm()
       }
     }
   },

@@ -18,6 +18,20 @@ export default {
     return {
       alerts: [],
       loaded: false,
+      mercureActionsMapping: {
+        'friendship': {
+          'regex': /^\/(.+)\/friendship/,
+          'handler': this.handleMercureFriendship
+        },
+        'chat': {
+          'regex': /^\/(.+)\/chat/,
+          'handler': this.handleMercureChat
+        },
+        'notification': {
+          'regex': /^\/(.+)\/notification/,
+          'handler': this.handleMercureNotification
+        }
+      }
     }
   },
   beforeMount() {
@@ -48,7 +62,7 @@ export default {
           const eventSource = new EventSource(hub, {
             withCredentials: true
           });
-          eventSource.onmessage = event => this.handleMercureMessage(event.data);
+          eventSource.onmessage = event => this.handleMercureMessage(JSON.parse(event.data));
         });
   },
   methods: {
@@ -56,14 +70,53 @@ export default {
       window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/')
     },
     handleMercureMessage(data) {
-      console.log(data)
+      for (const property in this.mercureActionsMapping) {
+        if (true === this.mercureActionsMapping[property]['regex'].test(data.topic)) {
+          this.mercureActionsMapping[property]['handler'](data)
+        }
+      }
+    },
+    handleMercureFriendship(data) {
+      if ('newFriendship' === data.status) {
+        this.handleNewFriendship(data)
+      } else if ('refusedFriendship' === data.status) {
+        this.handleRefusedFriendship(data)
+      } else if ('acceptedFriendship' === data.status) {
+        this.handleAcceptedFriendship(data)
+      } else if ('removedFriendship' === data.status) {
+        this.handleRemovedFriendship(data)
+      }
+    },
+    handleMercureChat(data) {
+
+    },
+    handleMercureNotification(data) {
+
+    },
+    handleNewFriendship(data) {
+      let friendship = JSON.parse(data.friendship)
+      //this.$store.commit('addFriendships', [friendship])
+      this.$store.commit('addFriendships', [friendship])
+    },
+    handleRefusedFriendship(data) {
+      let friendship = JSON.parse(data.friendship)
+      //this.$store.commit('removeFriendship', friendship)
+      this.$store.commit('removeFriendship', friendship)
+    },
+    handleAcceptedFriendship(data) {
+      let friendship = JSON.parse(data.friendship)
+      this.$store.commit('removeFriendship', friendship)
+    },
+    handleRemovedFriendship(data) {
+      let friendship = JSON.parse(data.friendship)
+      this.$store.commit('removeFriendship', friendship)
     }
   },
   computed: {
     getUsername() {
       return this.$store.state.userInfos['username'];
     }
-  }
+  },
 }
 </script>
 

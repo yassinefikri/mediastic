@@ -16,7 +16,7 @@
         </div>
         <div class="d-flex flex-grow-1">
           <span class="text-muted ms-auto">
-            {{ post.createdAt | moment-ago }}
+            {{ post.createdAt | momentAgo }}
           </span>
         </div>
       </div>

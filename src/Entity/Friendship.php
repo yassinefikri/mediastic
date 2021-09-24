@@ -17,6 +17,7 @@ class Friendship
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("friendship")
      */
     private ?int $id = null;
 

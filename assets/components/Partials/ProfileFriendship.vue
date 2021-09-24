@@ -19,7 +19,7 @@ export default {
   components: {MyForm},
   data() {
     return {
-      childKey : 0,
+      childKey: 0,
     }
   },
   methods: {
@@ -27,7 +27,31 @@ export default {
       this.childKey++
       this.$parent.fetchPosts()
     }
+  },
+  computed: {
+    getCurrentUserUsername() {
+      return this.$store.state.userInfos['username']
+    }
+  },
+  watch: {
+    '$store.state.friendships': {
+      deep: true,
+      handler: function (val, oldVal) {
+        let arr1 = Object.keys(val)
+        let arr2 = Object.keys(oldVal)
+        let difference = [
+          ...arr1.filter(x => !arr2.includes(x)),
+          ...arr2.filter(x => !arr1.includes(x))
+        ];
+        let users = [this.username, this.getCurrentUserUsername]
+        difference = val[difference] ?? oldVal[difference]
+        if(undefined !== difference && true === users.includes(difference.sender.username) && true === users.includes(difference.receiver.username)) {
+          this.refreshForm()
+        }
+      }
+    }
   }
+
 }
 </script>
 

@@ -4,11 +4,7 @@ import Vuex from 'vuex'
 
 import './styles/app.scss';
 
-require('bootstrap');
-
 import {BootstrapVue, IconsPlugin} from 'bootstrap-vue'
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
@@ -35,30 +31,51 @@ Vue.prototype.$Routing = Routing
 const store = new Vuex.Store({
     state: {
         userInfos: {},
-        alerts: [],
-        friendships: [],
+        alert: null,
+        friendships: {},
+        friends: {},
+        unreadMessagesCount: 0,
+        unreadNotificationsCount: 0
     },
     mutations: {
         setUserInfos(state, userInfos) {
             state.userInfos = userInfos
         },
-        addAlerts(state, alerts) {
-            state.alerts = state.alerts.concat(alerts)
+        setAlert(state, alert) {
+            state.alert = alert
         },
-        setAlerts(state, alerts) {
-            state.alerts = alerts
-        },
-        deleteAlert(state, index) {
-            state.alerts.splice(index, 1)
-        },
-        removeAlerts(state) {
-            state.alerts = []
+        deleteAlert(state) {
+            state.alert = null
         },
         addFriendships(state, friendships) {
-            state.friendships = state.friendships.concat(friendships)
+            let obj = {...state.friendships}
+            friendships.forEach(function(friendship){
+                Object.assign(obj, {[friendship.id]: friendship})
+            })
+            state.friendships = obj
         },
-        removeFriendship(state, index) {
-            state.friendships.splice(index, 1)
+        removeFriendship(state, friendship) {
+            let obj = {...state.friendships}
+            delete obj[friendship.id]
+            state.friendships = obj
+        },
+        incrementUnreadMessagesCount(state) {
+            state.unreadMessagesCount++
+        },
+        setUnreadMessagesCount(state, value) {
+            state.unreadMessagesCount = value
+        },
+        resetUnreadMessagesCount(state) {
+            state.unreadMessagesCount = 0
+        },
+        incrementUnreadNotificationsCount(state) {
+            state.unreadNotificationsCount++
+        },
+        setUnreadNotificationsCount(state, value) {
+            state.unreadNotificationsCount = value
+        },
+        resetUnreadNotificationsCount(state) {
+            state.unreadNotificationsCount = 0
         }
     }
 })
@@ -126,7 +143,7 @@ const router = new VueRouter({
     routes
 })
 
-Vue.filter('moment-ago', function (date) {
+Vue.filter('momentAgo', function (date) {
     return moment(date).fromNow();
 })
 

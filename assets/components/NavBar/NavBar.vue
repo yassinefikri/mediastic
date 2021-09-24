@@ -22,17 +22,29 @@
                 <navbar-search/>
               </div>
               <div>
-                <button id="navbar-friendships-button" class="button-unstyled">
-                  <i class="bi bi-people-fill mx-2" style="font-size: 25px"></i>
+                <button id="navbar-friendships-button" class="button-unstyled position-relative mx-2">
+                  <i class="bi bi-people-fill bi-25 "></i>
+                  <span v-if="getFriendshipsCount> 0"
+                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{
+                      getFriendshipsCount
+                    }}</span>
                 </button>
-                <b-popover target="navbar-friendships-button" triggers="click blur" placement="bottom">
+                <b-popover target="navbar-friendships-button" triggers="click blur" placement="bottomright">
                   <navbar-friendship-list :list="getFriendships"/>
                 </b-popover>
-                <button class="button-unstyled">
-                  <i class="bi bi-chat-fill mx-2" style="font-size: 25px"></i>
+                <button class="button-unstyled position-relative mx-2">
+                  <i class="bi bi-chat-fill bi-25"></i>
+                  <span v-if="unreadMessagesCount > 0"
+                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{
+                      unreadMessagesCount
+                    }}</span>
                 </button>
-                <button class="button-unstyled">
-                  <i class="bi bi-bell-fill mx-2" style="font-size: 25px"></i>
+                <button class="button-unstyled position-relative mx-2">
+                  <i class="bi bi-bell-fill bi-25"></i>
+                  <span v-if="unreadNotificationsCount > 0"
+                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{
+                      unreadNotificationsCount
+                    }}</span>
                 </button>
               </div>
             </div>
@@ -53,11 +65,11 @@
         </div>
       </div>
     </nav>
-    <div v-for="(alert,index) in getAlerts" class="alert alert-dismissible fade show text-center rounded-0 mb-0"
-         :class="'alert-'+alert.type" role="alert">
-      {{ alert.message }}
+    <div v-if="getAlert" class="alert alert-dismissible fade show text-center rounded-0 mb-0"
+         :class="'alert-'+getAlert.type" role="alert">
+      {{ getAlert.message }}
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"
-              @click="$store.commit('deleteAlert', index)">
+              @click="$store.commit('deleteAlert')">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -74,14 +86,9 @@ import NavbarSearch from "./Search/NavbarSearch";
 export default {
   name: 'navbar',
   components: {NavLink, NavbarProfileLink, NavbarSearch, NavbarFriendshipList},
-  data() {
-    return {
-      friendshipsPage: 1,
-    }
-  },
   mounted() {
     axios
-        .get(this.$Routing.generate('friendships', {'page': this.friendshipsPage}))
+        .get(this.$Routing.generate('friendships', {'page': 1}))
         .then(response => {
           if (200 === response.status) {
             this.$store.commit('addFriendships', response.data)
@@ -98,16 +105,46 @@ export default {
     getUserFirstName() {
       return this.$store.state.userInfos['firstName'];
     },
-    getAlerts() {
-      return this.$store.state.alerts;
+    getUsername() {
+      return this.$store.state.userInfos['username'];
+    },
+    getAlert() {
+      return this.$store.state.alert;
     },
     getFriendships() {
-      return this.$store.state.friendships;
+      return Object.values(this.$store.state.friendships)
+      //return this.$store.state.friendships;
+    },
+    getFriendshipsCount() {
+      return this.getFriendships.filter(friendship => friendship.sender.username !== this.getUsername).length;
+    },
+    unreadMessagesCount() {
+      return this.$store.state.unreadMessagesCount;
+    },
+    unreadNotificationsCount() {
+      return this.$store.state.unreadNotificationsCount;
     }
   },
   watch: {
     '$route': function () {
-      this.$store.commit('removeAlerts')
+      this.$store.commit('deleteAlert')
+      this.$root.$emit('bv::hide::popover')
+    },
+    '$store.state.friendships': {
+      deep: true,
+      handler: function (val, oldVal) {
+        let arr1 = Object.keys(val)
+        let arr2 = Object.keys(oldVal)
+        let difference = [
+          ...arr1.filter(x => !arr2.includes(x)),
+          ...arr2.filter(x => !arr1.includes(x))
+        ];
+        let users = [this.username, this.getCurrentUserUsername]
+        difference = val[difference] ?? oldVal[difference]
+        if(undefined !== difference && true === users.includes(difference.sender.username) && true === users.includes(difference.receiver.username)) {
+          this.refreshForm()
+        }
+      }
     }
   }
 }
