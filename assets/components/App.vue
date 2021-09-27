@@ -110,7 +110,7 @@ export default {
       let friendship = JSON.parse(data.friendship)
       this.$store.commit('addFriendships', [friendship])
       if(friendship.receiver.username === this.getUsername) {
-        this.toast(friendship.sender,'Sent you a friend request', friendship.sentAt)
+        this.toast(friendship.sender,'Sent you a friend request', friendship.sentAt, 'primary')
       }
     },
     handleRefusedFriendship(data) {
@@ -123,7 +123,7 @@ export default {
       let user = friendship.sender.username === this.getUsername ? friendship.receiver : friendship.sender
       this.$store.commit('addFriend', [user])
       if(friendship.sender.username === this.getUsername) {
-        this.toast(friendship.sender,'Accepted you friend request', friendship.sentAt)
+        this.toast(friendship.receiver,'Accepted you friend request', friendship.sentAt, 'success')
       }
     },
     handleRemovedFriendship(data) {
