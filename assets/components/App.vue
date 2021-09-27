@@ -10,10 +10,12 @@ import axios, * as others from 'axios';
 import Navbar from './NavBar/NavBar';
 import Home from './Home'
 import Account from './Account'
+import MyToast from "./MyBootrsrap/MyToast";
+import Vue from 'vue';
 
 export default {
   name: "app",
-  components: {Navbar, Home, Account},
+  components: {Navbar, Home, Account, MyToast},
   data() {
     return {
       alerts: [],
@@ -107,6 +109,9 @@ export default {
     handleNewFriendship(data) {
       let friendship = JSON.parse(data.friendship)
       this.$store.commit('addFriendships', [friendship])
+      if(friendship.receiver.username === this.getUsername) {
+        this.toast(friendship.sender,'Sent you a friend request', friendship.sentAt)
+      }
     },
     handleRefusedFriendship(data) {
       let friendship = JSON.parse(data.friendship)
@@ -117,12 +122,26 @@ export default {
       this.$store.commit('removeFriendship', friendship)
       let user = friendship.sender.username === this.getUsername ? friendship.receiver : friendship.sender
       this.$store.commit('addFriend', [user])
+      if(friendship.sender.username === this.getUsername) {
+        this.toast(friendship.sender,'Accepted you friend request', friendship.sentAt)
+      }
     },
     handleRemovedFriendship(data) {
       let friendship = JSON.parse(data.friendship)
       this.$store.commit('removeFriendship', friendship)
       let user = friendship.sender.username === this.getUsername ? friendship.receiver : friendship.sender
       this.$store.commit('removeFriend', user)
+    },
+    toast(user, content, time, variant = 'light') {
+      const myToastClass = Vue.extend(MyToast)
+      const myToastInstance = new myToastClass({propsData: {
+          user,
+          content,
+          time,
+          variant
+        }});
+      myToastInstance.$mount()
+      this.$el.appendChild(myToastInstance.$el)
     }
   },
   computed: {

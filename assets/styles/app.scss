@@ -1,5 +1,3 @@
-@import '~bootstrap';
-//@import '~bootstrap-vue';
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css");
 
 hr {
@@ -11,7 +9,7 @@ hr {
 }
 
 .button-unstyled {
-  border: 0px transparent !important;
+  border: 0 transparent !important;
   background-color: transparent;
   color: inherit;
 }
@@ -194,4 +192,9 @@ button.close:hover {
 
 .bi.bi-25::before {
   font-size: 25px
+}
+
+.toast-avatar-container {
+  width: 30px;
+  height: 30px;
 }
