@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\MessageRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -15,29 +16,29 @@ class Message
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id = null;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="messages")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $sender;
+    private ?User $sender;
 
     /**
      * @ORM\Column(type="datetime_immutable")
      */
-    private $sentAt;
+    private DateTimeImmutable $sentAt;
 
     /**
      * @ORM\Column(type="text")
      */
-    private $content;
+    private string $content;
 
     /**
      * @ORM\ManyToOne(targetEntity=Conversation::class, inversedBy="messages")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $conversation;
+    private ?Conversation $conversation;
 
     public function getId(): ?int
     {
@@ -56,12 +57,12 @@ class Message
         return $this;
     }
 
-    public function getSentAt(): ?\DateTimeImmutable
+    public function getSentAt(): ?DateTimeImmutable
     {
         return $this->sentAt;
     }
 
-    public function setSentAt(\DateTimeImmutable $sentAt): self
+    public function setSentAt(DateTimeImmutable $sentAt): self
     {
         $this->sentAt = $sentAt;
 

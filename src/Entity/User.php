@@ -97,20 +97,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\ManyToMany(targetEntity=Conversation::class, mappedBy="participants")
      */
-    private $conversations;
+    private Collection $conversations;
 
     /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="sender", orphanRemoval=true)
      */
-    private $messages;
+    private Collection $messages;
 
     public function __construct()
     {
-        $this->posts = new ArrayCollection();
-        $this->sentFriendships = new ArrayCollection();
+        $this->posts               = new ArrayCollection();
+        $this->sentFriendships     = new ArrayCollection();
         $this->receivedFriendships = new ArrayCollection();
-        $this->conversations = new ArrayCollection();
-        $this->messages = new ArrayCollection();
+        $this->conversations       = new ArrayCollection();
+        $this->messages            = new ArrayCollection();
     }
 
     public function getId(): ?int

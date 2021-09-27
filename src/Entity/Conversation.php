@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ConversationRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,27 +18,27 @@ class Conversation
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id = null;
 
     /**
      * @ORM\ManyToMany(targetEntity=User::class, inversedBy="conversations")
      */
-    private $participants;
+    private Collection $participants;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
-    private $updatedAt;
+    private ?DateTimeImmutable $updatedAt;
 
     /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="conversation", orphanRemoval=true)
      */
-    private $messages;
+    private Collection $messages;
 
     public function __construct()
     {
         $this->participants = new ArrayCollection();
-        $this->messages = new ArrayCollection();
+        $this->messages     = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -69,12 +70,12 @@ class Conversation
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?DateTimeImmutable
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
+    public function setUpdatedAt(?DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
