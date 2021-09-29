@@ -4,7 +4,7 @@
     <input type="text" form="navbar-search-form" id="navbar_search_query" name="navbar_search[query]"
            class="form-control" placeholder="search" v-model:is="username" autocomplete="off">
     <b-popover :show.sync="show" target="navbar_search_query" triggers="input focus" placement="bottom">
-      <div id="search_results">
+      <div class="search_results">
         <ul class="list-group">
           <li v-for="(user,index) in result" class="list-group-item">
             <navbar-search-link-container :user="user" :key="index"/>
@@ -41,13 +41,13 @@ export default {
         })
   },
   watch: {
-    username: function (val, oldVal) {
+    username: function (val) {
       this.result = []
       if (val.length > 0) {
-        this.fetchResults(val)
+        this.fetchResults()
       }
     },
-    result: function (val, oldVal) {
+    result: function (val) {
       this.show = val.length > 0
     },
     '$route': function () {
@@ -55,7 +55,7 @@ export default {
     }
   },
   methods: {
-    fetchResults(query) {
+    fetchResults() {
       let form = this.$refs['form-container'].querySelector('form');
       let formData = new FormData(form);
       axios
@@ -66,6 +66,7 @@ export default {
             }
           })
           .catch(error => {
+            console.log(error)
           })
     }
   }

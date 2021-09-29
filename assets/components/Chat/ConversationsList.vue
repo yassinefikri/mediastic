@@ -1,5 +1,7 @@
 <template>
   <div class="conversation-container h-100">
+    <new-conversation-form/>
+    <hr/>
     <ul class="list-group overflow-auto">
       <router-link
           v-for="(item,index) in getList" :key="index"
@@ -16,10 +18,11 @@
 
 <script>
 import ConversationLink from "./ConversationLink";
+import NewConversationForm from "./NewConversationForm";
 
 export default {
   name: "conversations-list",
-  components: {ConversationLink},
+  components: {ConversationLink, NewConversationForm},
   computed: {
     getUnreadConversation() {
       return this.$store.state.unreadConversation
