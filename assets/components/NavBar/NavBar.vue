@@ -11,9 +11,13 @@
             }}
           </nav-link>
         </router-link>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        <button class="navbar-toggler position-relative" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
+          <span v-if="getNavbarButtonCount > 0"
+                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{
+              getNavbarButtonCount
+            }}</span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0 w-100">
@@ -36,7 +40,9 @@
                     :to="{name: 'chat'}"
                     custom
                     v-slot="{ href, route, navigate, isActive, isExactActive }">
-                  <nav-icon-link :active="isActive" :href="href" @click="navigate" icon="bi-chat-fill" :count="unreadConversation">{{ route.fullPath }}</nav-icon-link>
+                  <nav-icon-link :active="isActive" :href="href" @click="navigate" icon="bi-chat-fill"
+                                 :count="unreadConversation">{{ route.fullPath }}
+                  </nav-icon-link>
                 </router-link>
                 <button class="button-unstyled position-relative mx-2">
                   <i class="bi bi-bell-fill bi-25"></i>
@@ -135,13 +141,16 @@ export default {
     },
     unreadNotificationsCount() {
       return this.$store.state.unreadNotificationsCount;
+    },
+    getNavbarButtonCount() {
+      return this.unreadConversation + this.getFriendshipsCount + this.unreadNotificationsCount
     }
   },
   watch: {
     '$route': function (val, oldVal) {
       this.$store.commit('deleteAlert')
       this.$root.$emit('bv::hide::popover')
-      if('chat_user' === val.name && 'chat_user' !== oldVal.name) {
+      if ('chat_user' === val.name && 'chat_user' !== oldVal.name) {
         this.$store.commit('resetUnreadConversation', val.params.conversationId)
       }
     },
