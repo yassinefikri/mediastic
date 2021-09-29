@@ -15,15 +15,21 @@ export default {
   components: {ConversationsList, MessageList},
   props: ['conversationId'],
   mounted() {
-    axios
-        .get(this.$Routing.generate('get_conversations'))
-        .then(response => {
-          this.$store.commit('addConversation', response.data)
-        })
-        .catch(error => {
-          console.log(error)
-        })
+    if (0 === this.getList.length)
+      axios
+          .get(this.$Routing.generate('get_conversations'))
+          .then(response => {
+            this.$store.commit('addConversation', response.data)
+          })
+          .catch(error => {
+            console.log(error)
+          })
   },
+  computed: {
+    getList() {
+      return this.$store.state.conversations
+    }
+  }
 }
 </script>
 

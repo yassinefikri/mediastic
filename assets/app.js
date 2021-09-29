@@ -80,10 +80,12 @@ const store = new Vuex.Store({
         removeConversation(state, specificConversation) {
             state.conversations = state.conversations.filter((conversation) => conversation.id !== specificConversation.id)
         },
-        moveConversationToStart(state, conversationId) {
-            let index = state.conversations.findIndex((conversation) => conversation.id === conversationId)
+        moveConversationToStart(state, otherConversation) {
+            let index = state.conversations.findIndex((conversation) => conversation.id === otherConversation.id)
             let arr = [...state.conversations]
-            arr.unshift(arr.splice(index, 1)[0])
+            let fullConversation = arr.splice(index, 1)[0];
+            fullConversation.updatedAt = otherConversation.updatedAt
+            arr.unshift(fullConversation)
             state.conversations = arr
         },
         resetMessages() {

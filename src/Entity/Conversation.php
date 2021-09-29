@@ -30,6 +30,7 @@ class Conversation
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
+     * @Groups({"json", "message"})
      */
     private ?DateTimeImmutable $updatedAt;
 

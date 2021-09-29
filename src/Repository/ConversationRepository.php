@@ -33,6 +33,7 @@ class ConversationRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('c')
             ->innerJoin('c.participants', 'u')
             ->where('u = :user')
+            ->andWhere('c.updatedAt is NOT NULL')
             ->setParameter('user', $user)
             ->orderBy('c.updatedAt', 'DESC')
             ->getQuery()
