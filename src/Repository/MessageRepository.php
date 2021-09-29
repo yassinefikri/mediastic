@@ -2,9 +2,13 @@
 
 namespace App\Repository;
 
+use App\Entity\Conversation;
 use App\Entity\Message;
+use App\Entity\User;
+use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\DBAL\Types\Types;
 
 /**
  * @method Message|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,37 +18,40 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class MessageRepository extends ServiceEntityRepository
 {
+    use RepositoryTrait;
+
+    private const PAGE_SIZE = 15;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Message::class);
     }
 
-    // /**
-    //  * @return Message[] Returns an array of Message objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @param Conversation $conversation
+     * @param int          $page
+     *
+     * @return Message[]
+     */
+    public function getMessages(Conversation $conversation, int $page): array
     {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('m.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $this->validatePageNumber($page);
 
-    /*
-    public function findOneBySomeField($value): ?Message
-    {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $this->findBy(['conversation' => $conversation], ['sentAt' => 'DESC'], self::PAGE_SIZE, self::PAGE_SIZE * ($page - 1));
     }
-    */
+
+    public function setMessagesSeen(Conversation $conversation, User $user): void
+    {
+        $this->getEntityManager()->createQueryBuilder()
+            ->update(Message::class, 'm')
+            ->set('m.seenAt', ':datetime')
+            ->where('m.conversation = :conversation')
+            ->andWhere('m.seenAt is NULL')
+            ->andWhere('m.sender != :user')
+            ->setParameter('datetime', new DateTimeImmutable(), Types::DATETIME_IMMUTABLE)
+            ->setParameter('conversation', $conversation)
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->execute();
+    }
 }

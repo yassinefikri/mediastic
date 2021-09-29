@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from "axios"
 
 export default {
   name: "my-form",
@@ -25,9 +25,9 @@ export default {
   },
   methods: {
     formHandler(event) {
-      let form = this.$refs['form-container'].querySelector('form');
+      let form = this.$refs['form-container'].querySelector('form')
       if (null !== form) {
-        let formData = new FormData(form);
+        let formData = new FormData(form)
         if (undefined !== event.submitter) {
           formData.append(event.submitter.name, '')
         }
@@ -37,15 +37,15 @@ export default {
             .then(response => {
               if (200 === response.status) {
                 form.querySelectorAll("input[type=password], input[type=file]").forEach(function (input) {
-                  input.value = '';
+                  input.value = ''
                 })
                 this.removeErrors(form)
-                this.$emit('form-posted', response.data);
-                if(undefined !== this.message){
+                this.$emit('form-posted', response.data)
+                if (undefined !== this.message) {
                   this.$store.commit('setAlert', {type: 'success', message: this.message})
                 }
                 if (true === this.clearFormAfterSubmit) {
-                  this.clearInputs(form);
+                  this.clearInputs(form)
                 }
               }
             })
@@ -61,7 +61,7 @@ export default {
     },
     clearInputs(form) {
       form.querySelectorAll("input:not([type='hidden']),textarea").forEach(function (input) {
-        input.value = '';
+        input.value = ''
       })
     },
     fillErrors(form, errors, isRoot = true) {
@@ -96,6 +96,10 @@ export default {
           input.removeAttribute('disabled')
         }
       })
+    },
+    clearForm() {
+      let form = this.$refs['form-container'].querySelector('form')
+      this.clearInputs(form)
     }
   },
 }

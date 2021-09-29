@@ -1,8 +1,8 @@
-@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css");
+@import '~bootstrap-icons/font/bootstrap-icons.css';
 
 hr {
   margin: 1rem auto;
-  max-width: 200px;
+  width: 200px;
   height: 3px !important;
   border-radius: 3px;
   opacity: 0.2;
@@ -155,7 +155,7 @@ button.close:hover {
   padding: 0;
 }
 
-.post-owner a, .profile-sett a {
+.post-owner a, .profile-sett a, a.navlink-icon, #search_results a, .conversation-container a {
   color: inherit;
   text-decoration: none;
 }
@@ -177,11 +177,6 @@ button.close:hover {
   min-width: 250px;
 }
 
-#search_results a {
-  text-decoration: none;
-  color: inherit;
-}
-
 .navbar-search-link {
   cursor: pointer;
 }
@@ -197,4 +192,16 @@ button.close:hover {
 .toast-avatar-container {
   width: 30px;
   height: 30px;
+}
+
+.conversation-container {
+  width: min(400px,40%);
+}
+
+.chat-container {
+  height: calc(100vh - 72px);
+}
+
+.message {
+  max-width: 70%;
 }

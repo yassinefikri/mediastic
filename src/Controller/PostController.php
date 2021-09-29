@@ -49,7 +49,7 @@ class PostController extends AbstractController
             $entityManager->persist($post);
             $entityManager->flush();
 
-            return new JsonResponse(null, Response::HTTP_OK);
+            return new JsonResponse();
         }
 
         return new JsonResponse($this->formGetErrors($form), Response::HTTP_BAD_REQUEST);

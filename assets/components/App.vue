@@ -101,16 +101,18 @@ export default {
       }
     },
     handleMercureChat(data) {
-
+      if ('newMessage' === data.status) {
+        this.handleNewMessage(data)
+      }
     },
     handleMercureNotification(data) {
-
+      //console.log(data)
     },
     handleNewFriendship(data) {
       let friendship = JSON.parse(data.friendship)
       this.$store.commit('addFriendships', [friendship])
-      if(friendship.receiver.username === this.getUsername) {
-        this.toast(friendship.sender,'Sent you a friend request', friendship.sentAt, 'primary')
+      if (friendship.receiver.username === this.getUsername) {
+        this.toast(friendship.sender, 'Sent you a friend request', friendship.sentAt, 'primary')
       }
     },
     handleRefusedFriendship(data) {
@@ -122,8 +124,8 @@ export default {
       this.$store.commit('removeFriendship', friendship)
       let user = friendship.sender.username === this.getUsername ? friendship.receiver : friendship.sender
       this.$store.commit('addFriend', [user])
-      if(friendship.sender.username === this.getUsername) {
-        this.toast(friendship.receiver,'Accepted you friend request', friendship.sentAt, 'success')
+      if (friendship.sender.username === this.getUsername) {
+        this.toast(friendship.receiver, 'Accepted you friend request', friendship.sentAt, 'success')
       }
     },
     handleRemovedFriendship(data) {
@@ -132,14 +134,28 @@ export default {
       let user = friendship.sender.username === this.getUsername ? friendship.receiver : friendship.sender
       this.$store.commit('removeFriend', user)
     },
+    handleNewMessage(data) {
+      let message = JSON.parse(data.message)
+      if(message.sender.username === this.getUsername) {
+        this.$store.commit('addMessage', [message])
+      } else {
+        if ('chat_user' !== this.getCurrentRoute.name || parseInt(this.getCurrentRoute.params.conversationId) !== message.conversation.id) {
+          this.$store.commit('addUnreadConversation', message.conversation)
+        } else {
+          this.$store.commit('addMessage', [message])
+        }
+      }
+    },
     toast(user, content, time, variant = 'light') {
       const myToastClass = Vue.extend(MyToast)
-      const myToastInstance = new myToastClass({propsData: {
+      const myToastInstance = new myToastClass({
+        propsData: {
           user,
           content,
           time,
           variant
-        }});
+        }
+      });
       myToastInstance.$mount()
       this.$el.appendChild(myToastInstance.$el)
     }
@@ -147,6 +163,9 @@ export default {
   computed: {
     getUsername() {
       return this.$store.state.userInfos['username'];
+    },
+    getCurrentRoute() {
+      return this.$route;
     }
   },
 }

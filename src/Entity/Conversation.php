@@ -7,6 +7,7 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ConversationRepository::class)
@@ -17,11 +18,13 @@ class Conversation
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"json", "message"})
      */
     private ?int $id = null;
 
     /**
      * @ORM\ManyToMany(targetEntity=User::class, inversedBy="conversations")
+     * @Groups("json")
      */
     private Collection $participants;
 

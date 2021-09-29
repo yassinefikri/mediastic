@@ -36,7 +36,7 @@ class FriendshipController extends AbstractController
         if (true === $form->isSubmitted() && true === $form->isValid()) {
             $friendshipManager->handleForm($form, $friendship, $user, $currentUser);
 
-            return new JsonResponse(null, Response::HTTP_OK);
+            return new JsonResponse();
         }
 
         return new JsonResponse($this->formGetErrors($form), Response::HTTP_BAD_REQUEST);

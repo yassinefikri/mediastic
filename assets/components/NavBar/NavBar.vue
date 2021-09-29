@@ -32,13 +32,12 @@
                 <b-popover target="navbar-friendships-button" triggers="click blur" placement="bottomright">
                   <navbar-friendship-list :list="getFriendships"/>
                 </b-popover>
-                <button class="button-unstyled position-relative mx-2">
-                  <i class="bi bi-chat-fill bi-25"></i>
-                  <span v-if="unreadMessagesCount > 0"
-                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{
-                      unreadMessagesCount
-                    }}</span>
-                </button>
+                <router-link
+                    :to="{name: 'chat'}"
+                    custom
+                    v-slot="{ href, route, navigate, isActive, isExactActive }">
+                  <nav-icon-link :active="isActive" :href="href" @click="navigate" icon="bi-chat-fill" :count="unreadConversation">{{ route.fullPath }}</nav-icon-link>
+                </router-link>
                 <button class="button-unstyled position-relative mx-2">
                   <i class="bi bi-bell-fill bi-25"></i>
                   <span v-if="unreadNotificationsCount > 0"
@@ -82,16 +81,27 @@ import NavbarProfileLink from './NavbarProfileLink';
 import NavbarFriendshipList from "./Friendship/NavbarFriendshipList";
 import axios from "axios";
 import NavbarSearch from "./Search/NavbarSearch";
+import NavIconLink from "./NavIconLink";
 
 export default {
   name: 'navbar',
-  components: {NavLink, NavbarProfileLink, NavbarSearch, NavbarFriendshipList},
+  components: {NavLink, NavbarProfileLink, NavbarSearch, NavbarFriendshipList, NavIconLink},
   mounted() {
     axios
         .get(this.$Routing.generate('friendships', {'page': 1}))
         .then(response => {
           if (200 === response.status) {
             this.$store.commit('addFriendships', response.data)
+          }
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    axios
+        .get(this.$Routing.generate('get_unread_conversations'))
+        .then(response => {
+          if (200 === response.status) {
+            this.$store.commit('setUnreadConversation', response.data)
           }
         })
         .catch(error => {
@@ -117,17 +127,20 @@ export default {
     getFriendshipsCount() {
       return this.getFriendships.filter(friendship => friendship.sender.username !== this.getUsername).length;
     },
-    unreadMessagesCount() {
-      return this.$store.state.unreadMessagesCount;
+    unreadConversation() {
+      return Object.entries(this.$store.state.unreadConversation).length
     },
     unreadNotificationsCount() {
       return this.$store.state.unreadNotificationsCount;
     }
   },
   watch: {
-    '$route': function () {
+    '$route': function (val, oldVal) {
       this.$store.commit('deleteAlert')
       this.$root.$emit('bv::hide::popover')
+      if('chat_user' === val.name && 'chat_user' !== oldVal.name) {
+        this.$store.commit('resetUnreadConversation', val.params.conversationId)
+      }
     },
   }
 }

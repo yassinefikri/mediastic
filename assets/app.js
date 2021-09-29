@@ -3,9 +3,9 @@ import VueRouter from 'vue-router'
 import Vuex from 'vuex'
 
 import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap';
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import './styles/app.scss'
+import 'bootstrap';
 
 import BootstrapVue from 'bootstrap-vue'
 Vue.use(BootstrapVue)
@@ -19,6 +19,7 @@ import Account from './components/Account'
 import AccountGeneral from './components/Account/AccountGeneral'
 import AccountAvatar from './components/Account/AccountAvatar'
 import AccountPassword from './components/Account/AccountPassword'
+import Chat from './components/Chat'
 
 Vue.use(Vuex)
 Vue.use(VueRouter)
@@ -35,7 +36,8 @@ const store = new Vuex.Store({
         alert: null,
         friendships: {},
         friends: {},
-        unreadMessagesCount: 0,
+        messages: {},
+        unreadConversation: {},
         unreadNotificationsCount: 0
     },
     mutations: {
@@ -60,6 +62,15 @@ const store = new Vuex.Store({
         removeFriend(state, friend) {
             this.commit('removeFromObject', {object: 'friends', data: friend, key: 'username'})
         },
+        addMessage(state, messages) {
+            this.commit('addToObject', {object: 'messages', data: messages, key: 'id'})
+        },
+        removeMessage(state, messages) {
+            this.commit('removeFromObject', {object: 'messages', data: messages, key: 'id'})
+        },
+        resetMessages() {
+            this.commit('resetObject', {name: 'messages'})
+        },
         addToObject(state, payload) {
             let obj = {...state[payload.object]}
             payload.data.forEach(function (item) {
@@ -72,14 +83,32 @@ const store = new Vuex.Store({
             delete obj[payload.data[payload.key]]
             state[payload.object] = obj
         },
-        incrementUnreadMessagesCount(state) {
-            state.unreadMessagesCount++
+        resetObject(state, payload) {
+            state[payload.name] = {}
         },
-        setUnreadMessagesCount(state, value) {
-            state.unreadMessagesCount = value
+        addUnreadConversation(state, conversation) {
+            let obj = {...state.unreadConversation}
+            if (undefined === obj[conversation.id]) {
+                obj[conversation.id] = 1
+            } else {
+                obj[conversation.id]++
+            }
+            state.unreadConversation = obj
         },
-        resetUnreadMessagesCount(state) {
-            state.unreadMessagesCount = 0
+        setUnreadConversation(state, value) {
+            let obj = {...state.unreadConversation}
+            value.forEach(function(conversation){
+                obj[conversation.id] = conversation.count
+            })
+            state.unreadConversation = obj
+        },
+        resetUnreadConversation(state, conversationId) {
+            let obj = {...state.unreadConversation}
+            delete obj[conversationId]
+            state.unreadConversation = obj
+        },
+        resetUnreadConversations(state) {
+            state.unreadConversation = {}
         },
         incrementUnreadNotificationsCount(state) {
             state.unreadNotificationsCount++
@@ -89,7 +118,7 @@ const store = new Vuex.Store({
         },
         resetUnreadNotificationsCount(state) {
             state.unreadNotificationsCount = 0
-        }
+        },
     }
 })
 
@@ -151,6 +180,19 @@ const routes = [
         props: true,
         meta: {'label': 'Profile'}
     },
+    {
+        name: 'chat',
+        path: '/chat',
+        component: Chat,
+        meta: {'label': 'Chat'},
+    },
+    {
+        name: 'chat_user',
+        path: '/chat/:conversationId',
+        component: Chat,
+        props: true,
+        meta: {'label': 'Chat'},
+    }
 ]
 const router = new VueRouter({
     routes
