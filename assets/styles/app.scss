@@ -195,7 +195,7 @@ button.close:hover {
 }
 
 .conversation-container {
-  width: min(400px,40%);
+  width: min(400px, 40%);
 }
 
 .chat-container {
@@ -204,4 +204,41 @@ button.close:hover {
 
 .message {
   max-width: 70%;
+}
+
+#navbar-second-half {
+  display: flex !important;
+}
+
+@media (max-width: 991px) {
+  #navbar-first-half {
+    display: block !important;
+  }
+
+  #navbar-second-half {
+    justify-content: space-between !important;
+  }
+
+  #navbar-search-container {
+    width: 100% !important;
+    margin: 15px auto !important;
+  }
+
+  #avatar-navlink {
+    margin-left: 1.2rem !important;
+  }
+
+  #navbar-logout {
+    margin-right: 1.2rem !important;
+  }
+
+  #navbar-icons-container {
+    text-align: center;
+  }
+}
+
+@media (min-width: 991px) {
+  #navbarSupportedContent hr {
+    display: none !important;
+  }
 }

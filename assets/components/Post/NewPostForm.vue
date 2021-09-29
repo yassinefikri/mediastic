@@ -1,5 +1,5 @@
 <template>
-  <div ref="this-form">
+  <div ref="this-form" class="container">
     <my-form
         :getUrl="$Routing.generate('post_add_front')"
         :postUrl="$Routing.generate('post_add')"
