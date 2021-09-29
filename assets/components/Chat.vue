@@ -1,6 +1,6 @@
 <template>
   <div class="chat-container d-flex p-4">
-    <conversations-list :list="list" class="mx-2"/>
+    <conversations-list class="mx-2"/>
     <message-list v-if="conversationId" :conversationId="conversationId" class="mx-2"/>
   </div>
 </template>
@@ -14,16 +14,11 @@ export default {
   name: "chat",
   components: {ConversationsList, MessageList},
   props: ['conversationId'],
-  data() {
-    return {
-      list: {},
-    }
-  },
   mounted() {
     axios
         .get(this.$Routing.generate('get_conversations'))
         .then(response => {
-          this.list = response.data
+          this.$store.commit('addConversation', response.data)
         })
         .catch(error => {
           console.log(error)

@@ -141,6 +141,7 @@ export default {
       } else {
         if ('chat_user' !== this.getCurrentRoute.name || parseInt(this.getCurrentRoute.params.conversationId) !== message.conversation.id) {
           this.$store.commit('addUnreadConversation', message.conversation)
+          this.$store.commit('moveConversationToStart', message.conversation.id)
         } else {
           this.$store.commit('addMessage', [message])
         }

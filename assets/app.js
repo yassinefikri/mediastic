@@ -37,6 +37,7 @@ const store = new Vuex.Store({
         friendships: {},
         friends: {},
         messages: {},
+        conversations: [],
         unreadConversation: {},
         unreadNotificationsCount: 0
     },
@@ -64,9 +65,26 @@ const store = new Vuex.Store({
         },
         addMessage(state, messages) {
             this.commit('addToObject', {object: 'messages', data: messages, key: 'id'})
+            if (1 === messages.length) {
+                this.commit('moveConversationToStart', messages[0].conversation.id)
+            }
         },
         removeMessage(state, messages) {
             this.commit('removeFromObject', {object: 'messages', data: messages, key: 'id'})
+        },
+        addConversation(state, conversations) {
+            let arr = [...state.conversations]
+            arr = arr.concat(conversations)
+            state.conversations = arr
+        },
+        removeConversation(state, specificConversation) {
+            state.conversations = state.conversations.filter((conversation) => conversation.id !== specificConversation.id)
+        },
+        moveConversationToStart(state, conversationId) {
+            let index = state.conversations.findIndex((conversation) => conversation.id === conversationId)
+            let arr = [...state.conversations]
+            arr.unshift(arr.splice(index, 1)[0])
+            state.conversations = arr
         },
         resetMessages() {
             this.commit('resetObject', {name: 'messages'})
@@ -97,7 +115,7 @@ const store = new Vuex.Store({
         },
         setUnreadConversation(state, value) {
             let obj = {...state.unreadConversation}
-            value.forEach(function(conversation){
+            value.forEach(function (conversation) {
                 obj[conversation.id] = conversation.count
             })
             state.unreadConversation = obj
