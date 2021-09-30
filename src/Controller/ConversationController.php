@@ -36,6 +36,19 @@ class ConversationController extends AbstractController
     }
 
     /**
+     * @Route("/getSpecific/{id}", name="get_specific_conversation", options={"expose"=true},
+     *                             requirements={"id"="^[1-9]\d*$"})
+     */
+    public function getSpecificConversation(ConversationRepository $conversationRepository, int $id): JsonResponse
+    {
+        /**
+         * @var User $user
+         */
+        $user = $this->getUser();
+        return $this->json($conversationRepository->getUserConversations($user, $id), Response::HTTP_OK, [], ['groups' => 'json']);
+    }
+
+    /**
      * @Route("/get", name="get_conversation", options={"expose"=true})
      */
     public function getConversation(Request $request, ConversationManager $conversationManager): JsonResponse
