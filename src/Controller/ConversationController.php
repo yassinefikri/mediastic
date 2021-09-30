@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Conversation;
 use App\Entity\Message;
 use App\Entity\User;
+use App\Form\SearchConversationType;
 use App\Manager\ConversationManager;
 use App\Repository\ConversationRepository;
 use App\Repository\MessageRepository;
@@ -20,6 +21,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ConversationController extends AbstractController
 {
+    use ControllerTrait;
+
     /**
      * @Route("/getAll", name="get_conversations", options={"expose"=true})
      */
@@ -37,13 +40,28 @@ class ConversationController extends AbstractController
      */
     public function getConversation(Request $request, ConversationManager $conversationManager): JsonResponse
     {
-        $usernames    = $request->request->get('participants');
-        $conversation = $conversationManager->getConversation($usernames);
-        if (null === $conversation) {
-            return new JsonResponse(null, Response::HTTP_BAD_REQUEST);
+        $form = $this->createForm(SearchConversationType::class);
+        $form->handleRequest($request);
+        if (true === $form->isSubmitted() && true === $form->isValid()) {
+            $conversation = $conversationManager->getConversation(json_decode($form->get('participants')->getData()));
+            if (null !== $conversation) {
+                return $this->json($conversation, Response::HTTP_OK, [], ['groups' => 'json']);
+            }
         }
 
-        return $this->json($conversation, Response::HTTP_OK, [], ['groups' => 'json']);
+        return new JsonResponse($this->formGetErrors($form), Response::HTTP_BAD_REQUEST);
+    }
+
+    /**
+     * @Route("/get/front", name="get_conversation_front", options={"expose"=true})
+     */
+    public function getConversationFront(): JsonResponse
+    {
+        $form = $this->createForm(SearchConversationType::class);
+
+        return new JsonResponse($this->renderView('form/navbar_search.html.twig', [
+            'form' => $form->createView()
+        ]));
     }
 
     /**

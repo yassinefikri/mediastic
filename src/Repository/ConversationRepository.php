@@ -5,8 +5,9 @@ namespace App\Repository;
 use App\Entity\Conversation;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\Query\ResultSetMapping;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use LogicException;
 
@@ -48,17 +49,23 @@ class ConversationRepository extends ServiceEntityRepository
      */
     public function findByParticipants(array $users): ?Conversation
     {
-        if (count($users) < 2) {
-            throw new LogicException('array should have at least 2 users');
+        $count = count($users);
+        if ($count !== 2) {
+            throw new LogicException('array should have exactly 2 users');
         }
 
-        return $this->createQueryBuilder('c')
-            ->where('count(c.participants) = 2')
-            ->andWhere(':user1 IN (c.participants) AND :user2 IN (c.participants)')
-            ->set('user1', $users[0])
-            ->set('user2', $users[1])
-            ->getQuery()
-            ->getOneOrNullResult();
+        $entityManager = $this->getEntityManager();
+        $rsm           = new ResultSetMappingBuilder($entityManager);
+        $rsm->addRootEntityFromClassMetadata(Conversation::class, 'c1');
+
+        $sql   = 'SELECT * FROM `conversation` c1 WHERE c1.id IN (
+            SELECT c.id from `conversation` c INNER JOIN `conversation_user` cu ON c.id = cu.conversation_id INNER JOIN `user` u ON u.id = cu.user_id WHERE c.id IN (SELECT conversation_id from `conversation_user` where user_id = :user1) AND c.id IN (SELECT conversation_id from `conversation_user` where user_id = :user2) GROUP BY c.id  HAVING count(*) = 2
+        )';
+        $query = $entityManager->createNativeQuery($sql, $rsm);
+        $query->setParameter('user1', $users[0]->getId(), Types::INTEGER);
+        $query->setParameter('user2', $users[1]->getId(), Types::INTEGER);
+
+        return $query->getOneOrNullResult();
     }
 
     /**
