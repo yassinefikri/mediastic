@@ -3,7 +3,7 @@
     <ul class="list-group" v-if="list.length > 0">
       <li v-for="(friendship,index) in list" class="list-group-item d-flex align-content-center">
         <navbar-search-link-container :user="getFriendshipUser(friendship)" :key="index" class="flex-grow-1"/>
-        <i class="bi bi-clock ms-1 my-auto" style="font-size: 20px"></i>
+        <i class="bi bi-clock ms-3 my-auto" style="font-size: 20px"></i>
       </li>
     </ul>
     <div v-else class="list-group">
