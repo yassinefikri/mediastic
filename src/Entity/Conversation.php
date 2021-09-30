@@ -32,7 +32,7 @@ class Conversation
      * @ORM\Column(type="datetime_immutable", nullable=true)
      * @Groups({"json", "message"})
      */
-    private ?DateTimeImmutable $updatedAt;
+    private DateTimeImmutable $updatedAt;
 
     /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="conversation", orphanRemoval=true)
@@ -43,6 +43,7 @@ class Conversation
     {
         $this->participants = new ArrayCollection();
         $this->messages     = new ArrayCollection();
+        $this->updatedAt    = new DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -74,12 +75,12 @@ class Conversation
         return $this;
     }
 
-    public function getUpdatedAt(): ?DateTimeImmutable
+    public function getUpdatedAt(): DateTimeImmutable
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?DateTimeImmutable $updatedAt): self
+    public function setUpdatedAt(DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
