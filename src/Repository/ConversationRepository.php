@@ -50,7 +50,7 @@ class ConversationRepository extends ServiceEntityRepository
     public function findByParticipants(array $users): ?Conversation
     {
         $count = count($users);
-        if ($count !== 2) {
+        if ($count < 2) {
             throw new LogicException('array should have exactly 2 users');
         }
 
@@ -58,16 +58,23 @@ class ConversationRepository extends ServiceEntityRepository
         $rsm           = new ResultSetMappingBuilder($entityManager);
         $rsm->addRootEntityFromClassMetadata(Conversation::class, 'c1');
 
+        $count = count($users);
         $sql   = 'SELECT * FROM `conversation` c1 WHERE c1.id IN (
-            SELECT c.id from `conversation` c INNER JOIN `conversation_user` cu ON c.id = cu.conversation_id INNER JOIN `user` u ON u.id = cu.user_id 
-            WHERE c.id IN (SELECT conversation_id from `conversation_user` where user_id = :user1) 
-            AND c.id IN (SELECT conversation_id from `conversation_user` where user_id = :user2) 
-            GROUP BY c.id  
-            HAVING count(*) = 2
-        )';
+            SELECT c.id from `conversation` c INNER JOIN `conversation_user` cu ON c.id = cu.conversation_id INNER JOIN `user` u ON u.id = cu.user_id WHERE ';
+
+        for ($i = 0; $i < $count; $i++) {
+            if (0 !== $i) {
+                $sql .= "AND ";
+            }
+            $sql .= "c.id IN (SELECT conversation_id from `conversation_user` where user_id = :user{$i}) ";
+        }
+        $sql   .= "GROUP BY c.id  
+            HAVING count(*) = {$count}
+        )";
         $query = $entityManager->createNativeQuery($sql, $rsm);
-        $query->setParameter('user1', $users[0]->getId(), Types::INTEGER);
-        $query->setParameter('user2', $users[1]->getId(), Types::INTEGER);
+        for ($i = 0; $i < $count; $i++) {
+            $query->setParameter('user'.$i, $users[$i]->getId(), Types::INTEGER);
+        }
 
         return $query->getOneOrNullResult();
     }

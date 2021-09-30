@@ -26,16 +26,12 @@ class ConversationManager
     public function getConversation(array $usernames): ?Conversation
     {
         $users = $this->entityManager->getRepository(User::class)->findBy(['username' => $usernames]);
-        if (2 === count($usernames)) {
-            /**
-             * @var ConversationRepository
-             */
-            $conversationRepository = $this->entityManager->getRepository(Conversation::class);
-            $conversation           = $conversationRepository->findByParticipants($users);
-            if (null === $conversation) {
-                $conversation = $this->createConversation($users);
-            }
-        } else {
+        /**
+         * @var ConversationRepository
+         */
+        $conversationRepository = $this->entityManager->getRepository(Conversation::class);
+        $conversation           = $conversationRepository->findByParticipants($users);
+        if (null === $conversation) {
             $conversation = $this->createConversation($users);
         }
 
