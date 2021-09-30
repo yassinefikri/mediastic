@@ -136,6 +136,7 @@ export default {
     },
     handleNewMessage(data) {
       let message = JSON.parse(data.message)
+      this.$store.commit('moveConversationToStart', message.conversation)
       if(message.sender.username === this.getUsername) {
         this.$store.commit('addMessage', [message])
       } else {
@@ -145,7 +146,6 @@ export default {
           this.$store.commit('addMessage', [message])
         }
       }
-      this.$store.commit('moveConversationToStart', message.conversation)
     },
     toast(user, content, time, variant = 'light') {
       const myToastClass = Vue.extend(MyToast)
@@ -167,6 +167,22 @@ export default {
     },
     getCurrentRoute() {
       return this.$route;
+    },
+    getConversations() {
+      return this.$store.state.conversations
+      /*
+      let conversation = this.getConversations.filter((conversation) => (conversation.id === message.conversation.id))
+      if (0 === conversation.length) {
+        axios
+            .get(this.$Routing.generate('get_specific_conversation', {'id': message.conversation.id}))
+            .then(response => {
+              this.$store.commit('addConversation', [JSON.parse(response.data)])
+            })
+            .catch(error => {
+              console.log(error)
+            })
+      }
+       */
     }
   },
 }

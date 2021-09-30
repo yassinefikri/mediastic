@@ -65,9 +65,6 @@ const store = new Vuex.Store({
         },
         addMessage(state, messages) {
             this.commit('addToObject', {object: 'messages', data: messages, key: 'id'})
-            if (1 === messages.length) {
-                this.commit('moveConversationToStart', messages[0].conversation.id)
-            }
         },
         removeMessage(state, messages) {
             this.commit('removeFromObject', {object: 'messages', data: messages, key: 'id'})
@@ -93,7 +90,7 @@ const store = new Vuex.Store({
         moveConversationToStart(state, otherConversation) {
             let index = state.conversations.findIndex((conversation) => conversation.id === otherConversation.id)
             let arr = [...state.conversations]
-            let fullConversation = arr.splice(index, 1)[0];
+            let fullConversation = arr.splice(index, 1)[0]
             fullConversation.updatedAt = otherConversation.updatedAt
             arr.unshift(fullConversation)
             state.conversations = arr
