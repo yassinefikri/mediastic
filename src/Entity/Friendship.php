@@ -43,6 +43,7 @@ class Friendship
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
+     * @Groups("friendship")
      */
     private ?DateTimeImmutable $answeredAt;
 

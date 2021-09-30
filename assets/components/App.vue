@@ -125,7 +125,7 @@ export default {
       let user = friendship.sender.username === this.getUsername ? friendship.receiver : friendship.sender
       this.$store.commit('addFriend', [user])
       if (friendship.sender.username === this.getUsername) {
-        this.toast(friendship.receiver, 'Accepted you friend request', friendship.sentAt, 'success')
+        this.toast(friendship.receiver, 'Accepted you friend request', friendship.answeredAt, 'success')
       }
     },
     handleRemovedFriendship(data) {
