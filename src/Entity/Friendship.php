@@ -45,12 +45,12 @@ class Friendship
      * @ORM\Column(type="datetime_immutable", nullable=true)
      * @Groups("friendship")
      */
-    private ?DateTimeImmutable $answeredAt;
+    private ?DateTimeImmutable $answeredAt = null;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
-    private ?DateTimeImmutable $editedAt;
+    private ?DateTimeImmutable $editedAt = null;
 
     /**
      * @ORM\Column(type="string", length=255)
