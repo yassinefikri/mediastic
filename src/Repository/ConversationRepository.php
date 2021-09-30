@@ -59,7 +59,11 @@ class ConversationRepository extends ServiceEntityRepository
         $rsm->addRootEntityFromClassMetadata(Conversation::class, 'c1');
 
         $sql   = 'SELECT * FROM `conversation` c1 WHERE c1.id IN (
-            SELECT c.id from `conversation` c INNER JOIN `conversation_user` cu ON c.id = cu.conversation_id INNER JOIN `user` u ON u.id = cu.user_id WHERE c.id IN (SELECT conversation_id from `conversation_user` where user_id = :user1) AND c.id IN (SELECT conversation_id from `conversation_user` where user_id = :user2) GROUP BY c.id  HAVING count(*) = 2
+            SELECT c.id from `conversation` c INNER JOIN `conversation_user` cu ON c.id = cu.conversation_id INNER JOIN `user` u ON u.id = cu.user_id 
+            WHERE c.id IN (SELECT conversation_id from `conversation_user` where user_id = :user1) 
+            AND c.id IN (SELECT conversation_id from `conversation_user` where user_id = :user2) 
+            GROUP BY c.id  
+            HAVING count(*) = 2
         )';
         $query = $entityManager->createNativeQuery($sql, $rsm);
         $query->setParameter('user1', $users[0]->getId(), Types::INTEGER);
