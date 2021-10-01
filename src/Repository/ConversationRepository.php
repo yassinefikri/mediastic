@@ -25,25 +25,34 @@ class ConversationRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param User     $user
-     * @param int|null $id
+     * @param User $user
      *
      * @return Conversation[]
      */
-    public function getUserConversations(User $user, int $id = null): array
+    public function getUserConversations(User $user): array
     {
-        $qb = $this->createQueryBuilder('c');
-        $qb->innerJoin('c.participants', 'u')
+        return $this->createQueryBuilder('c')
+            ->innerJoin('c.participants', 'u')
             ->where('u = :user')
             ->andWhere('c.updatedAt is NOT NULL')
-            ->setParameter('user', $user);
-        if (null !== $id) {
-            $qb->andWhere('c.id = :id')
-                ->setParameter('id', $id);
-        }
-        return $qb->orderBy('c.updatedAt', 'DESC')
+            ->setParameter('user', $user)
+            ->orderBy('c.updatedAt', 'DESC')
             ->getQuery()
             ->getResult();
+    }
+
+    public function getUserConversation(User $user, int $id): ?Conversation
+    {
+        return $this->createQueryBuilder('c')
+            ->innerJoin('c.participants', 'u')
+            ->where('u = :user')
+            ->andWhere('c.updatedAt is NOT NULL')
+            ->setParameter('user', $user)
+            ->andWhere('c.id = :id')
+            ->setParameter('id', $id)
+            ->orderBy('c.updatedAt', 'DESC')
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     /**

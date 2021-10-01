@@ -45,7 +45,7 @@ class ConversationController extends AbstractController
          * @var User $user
          */
         $user = $this->getUser();
-        return $this->json($conversationRepository->getUserConversations($user, $id), Response::HTTP_OK, [], ['groups' => 'json']);
+        return $this->json($conversationRepository->getUserConversation($user, $id), Response::HTTP_OK, [], ['groups' => 'json']);
     }
 
     /**
