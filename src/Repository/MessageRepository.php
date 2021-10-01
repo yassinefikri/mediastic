@@ -37,6 +37,6 @@ class MessageRepository extends ServiceEntityRepository
     {
         $this->validatePageNumber($page);
 
-        return $this->findBy(['conversation' => $conversation], ['sentAt' => 'DESC'], self::PAGE_SIZE, self::PAGE_SIZE * ($page - 1));
+        return $this->findBy(['conversation' => $conversation], ['sentAt' => 'ASC'], self::PAGE_SIZE, self::PAGE_SIZE * ($page - 1));
     }
 }

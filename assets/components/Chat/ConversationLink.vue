@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="ms-auto my-auto">
-        <span v-if="item.updatedAt" class="me-2 text-muted">{{ item.updatedAt | momentAgo}}</span>
+        <span v-if="item.updatedAt" class="me-2 text-muted">{{ item.updatedAt | momentAgo }}</span>
         <span class="badge bg-danger rounded-pill my-auto" :class="[unreadCount ? 'visible' : 'invisible']">{{ unreadCount }}</span>
       </div>
     </a>

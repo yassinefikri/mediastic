@@ -73,9 +73,32 @@ class MessageController extends AbstractController
                 $hub->publish(new Update($topic, (string)json_encode($data), true));
             }
 
-            return new JsonResponse();
+            return $this->json($message, Response::HTTP_OK, [], ['groups' => 'message']);
         }
 
         return new JsonResponse($this->formGetErrors($form), Response::HTTP_BAD_REQUEST);
+    }
+
+    /**
+     * @Route("/seen/{id}", name="set_message_seen", options={"expose"=true}, requirements={"id"="^[1-9]\d*$"})
+     */
+    public function setMessageSeen(Message $message): JsonResponse
+    {
+        /**
+         * @var User $user
+         */
+        $user = $this->getUser();
+
+        if ($message->getConversation()->getParticipants()->contains($user)
+            && $message->getSender() !== $user
+            && !$message->getSeenBy()->contains($user)
+        ) {
+            $message->addSeenBy($user);
+            $this->getDoctrine()->getManager()->flush();
+
+            return new JsonResponse();
+        }
+
+        return new JsonResponse(null, Response::HTTP_BAD_REQUEST);
     }
 }

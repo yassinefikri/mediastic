@@ -206,10 +206,6 @@ button.close:hover {
   height: calc(100vh - 72px);
 }
 
-.message {
-  max-width: 70%;
-}
-
 #navbar-second-half {
   display: flex !important;
 }
@@ -249,4 +245,13 @@ button.close:hover {
 
 .search_results.search_chat_results {
   min-width: 337px;
+}
+
+.message-sender-avatar {
+  width: 40px;
+  height: 40px;
+}
+
+.message-container {
+  width: 70%;
 }

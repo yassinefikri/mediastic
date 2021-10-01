@@ -157,6 +157,11 @@ export default {
           this.$store.commit('addUnreadConversation', message.conversation)
         } else {
           this.$store.commit('addMessage', [message])
+          axios.
+              post(this.$Routing.generate('set_message_seen', {'id': message.id}))
+              .catch(error => {
+                console.log(error)
+              })
         }
       }
     },

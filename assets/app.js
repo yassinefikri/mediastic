@@ -65,7 +65,16 @@ const store = new Vuex.Store({
             this.commit('removeFromObject', {object: 'friends', data: friend, key: 'username'})
         },
         addMessage(state, messages) {
-            this.commit('addToObject', {object: 'messages', data: messages, key: 'id'})
+            let obj = {...state.messages}
+            messages.forEach(function (message) {
+                if (undefined === obj[message.conversation.id]) {
+                    obj[message.conversation.id] = []
+                }
+                let arr = [...obj[message.conversation.id]]
+                arr.push(message)
+                obj[message.conversation.id] = arr
+            })
+            state.messages = obj
         },
         removeMessage(state, messages) {
             this.commit('removeFromObject', {object: 'messages', data: messages, key: 'id'})
@@ -95,9 +104,6 @@ const store = new Vuex.Store({
             fullConversation.updatedAt = otherConversation.updatedAt
             arr.unshift(fullConversation)
             state.conversations = arr
-        },
-        resetMessages() {
-            this.commit('resetObject', {name: 'messages'})
         },
         addToObject(state, payload) {
             let obj = {...state[payload.object]}
@@ -147,6 +153,13 @@ const store = new Vuex.Store({
         resetUnreadNotificationsCount(state) {
             state.unreadNotificationsCount = 0
         },
+        setMessageSeen(state, messages) {
+            let obj = {...state.messages}
+            messages.forEach(function (message) {
+                obj[message.conversation.id].se
+            })
+            state.messages = obj
+        }
     }
 })
 

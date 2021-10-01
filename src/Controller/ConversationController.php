@@ -95,7 +95,9 @@ class ConversationController extends AbstractController
         $user     = $this->getUser();
         $messages = $messagesRepository->getMessages($conversation, $page);
         foreach ($messages as $message) {
-            $message->addSeenBy($user);
+            if ($message->getSender() !== $user) {
+                $message->addSeenBy($user);
+            }
         }
         $entityManager->flush();
 
