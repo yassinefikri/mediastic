@@ -39,19 +39,4 @@ class MessageRepository extends ServiceEntityRepository
 
         return $this->findBy(['conversation' => $conversation], ['sentAt' => 'DESC'], self::PAGE_SIZE, self::PAGE_SIZE * ($page - 1));
     }
-
-    public function setMessagesSeen(Conversation $conversation, User $user): void
-    {
-        $this->getEntityManager()->createQueryBuilder()
-            ->update(Message::class, 'm')
-            ->set('m.seenAt', ':datetime')
-            ->where('m.conversation = :conversation')
-            ->andWhere('m.seenAt is NULL')
-            ->andWhere('m.sender != :user')
-            ->setParameter('datetime', new DateTimeImmutable(), Types::DATETIME_IMMUTABLE)
-            ->setParameter('conversation', $conversation)
-            ->setParameter('user', $user)
-            ->getQuery()
-            ->execute();
-    }
 }

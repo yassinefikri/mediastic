@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\MessageRepository;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -48,12 +50,20 @@ class Message
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
+     * @Groups("message")
      */
     private ?DateTimeImmutable $seenAt;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="seenMessages")
+     */
+    private Collection $seenBy;
 
     public function __construct()
     {
         $this->sentAt = new DateTimeImmutable();
+        $this->seenAt = null;
+        $this->seenBy = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -73,7 +83,7 @@ class Message
         return $this;
     }
 
-    public function getSentAt(): ?DateTimeImmutable
+    public function getSentAt(): DateTimeImmutable
     {
         return $this->sentAt;
     }
@@ -117,6 +127,33 @@ class Message
     public function setSeenAt(?DateTimeImmutable $seenAt): self
     {
         $this->seenAt = $seenAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getSeenBy(): Collection
+    {
+        return $this->seenBy;
+    }
+
+    public function addSeenBy(User $seenBy): self
+    {
+        if (!$this->seenBy->contains($seenBy)) {
+            $this->seenBy[] = $seenBy;
+            if ($this->seenBy->count() === $this->getConversation()->getParticipants()->count() - 1) {
+                $this->seenAt = new DateTimeImmutable();
+            }
+        }
+
+        return $this;
+    }
+
+    public function removeSeenBy(User $seenBy): self
+    {
+        $this->seenBy->removeElement($seenBy);
 
         return $this;
     }

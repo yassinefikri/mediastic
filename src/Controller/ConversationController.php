@@ -84,17 +84,22 @@ class ConversationController extends AbstractController
      */
     public function getConversationMessages(Conversation $conversation, int $page = 1): JsonResponse
     {
+        $entityManager = $this->getDoctrine()->getManager();
         /**
          * @var MessageRepository $messagesRepository
          */
-        $messagesRepository = $this->getDoctrine()->getManager()->getRepository(Message::class);
+        $messagesRepository = $entityManager->getRepository(Message::class);
         /**
          * @var User $user
          */
-        $user = $this->getUser();
-        $messagesRepository->setMessagesSeen($conversation, $user);
+        $user     = $this->getUser();
+        $messages = $messagesRepository->getMessages($conversation, $page);
+        foreach ($messages as $message) {
+            $message->addSeenBy($user);
+        }
+        $entityManager->flush();
 
-        return $this->json($messagesRepository->getMessages($conversation, $page), Response::HTTP_OK, [], ['groups' => 'message']);
+        return $this->json($messages, Response::HTTP_OK, [], ['groups' => 'message']);
     }
 
     /**

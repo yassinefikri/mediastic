@@ -104,6 +104,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private Collection $messages;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Message::class, mappedBy="seenBy")
+     */
+    private Collection $seenMessages;
+
     public function __construct()
     {
         $this->posts               = new ArrayCollection();
@@ -111,6 +116,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->receivedFriendships = new ArrayCollection();
         $this->conversations       = new ArrayCollection();
         $this->messages            = new ArrayCollection();
+        $this->seenMessages        = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -402,6 +408,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             if ($message->getSender() === $this) {
                 $message->setSender(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Message[]
+     */
+    public function getSeenMessages(): Collection
+    {
+        return $this->seenMessages;
+    }
+
+    public function addSeenMessage(Message $seenMessage): self
+    {
+        if (!$this->seenMessages->contains($seenMessage)) {
+            $this->seenMessages[] = $seenMessage;
+            $seenMessage->addSeenBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSeenMessage(Message $seenMessage): self
+    {
+        if ($this->seenMessages->removeElement($seenMessage)) {
+            $seenMessage->removeSeenBy($this);
         }
 
         return $this;
