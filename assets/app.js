@@ -8,6 +8,7 @@ import './styles/app.scss'
 import 'bootstrap';
 
 import BootstrapVue from 'bootstrap-vue'
+
 Vue.use(BootstrapVue)
 
 import moment from "moment"
@@ -71,7 +72,7 @@ const store = new Vuex.Store({
         },
         addConversation(state, conversations) {
             let arr = [...state.conversations]
-            arr = arr.concat(conversations)
+            arr = conversations.concat(arr)
             state.conversations = arr
         },
         removeConversation(state, specificConversation) {
