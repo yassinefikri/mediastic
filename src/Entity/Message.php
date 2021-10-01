@@ -56,6 +56,7 @@ class Message
 
     /**
      * @ORM\ManyToMany(targetEntity=User::class, inversedBy="seenMessages")
+     * @Groups("message")
      */
     private Collection $seenBy;
 
@@ -143,7 +144,11 @@ class Message
     {
         if (!$this->seenBy->contains($seenBy)) {
             $this->seenBy[] = $seenBy;
-            if ($this->seenBy->count() === $this->getConversation()->getParticipants()->count() - 1) {
+            /**
+             * @var Conversation $conversation
+             */
+            $conversation = $this->getConversation();
+            if ($this->seenBy->count() === $conversation->getParticipants()->count() - 1) {
                 $this->seenAt = new DateTimeImmutable();
             }
         }

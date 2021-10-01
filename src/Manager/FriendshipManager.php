@@ -47,8 +47,8 @@ class FriendshipManager
     }
 
     /**
-     * @param Friendship|null      $friendship
-     * @param array<string,string> $options
+     * @param Friendship|null $friendship
+     * @param mixed[]         $options
      *
      * @return FormInterface<string|FormInterface>
      */
@@ -176,8 +176,8 @@ class FriendshipManager
     }
 
     /**
-     * @param Friendship          $friendship
-     * @param array<string,mixed> $data
+     * @param Friendship $friendship
+     * @param mixed[]    $data
      *
      * @return Update[]
      */
@@ -202,8 +202,8 @@ class FriendshipManager
     }
 
     /**
-     * @param User  $user
-     * @param array<string,mixed> $data
+     * @param User    $user
+     * @param mixed[] $data
      *
      * @return Update
      */

@@ -41,13 +41,13 @@ class UserNormalizer implements ContextAwareNormalizerInterface
      * @param string|null $format
      * @param mixed[]     $context
      *
-     * @return array<string, string>
+     * @return string[]
      * @throws ExceptionInterface
      */
     public function normalize($object, string $format = null, array $context = []): array
     {
         /**
-         * @var array<string,string> $normalizedUser
+         * @var string[] $normalizedUser
          */
         $normalizedUser               = $this->normalizer->normalize($object, $format, $context);
         $normalizedUser['avatar_url'] = $this->assetsResolver->getAvatarAsset($object);

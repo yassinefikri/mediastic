@@ -42,16 +42,16 @@ class FormProvider
     }
 
     /**
-     * @param string               $route
-     * @param mixed                $data
-     * @param array<string,string> $options
+     * @param string  $route
+     * @param mixed   $data
+     * @param mixed[] $options
      *
      * @return JsonResponse
      */
     public function getResponse(string $route, $data = null, array $options = []): JsonResponse
     {
         $options = array_merge($options, ['attr' => ['id' => self::ROUTE_FORM_MAPPING[$route]['id']]]);
-        $form = $this->formFactory->create(self::ROUTE_FORM_MAPPING[$route]['class'], $data, $options);
+        $form    = $this->formFactory->create(self::ROUTE_FORM_MAPPING[$route]['class'], $data, $options);
 
         try {
             return new JsonResponse($this->twig->render('form/form.html.twig', [

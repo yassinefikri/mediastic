@@ -88,8 +88,11 @@ class MessageController extends AbstractController
          * @var User $user
          */
         $user = $this->getUser();
-
-        if ($message->getConversation()->getParticipants()->contains($user)
+        /**
+         * @var Conversation $conversation
+         */
+        $conversation = $message->getConversation();
+        if ($conversation->getParticipants()->contains($user)
             && $message->getSender() !== $user
             && !$message->getSeenBy()->contains($user)
         ) {
