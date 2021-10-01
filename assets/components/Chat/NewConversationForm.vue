@@ -6,7 +6,7 @@
              class="form-control" placeholder="search" v-model:is="currentSearch" autocomplete="off">
     </div>
     <b-popover :show.sync="show" target="conversation_search_query" triggers="input" placement="bottom">
-      <div class="search_results">
+      <div class="search_results search_chat_results">
         <ul class="list-group">
           <li v-for="(user,index) in result" :key="index" class="list-group-item d-flex">
             <div class="d-flex align-items-center">
