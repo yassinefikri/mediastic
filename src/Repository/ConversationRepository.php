@@ -100,18 +100,24 @@ class ConversationRepository extends ServiceEntityRepository
      */
     public function getUnreadConversations(User $user)
     {
-        return $this->createQueryBuilder('c')
-            ->leftJoin('c.messages', 'm')
-            ->leftJoin('c.participants', 'u')
-            ->leftJoin('m.sender', 'u2')
-            ->select('c.id, count(c.id) as count')
-            ->where('m.sentAt is NOT NULL')
-            ->andWhere('m.seenAt is NULL')
-            ->andWhere('u.username = :username')
-            ->andWhere('u2.username != :username')
-            ->setParameter('username', $user->getUserIdentifier())
-            ->groupBy('c.id')
-            ->getQuery()
-            ->getResult();
+        $entityManager = $this->getEntityManager();
+        $rsm = new ResultSetMappingBuilder($entityManager);
+        $rsm->addScalarResult('id', 'id');
+        $rsm->addScalarResult('count', 'count');
+
+        $sql = 'SELECT cf.id, count(cf.id) AS count FROM `conversation` cf INNER JOIN `message` mf ON mf.conversation_id = cf.id WHERE mf.id IN (
+                    SELECT m.id FROM `message` m INNER JOIN `conversation` c ON m.conversation_id = c.id INNER JOIN `user` u ON m.sender_id = u.id WHERE c.id IN (
+                        SELECT c1.id from `conversation` c1 INNER JOIN `conversation_user` cu ON cu.conversation_id = c1.id WHERE cu.user_id = :user
+                    )
+                    AND m.id NOT IN (
+                        SELECT mu.message_id FROM `message_user` mu WHERE mu.user_id = :user
+                    ) 
+                    AND u.id != :user
+                ) GROUP BY cf.id';
+
+        $query = $entityManager->createNativeQuery($sql, $rsm);
+        $query->setParameter('user', $user->getId(), Types::INTEGER);
+
+        return $query->getResult();
     }
 }
