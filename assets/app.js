@@ -81,6 +81,7 @@ const store = new Vuex.Store({
                 if (undefined === obj[message.conversation.id]) {
                     obj[message.conversation.id] = []
                 }
+                message.seenBy.push(message.sender)
                 let arr = [...obj[message.conversation.id]]
                 arr.unshift(message)
                 obj[message.conversation.id] = arr

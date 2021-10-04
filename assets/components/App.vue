@@ -59,15 +59,15 @@ export default {
             withCredentials: true
           });
 
-          eventSource.addEventListener('chat', function(event) {
+          eventSource.addEventListener('chat', function (event) {
             this.handleMercureChat(JSON.parse(event.data))
           }.bind(this), false);
 
-          eventSource.addEventListener('friendship', function(event) {
+          eventSource.addEventListener('friendship', function (event) {
             this.handleMercureFriendship(JSON.parse(event.data))
           }.bind(this), false);
 
-          eventSource.addEventListener('seen', function(event) {
+          eventSource.addEventListener('seen', function (event) {
             this.handleNewMessageSeen(JSON.parse(event.data))
           }.bind(this), false);
         })
@@ -99,7 +99,7 @@ export default {
       //console.log(data)
     },
     handleNewMessageSeen(data) {
-      if ('chat_user' === this.getCurrentRoute.name && this.getCurrentRoute.params.conversationId === Object.keys(data)[0]) {
+      if ('chat_user' === this.getCurrentRoute.name && ""+this.getCurrentRoute.params.conversationId === Object.keys(data)[0]) {
         this.$store.commit('setMessageSeen', data)
       }
     },
@@ -136,7 +136,6 @@ export default {
         axios
             .get(this.$Routing.generate('get_specific_conversation', {'id': message.conversation.id}))
             .then(response => {
-              console.log(typeof response.data)
               this.$store.commit('addConversation', [response.data])
             })
             .catch(error => {
@@ -152,8 +151,7 @@ export default {
           this.$store.commit('addUnreadConversation', message.conversation)
         } else {
           this.$store.commit('addSingleMessage', message)
-          axios.
-              post(this.$Routing.generate('set_message_seen', {'id': message.id}))
+          axios.post(this.$Routing.generate('set_message_seen', {'id': message.id}))
               .catch(error => {
                 console.log(error)
               })
