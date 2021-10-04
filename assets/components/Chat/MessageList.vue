@@ -53,7 +53,7 @@ export default {
     }
   },
   mounted() {
-    this.$store.commit('initMesages', this.conversationId)
+    this.$store.commit('initMessages', this.conversationId)
     this.fetchMessages()
   },
   computed: {
@@ -99,7 +99,9 @@ export default {
   },
   watch: {
     '$route.params.conversationId': function () {
+      this.$store.commit('initMessages', this.conversationId)
       this.loadedMessages = false
+      this.page = 1
       this.fetchMessages()
       this.$store.commit('resetUnreadConversation', this.conversationId)
     },

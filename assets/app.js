@@ -198,7 +198,7 @@ const store = new Vuex.Store({
             state.lastSeenMessage = obj
             state.messages = obj2
         },
-        initMesages(state, conversationId) {
+        initMessages(state, conversationId) {
             let obj = {...state.messages}
             delete obj[conversationId]
             state.messages = obj
