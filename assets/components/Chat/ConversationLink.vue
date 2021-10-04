@@ -7,12 +7,10 @@
             <div  class="toast-avatar-container me-3">
               <img :src="participant.avatar_url" class="rounded-circle w-100 h-100" :alt="participant.firstName + ' ' + participant.lastName">
             </div>
-            <div class="d-flex flex-column">
-              <span class="fw-bold">{{ participant.firstName }} {{ participant.lastName }}</span>
-              <span v-if="item.updatedAt" class="me-2">{{ item.updatedAt | momentAgo }}</span>
-            </div>
+            <span class="fw-bold">{{ participant.firstName }} {{ participant.lastName }}</span>
           </div>
         </div>
+        <span v-if="item.updatedAt" class="me-2">{{ item.updatedAt | momentAgo }}</span>
       </div>
       <div class="ms-auto my-auto">
         <span class="badge bg-danger rounded-pill my-auto" :class="[unreadCount ? 'visible' : 'invisible']">{{ unreadCount }}</span>

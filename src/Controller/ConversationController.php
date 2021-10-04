@@ -7,6 +7,7 @@ use App\Entity\Message;
 use App\Entity\User;
 use App\Form\SearchConversationType;
 use App\Manager\ConversationManager;
+use App\Manager\SeenManager;
 use App\Repository\ConversationRepository;
 use App\Repository\MessageRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -82,7 +83,7 @@ class ConversationController extends AbstractController
      *                                    requirements={"page"="^[1-9]\d*$"})
      * @IsGranted("READ_MESSAGES", subject="conversation")
      */
-    public function getConversationMessages(Conversation $conversation, int $page = 1): JsonResponse
+    public function getConversationMessages(Conversation $conversation, SeenManager $manager, int $page = 1): JsonResponse
     {
         $entityManager = $this->getDoctrine()->getManager();
         /**
@@ -92,14 +93,18 @@ class ConversationController extends AbstractController
         /**
          * @var User $user
          */
-        $user     = $this->getUser();
-        $messages = $messagesRepository->getMessages($conversation, $page);
+        $user                        = $this->getUser();
+        $messages                    = $messagesRepository->getMessages($conversation, $page);
+        $messagesToUpdateSeenInFront = [];
+
         foreach ($messages as $message) {
-            if ($message->getSender() !== $user) {
+            if ($message->getSender() !== $user && false === $message->getSeenBy()->contains($user)) {
                 $message->addSeenBy($user);
+                $messagesToUpdateSeenInFront[] = $message;
             }
         }
         $entityManager->flush();
+        $manager->messageSeenUpdate2Clients($messagesToUpdateSeenInFront);
 
         return $this->json($messages, Response::HTTP_OK, [], ['groups' => 'message']);
     }
@@ -115,5 +120,14 @@ class ConversationController extends AbstractController
         $user = $this->getUser();
 
         return new JsonResponse($conversationRepository->getUnreadConversations($user));
+    }
+
+    /**
+     * @Route("/getSeens/{id}", name="get_messages_seens", options={"expose"=true}, requirements={"page"="^[1-9]\d*$"})
+     * @IsGranted("READ_MESSAGES", subject="conversation")
+     */
+    public function getMessagesSeens(Conversation $conversation, MessageRepository $messageRepository): JsonResponse
+    {
+        return new JsonResponse($messageRepository->getMessagesSeens($conversation));
     }
 }

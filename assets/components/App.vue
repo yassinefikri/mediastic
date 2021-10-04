@@ -20,20 +20,6 @@ export default {
     return {
       alerts: [],
       loaded: false,
-      mercureActionsMapping: {
-        'friendship': {
-          'regex': /^\/(.+)\/friendship/,
-          'handler': this.handleMercureFriendship
-        },
-        'chat': {
-          'regex': /^\/(.+)\/chat/,
-          'handler': this.handleMercureChat
-        },
-        'notification': {
-          'regex': /^\/(.+)\/notification/,
-          'handler': this.handleMercureNotification
-        }
-      }
     }
   },
   beforeMount() {
@@ -72,7 +58,18 @@ export default {
           const eventSource = new EventSource(hub, {
             withCredentials: true
           });
-          eventSource.onmessage = event => this.handleMercureMessage(JSON.parse(event.data));
+
+          eventSource.addEventListener('chat', function(event) {
+            this.handleMercureChat(JSON.parse(event.data))
+          }.bind(this), false);
+
+          eventSource.addEventListener('friendship', function(event) {
+            this.handleMercureFriendship(JSON.parse(event.data))
+          }.bind(this), false);
+
+          eventSource.addEventListener('seen', function(event) {
+            this.handleNewMessageSeen(JSON.parse(event.data))
+          }.bind(this), false);
         })
         .catch(error => {
           console.log(error)
@@ -81,13 +78,6 @@ export default {
   methods: {
     goBack() {
       window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/')
-    },
-    handleMercureMessage(data) {
-      for (const property in this.mercureActionsMapping) {
-        if (true === this.mercureActionsMapping[property]['regex'].test(data.topic)) {
-          this.mercureActionsMapping[property]['handler'](data)
-        }
-      }
     },
     handleMercureFriendship(data) {
       if ('newFriendship' === data.status) {
@@ -107,6 +97,11 @@ export default {
     },
     handleMercureNotification(data) {
       //console.log(data)
+    },
+    handleNewMessageSeen(data) {
+      if ('chat_user' === this.getCurrentRoute.name && this.getCurrentRoute.params.conversationId === Object.keys(data)[0]) {
+        this.$store.commit('setMessageSeen', data)
+      }
     },
     handleNewFriendship(data) {
       let friendship = JSON.parse(data.friendship)
@@ -151,12 +146,12 @@ export default {
         this.$store.commit('moveConversationToStart', message.conversation)
       }
       if (message.sender.username === this.getUsername) {
-        this.$store.commit('addMessage', [message])
+        this.$store.commit('addSingleMessage', message)
       } else {
         if ('chat_user' !== this.getCurrentRoute.name || parseInt(this.getCurrentRoute.params.conversationId) !== message.conversation.id) {
           this.$store.commit('addUnreadConversation', message.conversation)
         } else {
-          this.$store.commit('addMessage', [message])
+          this.$store.commit('addSingleMessage', message)
           axios.
               post(this.$Routing.generate('set_message_seen', {'id': message.id}))
               .catch(error => {

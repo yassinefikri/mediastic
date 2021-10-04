@@ -210,9 +210,8 @@ class FriendshipManager
     private function buildSingleUpdate(User $user, array $data): Update
     {
         $topic         = $this->topicsResolver->getFriendshipTopic($user);
-        $data['topic'] = $topic;
 
-        return new Update($topic, (string)json_encode($data), true);
+        return new Update($topic, (string)json_encode($data), true, null, 'friendship');
     }
 
     /**

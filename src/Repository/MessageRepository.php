@@ -37,6 +37,24 @@ class MessageRepository extends ServiceEntityRepository
     {
         $this->validatePageNumber($page);
 
-        return $this->findBy(['conversation' => $conversation], ['sentAt' => 'ASC'], self::PAGE_SIZE, self::PAGE_SIZE * ($page - 1));
+        return $this->findBy(['conversation' => $conversation], ['sentAt' => 'DESC'], self::PAGE_SIZE, self::PAGE_SIZE * ($page - 1));
+    }
+
+    /**
+     * @param Conversation $conversation
+     *
+     * @return string[]
+     */
+    public function getMessagesSeens(Conversation $conversation)
+    {
+        return $this->createQueryBuilder('m')
+            ->select('u.username as user, MAX(m.id) as message')
+            ->innerJoin('m.conversation', 'c')
+            ->innerJoin('m.seenBy', 'u')
+            ->groupBy('u.username')
+            ->where('c.id = :conversation')
+            ->setParameter('conversation', $conversation->getId())
+            ->getQuery()
+            ->getArrayResult();
     }
 }

@@ -6,6 +6,7 @@ use App\Entity\Conversation;
 use App\Entity\Message;
 use App\Entity\User;
 use App\Form\MessageFormType;
+use App\Manager\SeenManager;
 use App\Resolver\UserTopicsResolver;
 use DateTimeImmutable;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -65,13 +66,12 @@ class MessageController extends AbstractController
             $entityManager->flush();
 
             $messageData = $serializer->serialize($message, 'json', ['groups' => 'message']);
+            $data        = ['status' => 'newMessage', 'message' => $messageData];
+            $topics      = [];
             foreach ($conversation->getParticipants() as $participant) {
-                $topic           = $topicsResolver->getChatTopic($participant);
-                $data            = ['status' => 'newMessage'];
-                $data['topic']   = $topic;
-                $data['message'] = $messageData;
-                $hub->publish(new Update($topic, (string)json_encode($data), true));
+                $topics[] = $topicsResolver->getChatTopic($participant);
             }
+            $hub->publish(new Update($topics, (string)json_encode($data), true, null, 'chat'));
 
             return $this->json($message, Response::HTTP_OK, [], ['groups' => 'message']);
         }
@@ -82,7 +82,7 @@ class MessageController extends AbstractController
     /**
      * @Route("/seen/{id}", name="set_message_seen", options={"expose"=true}, requirements={"id"="^[1-9]\d*$"})
      */
-    public function setMessageSeen(Message $message): JsonResponse
+    public function setMessageSeen(Message $message, SeenManager $manager): JsonResponse
     {
         /**
          * @var User $user
@@ -98,6 +98,7 @@ class MessageController extends AbstractController
         ) {
             $message->addSeenBy($user);
             $this->getDoctrine()->getManager()->flush();
+            $manager->messageSeenUpdate2Clients([$message]);
 
             return new JsonResponse();
         }
