@@ -8,6 +8,12 @@ export default {
     cover(state) {
         return state.userInfos['cover_url']
     },
+    firstname(state) {
+        return state.userInfos['firstName']
+    },
+    userInfos(state) {
+        return state.userInfos
+    },
     allConversations(state) {
         return state.conversations
     },

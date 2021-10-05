@@ -122,7 +122,7 @@ export default {
       return this.$store.getters.avatar;
     },
     getUserFirstName() {
-      return this.$store.state.userInfos['firstName'];
+      return this.$store.getters.firstname;
     },
     getUsername() {
       return this.$store.getters.username;

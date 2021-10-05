@@ -28,7 +28,7 @@ export default {
       return this.$store.state.unreadConversation
     },
     getList() {
-      return this.$store.state.conversations
+      return this.$store.getters.allConversations
     }
   }
 }

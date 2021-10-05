@@ -29,7 +29,7 @@ export default {
   },
   computed: {
     getCurrentUserUsername() {
-      return this.$store.state.userInfos['username']
+      return this.$store.getters.username
     }
   },
   watch: {
