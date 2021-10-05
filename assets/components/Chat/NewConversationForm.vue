@@ -50,8 +50,9 @@
 </template>
 
 <script>
-import MyForm from "../Partials/MyForm";
-import axios from "axios";
+import MyForm from "../Partials/MyForm"
+import axios from "axios"
+import {mapGetters} from "vuex"
 
 export default {
   name: "new-conversation-form",
@@ -88,8 +89,8 @@ export default {
   },
   methods: {
     fetchResults(query) {
-      let form = this.$refs['form-container'].querySelector('form');
-      let formData = new FormData(form);
+      let form = this.$refs['form-container'].querySelector('form')
+      let formData = new FormData(form)
       axios
           .post(this.$Routing.generate('navbar_search'), formData)
           .then(response => {
@@ -111,11 +112,11 @@ export default {
     },
     createConversation() {
       this.reset()
-      let usernames = [this.getUsername]
+      let usernames = [this.username]
       for (const property in this.list) {
         usernames.push(this.list[property].username)
       }
-      let form = this.$refs['second-form-container'].querySelector('form');
+      let form = this.$refs['second-form-container'].querySelector('form')
       let formData = new FormData(form)
       formData.append('search_conversation[participants]', JSON.stringify(usernames))
       axios
@@ -123,9 +124,11 @@ export default {
           .then(response => {
             if (200 === response.status) {
               this.$store.commit('updateOrAddConversation', response.data)
-              this.$router.push({name: 'chat_user', params: {
-                conversationId: response.data.id
-                }})
+              this.$router.push({
+                name: 'chat_user', params: {
+                  conversationId: response.data.id
+                }
+              })
               this.resetList()
             }
           })
@@ -163,9 +166,9 @@ export default {
     }
   },
   computed: {
-    getUsername() {
-      return this.$store.getters.username;
-    },
+    ...mapGetters([
+      'username',
+    ]),
   }
 }
 </script>

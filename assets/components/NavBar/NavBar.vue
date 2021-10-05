@@ -11,7 +11,8 @@
             }}
           </nav-link>
         </router-link>
-        <button class="navbar-toggler position-relative" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        <button class="navbar-toggler position-relative" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
           <span v-if="getNavbarButtonCount > 0"
@@ -85,12 +86,13 @@
 </template>
 
 <script>
-import NavLink from './NavLink';
-import NavbarProfileLink from './NavbarProfileLink';
-import NavbarFriendshipList from "./Friendship/NavbarFriendshipList";
-import axios from "axios";
-import NavbarSearch from "./Search/NavbarSearch";
-import NavIconLink from "./NavIconLink";
+import NavLink from './NavLink'
+import NavbarProfileLink from './NavbarProfileLink'
+import NavbarFriendshipList from "./Friendship/NavbarFriendshipList"
+import axios from "axios"
+import NavbarSearch from "./Search/NavbarSearch"
+import NavIconLink from "./NavIconLink"
+import {mapGetters} from "vuex"
 
 export default {
   name: 'navbar',
@@ -118,29 +120,21 @@ export default {
         })
   },
   computed: {
-    getAvatarUrl() {
-      return this.$store.getters.avatar;
-    },
-    getUserFirstName() {
-      return this.$store.getters.firstname;
-    },
-    getUsername() {
-      return this.$store.getters.username;
-    },
-    getAlert() {
-      return this.$store.getters.alert;
-    },
+    ...mapGetters([
+      'username',
+      'firstname',
+      'avatar',
+      'alert',
+      'unreadNotificationsCount'
+    ]),
     getFriendships() {
       return Object.values(this.$store.getters.friendships)
     },
     getFriendshipsCount() {
-      return this.getFriendships.filter(friendship => friendship.sender.username !== this.getUsername).length;
+      return this.getFriendships.filter(friendship => friendship.sender.username !== this.getUsername).length
     },
     unreadConversation() {
       return Object.entries(this.$store.getters.unreadConversations).length
-    },
-    unreadNotificationsCount() {
-      return this.$store.getters.unreadNotificationsCount;
     },
     getNavbarButtonCount() {
       return this.unreadConversation + this.getFriendshipsCount + this.unreadNotificationsCount

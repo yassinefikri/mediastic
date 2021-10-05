@@ -16,7 +16,8 @@
 </template>
 
 <script>
-import NavbarSearchLinkContainer from "../Search/NavbarSearchLinkContainer";
+import NavbarSearchLinkContainer from "../Search/NavbarSearchLinkContainer"
+import {mapGetters} from "vuex"
 
 export default {
   name: "navbar-friendship-list",
@@ -24,13 +25,13 @@ export default {
   components: {NavbarSearchLinkContainer},
   methods: {
     getFriendshipUser(friendship) {
-      return friendship.sender.username === this.getUsername ? friendship.receiver : friendship.sender
+      return friendship.sender.username === this.username ? friendship.receiver : friendship.sender
     }
   },
   computed: {
-    getUsername() {
-      return this.$store.getters.username;
-    },
+    ...mapGetters([
+      'username',
+    ]),
   }
 }
 </script>
