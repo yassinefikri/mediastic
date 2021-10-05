@@ -2,16 +2,16 @@
   <div class="flex-grow-1 d-flex flex-column">
     <div class="messages-container d-flex flex-column h-100 overflow-auto px-2" id="messages-root">
       <div v-if="true === loadedMessages" class="d-flex flex-column align-items-center my-1"
-           v-for="(message,index) in getMessages" :key="index">
+           v-for="(message,index) in messages(conversationId)" :key="index">
         <span class="text-muted"
-              v-if="0 === index || ((new Date(message.sentAt).getTime() - new Date(getMessages[index - 1].sentAt).getTime())/1000) >= 60"
+              v-if="0 === index || ((new Date(message.sentAt).getTime() - new Date(messages(conversationId)[index - 1].sentAt).getTime())/1000) >= 60"
               v-b-tooltip.hover :title="new Date(message.sentAt).toLocaleString()">
         {{ message.sentAt | momentAgo }}
         </span>
         <div class="d-flex align-items-center justify-content-end"
-             :class="[message.sender.username === getUsername ? 'align-self-end' : 'align-self-start flex-row-reverse']">
+             :class="[message.sender.username === username ? 'align-self-end' : 'align-self-start flex-row-reverse']">
           <div class="alert message mb-0 mx-2"
-               :class="[message.sender.username === getUsername ? 'alert-info' : 'alert-secondary']"
+               :class="[message.sender.username === username ? 'alert-info' : 'alert-secondary']"
                role="alert">
             {{ message.content }}
           </div>
@@ -20,9 +20,9 @@
           </div>
         </div>
         <div class="seen-container d-flex"
-             :class="[message.sender.username === getUsername ? 'align-self-end' : 'align-self-start']">
+             :class="[message.sender.username === username ? 'align-self-end' : 'align-self-start']">
           <div v-for="(person,secondIndex) in message.seenBy"
-               v-if="person.username !== getUsername && getMessagesSeens[person.username] === message.id"
+               v-if="person.username !== username && lastSeenMessage(conversationId)[person.username] === message.id"
                :key="secondIndex" class="img-container">
             <user-avatar :user="person"/>
           </div>
@@ -43,6 +43,7 @@
 import MyForm from "../Partials/MyForm";
 import UserAvatar from "../User/UserAvatar";
 import axios from "axios";
+import { mapGetters } from 'vuex'
 
 export default {
   name: "message-list",
@@ -59,24 +60,17 @@ export default {
     this.fetchMessages()
   },
   computed: {
+    ...mapGetters([
+        'username',
+        'messages',
+        'lastSeenMessage',
+    ]),
     getUrl() {
       return this.$Routing.generate('message_sending_front')
     },
     postUrl() {
       return this.$Routing.generate('message_sending', {'id': this.conversationId})
     },
-    getMessages() {
-      return this.$store.getters.messages[this.conversationId]
-    },
-    getUsername() {
-      return this.$store.getters.username;
-    },
-    getConversation() {
-      return this.$store.getters.allConversations.filter((conversation) => (conversation.id = this.conversationId))[0] ?? null
-    },
-    getMessagesSeens() {
-      return this.$store.getters.lastSeenMessage[this.conversationId]
-    }
   },
   methods: {
     fetchMessages() {
@@ -107,7 +101,7 @@ export default {
       this.fetchMessages()
       this.$store.commit('resetUnreadConversation', this.conversationId)
     },
-    getMessages: function () {
+    messages: function () {
       this.scrollDown()
     },
   }

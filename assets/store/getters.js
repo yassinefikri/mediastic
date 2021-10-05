@@ -20,6 +20,9 @@ export default {
     allConversations(state) {
         return state.conversations
     },
+    conversation: (state) => (id) => {
+        return state.conversations.filter((conversation) => (conversation.id = id))[0] ?? null
+    },
     alert(state) {
         return state.alert
     },
