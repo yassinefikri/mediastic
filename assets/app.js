@@ -70,10 +70,12 @@ const store = new Vuex.Store({
             if (undefined === obj[message.conversation.id]) {
                 obj[message.conversation.id] = []
             }
+            message.seenBy.push(message.sender)
             let arr = [...obj[message.conversation.id]]
             arr.push(message)
             obj[message.conversation.id] = arr
             state.messages = obj
+            this.commit('setSeens', [message])
         },
         addMessages(state, messages) {
             let obj = {...state.messages}
@@ -190,7 +192,7 @@ const store = new Vuex.Store({
                 seen.forEach(function (temp) {
                     let user = JSON.parse(temp.user)
                     obj[conversation][user.username] = temp.message
-                    if(undefined !== obj2[conversation]){
+                    if (undefined !== obj2[conversation]) {
                         let index = obj2[conversation].findIndex((message) => message.id === temp.message)
                         obj2[conversation][index].seenBy.push(user)
                     }
