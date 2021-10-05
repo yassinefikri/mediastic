@@ -4,7 +4,7 @@
       <div class="d-flex justify-content-between align-items-start">
         <div class="d-flex flex-column me-4 flex-grow-1">
           <div v-for="(participant,index2) in item.participants" :key="index2">
-            <div v-if="participant.username !== getUsername" class="d-flex my-1 align-items-center">
+            <div v-if="participant.username !== username" class="d-flex my-1 align-items-center">
               <div  class="toast-avatar-container me-3">
                 <img :src="participant.avatar_url" class="rounded-circle w-100 h-100" :alt="participant.firstName + ' ' + participant.lastName">
               </div>
@@ -22,13 +22,15 @@
 </template>
 
 <script>
+import {mapGetters} from "vuex"
+
 export default {
   name: "conversation-link",
   props: ['active', 'href', 'item', 'unreadCount'],
   computed: {
-    getUsername() {
-      return this.$store.getters.username
-    }
+    ...mapGetters([
+      'username',
+    ]),
   }
 }
 </script>

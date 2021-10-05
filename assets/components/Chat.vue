@@ -6,16 +6,17 @@
 </template>
 
 <script>
-import axios from "axios";
-import ConversationsList from "./Chat/ConversationsList";
-import MessageList from "./Chat/MessageList";
+import axios from "axios"
+import ConversationsList from "./Chat/ConversationsList"
+import MessageList from "./Chat/MessageList"
+import {mapGetters} from 'vuex'
 
 export default {
   name: "chat",
   components: {ConversationsList, MessageList},
   props: ['conversationId'],
   mounted() {
-    if (0 === this.getList.length)
+    if (0 === this.allConversations.length)
       axios
           .get(this.$Routing.generate('get_conversations'))
           .then(response => {
@@ -26,9 +27,9 @@ export default {
           })
   },
   computed: {
-    getList() {
-      return this.$store.getters.allConversations
-    }
+    ...mapGetters([
+      'allConversations',
+    ]),
   }
 }
 </script>
