@@ -1,8 +1,8 @@
-@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css");
+@import '~bootstrap-icons/font/bootstrap-icons.css';
 
 hr {
   margin: 1rem auto;
-  max-width: 200px;
+  width: 200px;
   height: 3px !important;
   border-radius: 3px;
   opacity: 0.2;
@@ -155,9 +155,13 @@ button.close:hover {
   padding: 0;
 }
 
-.post-owner a, .profile-sett a {
+.post-owner a, .profile-sett a, a.navlink-icon, .search_results a, .conversation-container a, .navbar-search-link {
   color: inherit;
   text-decoration: none;
+}
+
+.navbar-search-link:hover {
+  color: inherit;
 }
 
 .post-owner a:hover {
@@ -173,13 +177,8 @@ button.close:hover {
   height: 50px;
 }
 
-#search_results {
-  min-width: 250px;
-}
-
-#search_results a {
-  text-decoration: none;
-  color: inherit;
+.search_results {
+  min-width: 275px;
 }
 
 .navbar-search-link {
@@ -197,4 +196,67 @@ button.close:hover {
 .toast-avatar-container {
   width: 30px;
   height: 30px;
+}
+
+.conversation-container {
+  width: min(400px, 40%);
+}
+
+.chat-container {
+  height: calc(100vh - 72px);
+}
+
+#navbar-second-half {
+  display: flex !important;
+}
+
+@media (max-width: 991px) {
+  #navbar-first-half {
+    display: block !important;
+  }
+
+  #navbar-second-half {
+    justify-content: space-between !important;
+  }
+
+  #navbar-search-container {
+    width: 100% !important;
+    margin: 15px auto !important;
+  }
+
+  #avatar-navlink {
+    margin-left: 1.2rem !important;
+  }
+
+  #navbar-logout {
+    margin-right: 1.2rem !important;
+  }
+
+  #navbar-icons-container {
+    text-align: center;
+  }
+}
+
+@media (min-width: 991px) {
+  #navbarSupportedContent hr {
+    display: none !important;
+  }
+}
+
+.search_results.search_chat_results {
+  min-width: 337px;
+}
+
+.message-sender-avatar {
+  width: 40px;
+  height: 40px;
+}
+
+.message-container {
+  width: 70%;
+}
+
+.seen-container .img-container {
+  width: 20px;
+  height: 20px;
 }

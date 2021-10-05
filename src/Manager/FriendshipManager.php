@@ -47,8 +47,8 @@ class FriendshipManager
     }
 
     /**
-     * @param Friendship|null      $friendship
-     * @param array<string,string> $options
+     * @param Friendship|null $friendship
+     * @param mixed[]         $options
      *
      * @return FormInterface<string|FormInterface>
      */
@@ -176,8 +176,8 @@ class FriendshipManager
     }
 
     /**
-     * @param Friendship          $friendship
-     * @param array<string,mixed> $data
+     * @param Friendship $friendship
+     * @param mixed[]    $data
      *
      * @return Update[]
      */
@@ -202,17 +202,16 @@ class FriendshipManager
     }
 
     /**
-     * @param User  $user
-     * @param array<string,mixed> $data
+     * @param User    $user
+     * @param mixed[] $data
      *
      * @return Update
      */
     private function buildSingleUpdate(User $user, array $data): Update
     {
         $topic         = $this->topicsResolver->getFriendshipTopic($user);
-        $data['topic'] = $topic;
 
-        return new Update($topic, (string)json_encode($data), true);
+        return new Update($topic, (string)json_encode($data), true, null, 'friendship');
     }
 
     /**

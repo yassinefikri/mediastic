@@ -1,13 +1,13 @@
 <template>
-  <div class="my-container-800 mx-auto">
+  <div class="container my-container-800 mx-auto">
     <post v-for="(post,index) in posts" :key="index" :post="post"/>
     <hr class="my-4"/>
   </div>
 </template>
 
 <script>
-import Post from "../Post/Post";
-import axios from "axios";
+import Post from "../Post/Post"
+import axios from "axios"
 
 export default {
   name: "post-list",
@@ -34,7 +34,7 @@ export default {
           })
           .finally(() => {
             this.$emit('finished-fetching', payload)
-          });
+          })
     },
     initList() {
       this.posts = []

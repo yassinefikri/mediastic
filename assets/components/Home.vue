@@ -12,8 +12,8 @@
 </template>
 
 <script>
-import PostList from "./Post/PostList";
-import NewPostForm from "./Post/NewPostForm";
+import PostList from "./Post/PostList"
+import NewPostForm from "./Post/NewPostForm"
 
 export default {
   name: 'home',
@@ -27,11 +27,11 @@ export default {
   mounted() {
     this.fetchPosts()
     window.onscroll = () => {
-      let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
+      let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight
       if (true === bottomOfWindow && false === this.lastPage) {
         this.fetchPosts()
       }
-    };
+    }
   },
   methods: {
     fetchPosts() {

@@ -10,7 +10,7 @@
           :first-name="userInfos['firstName']"
           :last-name="userInfos['lastName']"
       />
-      <div v-if="userInfos['username'] === $store.state.userInfos['username']">
+      <div v-if="userInfos['username'] === $store.getters.username">
         <div class="my-container-600 mx-auto">
           <div class="mx-auto d-flex justify-content-center align-items-center profile-sett btn btn-secondary"
                id="profile-setting-btn">
@@ -34,13 +34,13 @@
 </template>
 
 <script>
-import PostList from "./Post/PostList";
-import axios from "axios";
-import CoverAvatar from "./Partials/CoverAvatar";
-import NewPostForm from "./Post/NewPostForm";
-import MiniProfileInfos from "./Partials/MiniProfileInfos";
-import NavLink from "./NavBar/NavLink";
-import ProfileFriendship from "./Partials/ProfileFriendship";
+import PostList from "./Post/PostList"
+import axios from "axios"
+import CoverAvatar from "./Partials/CoverAvatar"
+import NewPostForm from "./Post/NewPostForm"
+import MiniProfileInfos from "./Partials/MiniProfileInfos"
+import NavLink from "./NavBar/NavLink"
+import ProfileFriendship from "./Partials/ProfileFriendship"
 
 export default {
   name: "profile",
@@ -59,11 +59,11 @@ export default {
   mounted() {
     this.fetchPosts()
     window.onscroll = () => {
-      let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
+      let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight
       if (true === bottomOfWindow && false === this.lastPage) {
         this.fetchPosts()
       }
-    };
+    }
   },
   methods: {
     fetchPosts() {
@@ -83,7 +83,7 @@ export default {
               console.log(error)
             })
       } else {
-        this.userInfos = this.$store.state.userInfos
+        this.userInfos = this.$store.getters.userInfos
       }
     },
     handleFetch(payload) {
@@ -109,7 +109,7 @@ export default {
   },
   watch: {
     '$route.params.username': function (username) {
-      let array = [undefined, this.$store.state.userInfos['username']]
+      let array = [undefined, this.$store.getters.username]
       if (false === array.includes(this.userInfos['username']) || false === array.includes(username)) {
         this.init()
         this.initAndFetchPosts()

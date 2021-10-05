@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import AccountBar from "./Account/AccountBar";
+import AccountBar from "./Account/AccountBar"
 export default {
   name: 'Account',
   components: {AccountBar}

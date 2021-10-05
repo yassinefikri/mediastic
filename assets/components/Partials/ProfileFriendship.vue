@@ -10,7 +10,8 @@
 </template>
 
 <script>
-import MyForm from "./MyForm";
+import MyForm from "./MyForm"
+import {mapGetters} from 'vuex'
 
 export default {
   name: "profile-friendship",
@@ -24,18 +25,18 @@ export default {
   methods: {
     refreshForm() {
       this.childKey++
-      window.scrollTo(0,0);
+      window.scrollTo(0,0)
     }
   },
   computed: {
-    getCurrentUserUsername() {
-      return this.$store.state.userInfos['username']
-    }
+    ...mapGetters({
+      currentUsername: 'username',
+    }),
   },
   watch: {
     '$store.state.friendships': function (val, oldVal) {
       let difference = this.$options.filters.objectDifference(val, oldVal)
-      let users = [this.username, this.getCurrentUserUsername]
+      let users = [this.username, this.currentUsername]
       difference = val[difference] ?? oldVal[difference]
       if(undefined !== difference && true === users.includes(difference.sender.username) && true === users.includes(difference.receiver.username)) {
         this.refreshForm()

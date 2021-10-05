@@ -7,7 +7,7 @@
             <mini-profile :user="post.createdBy"/>
           </b-popover>
           <div class="post-avatar me-2">
-            <img :src="post.createdBy.avatar_url" :alt="post.createdBy.firstName + ' avatar'" class="rounded-circle w-100 h-100"/>
+            <user-avatar :user="post.createdBy"/>
           </div>
           <div class="d-flex flex-column flex-grow-1 justify-content-center">
             <router-link :to="{ name: 'user_profile', params: { username: post.createdBy.username }}">{{ post.createdBy.firstName }} {{ post.createdBy.lastName }}</router-link>
@@ -31,12 +31,13 @@
 </template>
 
 <script>
-import MiniProfile from "../Partials/MiniProfile";
+import MiniProfile from "../Partials/MiniProfile"
+import UserAvatar from "../User/UserAvatar"
 
 export default {
   name: "post",
   props: ['post'],
-  components: {MiniProfile}
+  components: {MiniProfile, UserAvatar}
 }
 </script>
 

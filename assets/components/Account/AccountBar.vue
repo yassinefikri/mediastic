@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import NavLink from '../NavBar/NavLink';
+import NavLink from '../NavBar/NavLink'
 
 export default {
   name: "account-bar",

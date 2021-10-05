@@ -8,8 +8,8 @@
         </div>
         <strong class="me-auto">{{ user.firstName }} {{ user.lastName }}</strong>
         <small>{{ time|momentAgo }}</small>
-        <button type="button" @click="destroySelf" class="btn-close" :class="{'btn-close-white': variant !== 'light'}"
-                data-bs-dismiss="toast" aria-label="Close"></button>
+        <button type="button" @click="destroySelf" class="btn-close" data-bs-dismiss="toast"
+                aria-label="Close"></button>
       </div>
       <div class="toast-body">
         {{ content }}
@@ -25,13 +25,13 @@ export default {
   methods: {
     destroySelf() {
       this.$destroy()
-      this.$el.parentNode.removeChild(this.$el);
+      this.$el.parentNode.removeChild(this.$el)
     }
   },
   mounted() {
     setTimeout(() => {
       this.destroySelf()
-    }, 5000);
+    }, 5000)
   },
 }
 </script>
