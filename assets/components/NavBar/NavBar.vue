@@ -128,10 +128,10 @@ export default {
       return this.$store.getters.username;
     },
     getAlert() {
-      return this.$store.state.alert;
+      return this.$store.getters.alert;
     },
     getFriendships() {
-      return Object.values(this.$store.state.friendships)
+      return Object.values(this.$store.getters.friendships)
     },
     getFriendshipsCount() {
       return this.getFriendships.filter(friendship => friendship.sender.username !== this.getUsername).length;
@@ -140,7 +140,7 @@ export default {
       return Object.entries(this.$store.getters.unreadConversations).length
     },
     unreadNotificationsCount() {
-      return this.$store.state.unreadNotificationsCount;
+      return this.$store.getters.unreadNotificationsCount;
     },
     getNavbarButtonCount() {
       return this.unreadConversation + this.getFriendshipsCount + this.unreadNotificationsCount

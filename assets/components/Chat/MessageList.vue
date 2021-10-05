@@ -66,7 +66,7 @@ export default {
       return this.$Routing.generate('message_sending', {'id': this.conversationId})
     },
     getMessages() {
-      return this.$store.state.messages[this.conversationId]
+      return this.$store.getters.messages[this.conversationId]
     },
     getUsername() {
       return this.$store.getters.username;
@@ -75,7 +75,7 @@ export default {
       return this.$store.getters.allConversations.filter((conversation) => (conversation.id = this.conversationId))[0] ?? null
     },
     getMessagesSeens() {
-      return this.$store.state.lastSeenMessage[this.conversationId]
+      return this.$store.getters.lastSeenMessage[this.conversationId]
     }
   },
   methods: {

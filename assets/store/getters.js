@@ -20,4 +20,19 @@ export default {
     allConversations(state) {
         return state.conversations
     },
+    alert(state) {
+        return state.alert
+    },
+    messages: (state) => (id) => {
+        return state.messages[id]
+    },
+    lastSeenMessage: (state) => (id) => {
+        return state.lastSeenMessage[id]
+    },
+    friendships(state) {
+        return state.friendships
+    },
+    unreadNotificationsCount(state) {
+        return state.unreadNotificationsCount
+    }
 }
