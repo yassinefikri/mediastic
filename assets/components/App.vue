@@ -6,12 +6,13 @@
 </template>
 
 <script>
-import axios, * as others from 'axios';
-import Navbar from './NavBar/NavBar';
+import axios, * as others from 'axios'
+import Navbar from './NavBar/NavBar'
 import Home from './Home'
 import Account from './Account'
-import MyToast from "./MyBootrsrap/MyToast";
-import Vue from 'vue';
+import MyToast from './MyBootrsrap/MyToast'
+import Vue from 'vue'
+import {mapGetters} from 'vuex'
 
 export default {
   name: "app",
@@ -46,30 +47,30 @@ export default {
         .get(this.$Routing.generate('discover'))
         .then(response => {
           // Extract the hub URL from the Link header
-          const hubUrl = response.headers['link'].match(/<([^>]+)>;\s+rel=(?:mercure|"[^"]*mercure[^"]*")/)[1];
+          const hubUrl = response.headers['link'].match(/<([^>]+)>;\s+rel=(?:mercure|"[^"]*mercure[^"]*")/)[1]
 
           // Append the topic(s) to subscribe as query parameter
-          const hub = new URL(hubUrl, window.origin);
+          const hub = new URL(hubUrl, window.origin)
           response.data.forEach(function (topic) {
-            hub.searchParams.append('topic', topic);
+            hub.searchParams.append('topic', topic)
           })
 
           // Subscribe to updates
           const eventSource = new EventSource(hub, {
             withCredentials: true
-          });
+          })
 
           eventSource.addEventListener('chat', function (event) {
             this.handleMercureChat(JSON.parse(event.data))
-          }.bind(this), false);
+          }.bind(this), false)
 
           eventSource.addEventListener('friendship', function (event) {
             this.handleMercureFriendship(JSON.parse(event.data))
-          }.bind(this), false);
+          }.bind(this), false)
 
           eventSource.addEventListener('seen', function (event) {
             this.handleNewMessageSeen(JSON.parse(event.data))
-          }.bind(this), false);
+          }.bind(this), false)
         })
         .catch(error => {
           console.log(error)
@@ -99,14 +100,14 @@ export default {
       //console.log(data)
     },
     handleNewMessageSeen(data) {
-      if ('chat_user' === this.getCurrentRoute.name && ""+this.getCurrentRoute.params.conversationId === Object.keys(data)[0]) {
+      if ('chat_user' === this.getCurrentRoute.name && "" + this.getCurrentRoute.params.conversationId === Object.keys(data)[0]) {
         this.$store.commit('setMessageSeen', data)
       }
     },
     handleNewFriendship(data) {
       let friendship = JSON.parse(data.friendship)
       this.$store.commit('addFriendships', [friendship])
-      if (friendship.receiver.username === this.getUsername) {
+      if (friendship.receiver.username === this.username) {
         this.toast(friendship.sender, 'Sent you a friend request', friendship.sentAt, 'primary')
       }
     },
@@ -117,21 +118,21 @@ export default {
     handleAcceptedFriendship(data) {
       let friendship = JSON.parse(data.friendship)
       this.$store.commit('removeFriendship', friendship)
-      let user = friendship.sender.username === this.getUsername ? friendship.receiver : friendship.sender
+      let user = friendship.sender.username === this.username ? friendship.receiver : friendship.sender
       this.$store.commit('addFriend', [user])
-      if (friendship.sender.username === this.getUsername) {
+      if (friendship.sender.username === this.username) {
         this.toast(friendship.receiver, 'Accepted you friend request', friendship.answeredAt, 'success')
       }
     },
     handleRemovedFriendship(data) {
       let friendship = JSON.parse(data.friendship)
       this.$store.commit('removeFriendship', friendship)
-      let user = friendship.sender.username === this.getUsername ? friendship.receiver : friendship.sender
+      let user = friendship.sender.username === this.username ? friendship.receiver : friendship.sender
       this.$store.commit('removeFriend', user)
     },
     handleNewMessage(data) {
       let message = JSON.parse(data.message)
-      let conversation = this.getConversations.filter((conversation) => (conversation.id === message.conversation.id))
+      let conversation = this.allConversations.filter((tempconversation) => (tempconversation.id === message.conversation.id))
       if (0 === conversation.length) {
         axios
             .get(this.$Routing.generate('get_specific_conversation', {'id': message.conversation.id}))
@@ -144,7 +145,7 @@ export default {
       } else {
         this.$store.commit('moveConversationToStart', message.conversation)
       }
-      if (message.sender.username === this.getUsername) {
+      if (message.sender.username === this.username) {
         this.$store.commit('addMessages', [message])
       } else {
         if ('chat_user' !== this.getCurrentRoute.name || parseInt(this.getCurrentRoute.params.conversationId) !== message.conversation.id) {
@@ -167,21 +168,19 @@ export default {
           time,
           variant
         }
-      });
+      })
       myToastInstance.$mount()
       this.$el.appendChild(myToastInstance.$el)
     }
   },
   computed: {
-    getUsername() {
-      return this.$store.getters.username;
-    },
+    ...mapGetters([
+      'username',
+      'allConversations',
+    ]),
     getCurrentRoute() {
-      return this.$route;
+      return this.$route
     },
-    getConversations() {
-      return this.$store.getters.allConversations
-    }
   },
 }
 </script>

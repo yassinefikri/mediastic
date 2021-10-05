@@ -40,9 +40,9 @@
 </template>
 
 <script>
-import MyForm from "../Partials/MyForm";
-import UserAvatar from "../User/UserAvatar";
-import axios from "axios";
+import MyForm from "../Partials/MyForm"
+import UserAvatar from "../User/UserAvatar"
+import axios from "axios"
 import { mapGetters } from 'vuex'
 
 export default {
