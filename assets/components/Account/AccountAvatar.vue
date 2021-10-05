@@ -12,8 +12,8 @@
 </template>
 
 <script>
-import CoverAvatar from "../Partials/CoverAvatar";
-import MyForm from "../Partials/MyForm";
+import CoverAvatar from "../Partials/CoverAvatar"
+import MyForm from "../Partials/MyForm"
 
 export default {
   name: "account-avatar",

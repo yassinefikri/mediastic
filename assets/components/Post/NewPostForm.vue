@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import MyForm from "../Partials/MyForm";
+import MyForm from "../Partials/MyForm"
 
 export default {
   name: "new-post-form",
@@ -43,8 +43,8 @@ export default {
         deleteButton.innerHTML = '<i class="bi-trash"></i>'
         deleteButton.addEventListener('click', (e) => {
           e.preventDefault()
-          finalNode.remove();
-        });
+          finalNode.remove()
+        })
         // Create delete button container
         const deleteButtonContainer = document.createElement('div')
         deleteButtonContainer.append(deleteButton)
@@ -52,7 +52,7 @@ export default {
         // add the new element to the list
         list.append(finalNode)
       }
-    });
+    })
   },
   methods: {
     formPosted(){

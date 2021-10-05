@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import MiniProfileInfos from "./MiniProfileInfos";
+import MiniProfileInfos from "./MiniProfileInfos"
 
 export default {
   name: "mini-profile",

@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import NavbarSearchLink from "./NavbarSearchLink";
+import NavbarSearchLink from "./NavbarSearchLink"
 
 export default {
   name: "navbar-search-link-container",

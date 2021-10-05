@@ -31,8 +31,8 @@
 </template>
 
 <script>
-import MiniProfile from "../Partials/MiniProfile";
-import UserAvatar from "../User/UserAvatar";
+import MiniProfile from "../Partials/MiniProfile"
+import UserAvatar from "../User/UserAvatar"
 
 export default {
   name: "post",

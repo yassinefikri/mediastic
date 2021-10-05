@@ -16,8 +16,8 @@
 </template>
 
 <script>
-import axios from "axios";
-import NavbarSearchLinkContainer from "./NavbarSearchLinkContainer";
+import axios from "axios"
+import NavbarSearchLinkContainer from "./NavbarSearchLinkContainer"
 
 export default {
   name: "navbar-search",
@@ -56,8 +56,8 @@ export default {
   },
   methods: {
     fetchResults() {
-      let form = this.$refs['form-container'].querySelector('form');
-      let formData = new FormData(form);
+      let form = this.$refs['form-container'].querySelector('form')
+      let formData = new FormData(form)
       axios
           .post(this.$Routing.generate('navbar_search'), formData)
           .then(response => {

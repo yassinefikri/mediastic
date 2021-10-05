@@ -17,10 +17,10 @@ export default {
   props: ['avatar', 'cover'],
   computed: {
     getAvatarUrl(){
-      return this.avatar ?? this.$store.getters.avatar;
+      return this.avatar ?? this.$store.getters.avatar
     },
     getCoverURL(){
-      return this.cover ?? this.$store.getters.cover;
+      return this.cover ?? this.$store.getters.cover
     }
   },
 }

@@ -25,13 +25,13 @@ export default {
   methods: {
     destroySelf() {
       this.$destroy()
-      this.$el.parentNode.removeChild(this.$el);
+      this.$el.parentNode.removeChild(this.$el)
     }
   },
   mounted() {
     setTimeout(() => {
       this.destroySelf()
-    }, 5000);
+    }, 5000)
   },
 }
 </script>

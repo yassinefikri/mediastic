@@ -34,13 +34,13 @@
 </template>
 
 <script>
-import PostList from "./Post/PostList";
-import axios from "axios";
-import CoverAvatar from "./Partials/CoverAvatar";
-import NewPostForm from "./Post/NewPostForm";
-import MiniProfileInfos from "./Partials/MiniProfileInfos";
-import NavLink from "./NavBar/NavLink";
-import ProfileFriendship from "./Partials/ProfileFriendship";
+import PostList from "./Post/PostList"
+import axios from "axios"
+import CoverAvatar from "./Partials/CoverAvatar"
+import NewPostForm from "./Post/NewPostForm"
+import MiniProfileInfos from "./Partials/MiniProfileInfos"
+import NavLink from "./NavBar/NavLink"
+import ProfileFriendship from "./Partials/ProfileFriendship"
 
 export default {
   name: "profile",
@@ -59,11 +59,11 @@ export default {
   mounted() {
     this.fetchPosts()
     window.onscroll = () => {
-      let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
+      let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight
       if (true === bottomOfWindow && false === this.lastPage) {
         this.fetchPosts()
       }
-    };
+    }
   },
   methods: {
     fetchPosts() {

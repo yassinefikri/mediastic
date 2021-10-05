@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import Post from "../Post/Post";
-import axios from "axios";
+import Post from "../Post/Post"
+import axios from "axios"
 
 export default {
   name: "post-list",
@@ -34,7 +34,7 @@ export default {
           })
           .finally(() => {
             this.$emit('finished-fetching', payload)
-          });
+          })
     },
     initList() {
       this.posts = []

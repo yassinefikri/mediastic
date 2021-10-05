@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import MyForm from "../Partials/MyForm";
+import MyForm from "../Partials/MyForm"
 
 export default {
   name: "account-password",
