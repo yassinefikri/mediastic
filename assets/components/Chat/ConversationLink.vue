@@ -1,5 +1,5 @@
 <template>
-  <li class="list-group-item" :class="[active ? 'active' : '']">
+  <li class="list-group-item" :class="{'active': active}">
     <a class="d-flex flex-column" aria-current="page" :href="href">
       <div class="d-flex justify-content-between align-items-start">
         <div class="d-flex flex-column me-4 flex-grow-1">
