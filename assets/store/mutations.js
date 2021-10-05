@@ -97,25 +97,25 @@ export default {
         state[payload.name] = {}
     },
     addUnreadConversation(state, conversation) {
-        let obj = {...state.unreadConversation}
+        let obj = {...state.unreadConversations}
         if (undefined === obj[conversation.id]) {
             obj[conversation.id] = 1
         } else {
             obj[conversation.id]++
         }
-        state.unreadConversation = obj
+        state.unreadConversations = obj
     },
     setUnreadConversation(state, value) {
-        let obj = {...state.unreadConversation}
+        let obj = {...state.unreadConversations}
         value.forEach(function (conversation) {
             obj[conversation.id] = conversation.count
         })
-        state.unreadConversation = obj
+        state.unreadConversations = obj
     },
     resetUnreadConversation(state, conversationId) {
-        let obj = {...state.unreadConversation}
+        let obj = {...state.unreadConversations}
         delete obj[conversationId]
-        state.unreadConversation = obj
+        state.unreadConversations = obj
     },
     incrementUnreadNotificationsCount(state) {
         state.unreadNotificationsCount++

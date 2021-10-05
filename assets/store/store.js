@@ -13,7 +13,7 @@ export default new Vuex.Store({
         friends: {},
         messages: {},
         conversations: [],
-        unreadConversation: {},
+        unreadConversations: {},
         unreadNotificationsCount: 0,
         lastSeenMessage: {}
     },

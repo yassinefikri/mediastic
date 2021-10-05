@@ -25,7 +25,7 @@ export default {
   components: {ConversationLink, NewConversationForm},
   computed: {
     getUnreadConversation() {
-      return this.$store.state.unreadConversation
+      return this.$store.getters.unreadConversations
     },
     getList() {
       return this.$store.getters.allConversations

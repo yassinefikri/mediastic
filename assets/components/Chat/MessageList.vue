@@ -72,7 +72,7 @@ export default {
       return this.$store.getters.username;
     },
     getConversation() {
-      return this.$store.state.conversations.filter((conversation) => (conversation.id = this.conversationId))[0] ?? null
+      return this.$store.getters.allConversations.filter((conversation) => (conversation.id = this.conversationId))[0] ?? null
     },
     getMessagesSeens() {
       return this.$store.state.lastSeenMessage[this.conversationId]

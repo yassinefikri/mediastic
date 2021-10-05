@@ -137,7 +137,7 @@ export default {
       return this.getFriendships.filter(friendship => friendship.sender.username !== this.getUsername).length;
     },
     unreadConversation() {
-      return Object.entries(this.$store.state.unreadConversation).length
+      return Object.entries(this.$store.getters.unreadConversations).length
     },
     unreadNotificationsCount() {
       return this.$store.state.unreadNotificationsCount;

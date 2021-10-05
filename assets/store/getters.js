@@ -14,6 +14,9 @@ export default {
     userInfos(state) {
         return state.userInfos
     },
+    unreadConversations(state) {
+        return state.unreadConversations
+    },
     allConversations(state) {
         return state.conversations
     },
