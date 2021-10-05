@@ -61,7 +61,7 @@
                   custom
                   v-slot="{ href, route, navigate, isActive, isExactActive }">
                 <navbar-profile-link :active="isActive" :href="href" @click="navigate" :label="route['meta']['label']"
-                                     :userFirstName="getUserFirstName" :userAvatar="getAvatarUrl">{{ route.fullPath }}
+                                     :userFirstName="firstname" :userAvatar="avatar">{{ route.fullPath }}
                 </navbar-profile-link>
               </router-link>
               <li class="nav-item d-flex align-content-center ms-2 border-start" id="navbar-logout">
@@ -74,9 +74,9 @@
         </div>
       </div>
     </nav>
-    <div v-if="getAlert" class="alert alert-dismissible fade show text-center rounded-0 mb-0"
-         :class="'alert-'+getAlert.type" role="alert">
-      {{ getAlert.message }}
+    <div v-if="alert" class="alert alert-dismissible fade show text-center rounded-0 mb-0"
+         :class="'alert-'+alert.type" role="alert">
+      {{ alert.message }}
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"
               @click="$store.commit('deleteAlert')">
         <span aria-hidden="true">&times;</span>
@@ -131,7 +131,7 @@ export default {
       return Object.values(this.$store.getters.friendships)
     },
     getFriendshipsCount() {
-      return this.getFriendships.filter(friendship => friendship.sender.username !== this.getUsername).length
+      return this.getFriendships.filter(friendship => friendship.sender.username !== this.username).length
     },
     unreadConversation() {
       return Object.entries(this.$store.getters.unreadConversations).length

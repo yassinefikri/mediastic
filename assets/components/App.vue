@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import axios, * as others from 'axios'
+import axios from 'axios'
 import Navbar from './NavBar/NavBar'
 import Home from './Home'
 import Account from './Account'
