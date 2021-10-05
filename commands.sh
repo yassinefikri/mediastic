@@ -20,7 +20,7 @@ export -f mysql
 
 unalias yarn 2>/dev/null >/dev/null || true
 yarn() {
-  docker exec -it --user app symfony-vue_webpack_1 sh -c "yarn $*"
+  docker exec -it --user node symfony-vue_webpack_1 sh -c "yarn $*"
 }
 export -f yarn
 
