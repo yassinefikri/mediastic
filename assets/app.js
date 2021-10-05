@@ -65,18 +65,6 @@ const store = new Vuex.Store({
         removeFriend(state, friend) {
             this.commit('removeFromObject', {object: 'friends', data: friend, key: 'username'})
         },
-        addSingleMessage(state, message) {
-            let obj = {...state.messages}
-            if (undefined === obj[message.conversation.id]) {
-                obj[message.conversation.id] = []
-            }
-            message.seenBy.push(message.sender)
-            let arr = [...obj[message.conversation.id]]
-            arr.push(message)
-            obj[message.conversation.id] = arr
-            state.messages = obj
-            this.commit('setSeens', [message])
-        },
         addMessages(state, messages) {
             let obj = {...state.messages}
             messages.forEach(function (message) {
@@ -85,7 +73,11 @@ const store = new Vuex.Store({
                 }
                 message.seenBy.push(message.sender)
                 let arr = [...obj[message.conversation.id]]
-                arr.unshift(message)
+                if(messages.length === 1) {
+                    arr.push(message)
+                } else {
+                    arr.unshift(message)
+                }
                 obj[message.conversation.id] = arr
             })
             state.messages = obj
@@ -169,9 +161,6 @@ const store = new Vuex.Store({
             let obj = {...state.unreadConversation}
             delete obj[conversationId]
             state.unreadConversation = obj
-        },
-        resetUnreadConversations(state) {
-            state.unreadConversation = {}
         },
         incrementUnreadNotificationsCount(state) {
             state.unreadNotificationsCount++
