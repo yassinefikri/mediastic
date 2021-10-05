@@ -21,9 +21,10 @@
         </div>
         <div class="seen-container d-flex"
              :class="[message.sender.username === getUsername ? 'align-self-end' : 'align-self-start']">
-          <div v-for="(person,secondIndex) in message.seenBy" :key="secondIndex" class="img-container">
-            <user-avatar v-if="person.username !== getUsername && getMessagesSeens[person.username] === message.id"
-                         :user="person"/>
+          <div v-for="(person,secondIndex) in message.seenBy"
+               v-if="person.username !== getUsername && getMessagesSeens[person.username] === message.id"
+               :key="secondIndex" class="img-container">
+            <user-avatar :user="person"/>
           </div>
         </div>
       </div>
