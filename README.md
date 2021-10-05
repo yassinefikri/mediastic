@@ -11,7 +11,7 @@ composer install
 console doctrine:migrations:migrate
 yarn
 dump-routes
-yarn encore dev
+yarn encore production
 ```
 
 # Usage
