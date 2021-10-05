@@ -164,7 +164,7 @@ export default {
   },
   computed: {
     getUsername() {
-      return this.$store.state.userInfos['username'];
+      return this.$store.getters.username;
     },
   }
 }

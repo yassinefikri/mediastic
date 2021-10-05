@@ -119,13 +119,13 @@ export default {
   },
   computed: {
     getAvatarUrl() {
-      return this.$store.state.userInfos['avatar_url'];
+      return this.$store.getters.avatar;
     },
     getUserFirstName() {
       return this.$store.state.userInfos['firstName'];
     },
     getUsername() {
-      return this.$store.state.userInfos['username'];
+      return this.$store.getters.username;
     },
     getAlert() {
       return this.$store.state.alert;

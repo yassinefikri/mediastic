@@ -174,13 +174,13 @@ export default {
   },
   computed: {
     getUsername() {
-      return this.$store.state.userInfos['username'];
+      return this.$store.getters.username;
     },
     getCurrentRoute() {
       return this.$route;
     },
     getConversations() {
-      return this.$store.state.conversations
+      return this.$store.getters.allConversations
     }
   },
 }

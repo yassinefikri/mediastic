@@ -69,7 +69,7 @@ export default {
       return this.$store.state.messages[this.conversationId]
     },
     getUsername() {
-      return this.$store.state.userInfos['username'];
+      return this.$store.getters.username;
     },
     getConversation() {
       return this.$store.state.conversations.filter((conversation) => (conversation.id = this.conversationId))[0] ?? null

@@ -10,7 +10,7 @@
           :first-name="userInfos['firstName']"
           :last-name="userInfos['lastName']"
       />
-      <div v-if="userInfos['username'] === $store.state.userInfos['username']">
+      <div v-if="userInfos['username'] === $store.getters.username">
         <div class="my-container-600 mx-auto">
           <div class="mx-auto d-flex justify-content-center align-items-center profile-sett btn btn-secondary"
                id="profile-setting-btn">
