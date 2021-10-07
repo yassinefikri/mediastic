@@ -26,7 +26,7 @@
         </div>
       </div>
     </div>
-    <p class="mb-0">{{ post.content }}</p>
+    <p class="mb-0 multi-line-content">{{ post.content }}</p>
     <div v-if="post.postImages.length" class="post-images-cont mt-3">
       <figure class="figure post-figure mb-0" v-for="image in post.postImages">
         <img :src="$Routing.generate('post_image', {'id': image.id})" alt="post-image" class="w-100 h-100"/>

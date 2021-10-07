@@ -10,11 +10,9 @@
         </span>
         <div class="d-flex align-items-center justify-content-end"
              :class="[message.sender.username === username ? 'align-self-end' : 'align-self-start flex-row-reverse']">
-          <div class="alert message mb-0 mx-2"
+          <div class="alert message mb-0 mx-2 multi-line-content"
                :class="[message.sender.username === username ? 'alert-info' : 'alert-secondary']"
-               role="alert">
-            {{ message.content }}
-          </div>
+               role="alert">{{ message.content }}</div>
           <div class="message-sender-avatar rounded-circle">
             <user-avatar :user="message.sender"/>
           </div>
