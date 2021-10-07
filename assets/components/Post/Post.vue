@@ -10,14 +10,19 @@
             <user-avatar :user="post.createdBy"/>
           </div>
           <div class="d-flex flex-column flex-grow-1 justify-content-center">
-            <router-link :to="{ name: 'user_profile', params: { username: post.createdBy.username }}">{{ post.createdBy.firstName }} {{ post.createdBy.lastName }}</router-link>
+            <router-link :to="{ name: 'user_profile', params: { username: post.createdBy.username }}">
+              {{ post.createdBy.firstName }} {{ post.createdBy.lastName }}
+            </router-link>
             <i class="bi" style="font-size: 1.25rem" :class="[post.confidentiality === 'public' ? 'bi bi-globe' : post.confidentiality === 'friends' ? 'bi-people-fill' : 'bi-shield-lock-fill']"></i>
           </div>
         </div>
-        <div class="d-flex flex-grow-1">
+        <div class="d-flex flex-column ms-auto">
           <span class="text-muted ms-auto">
             {{ post.createdAt | momentAgo }}
           </span>
+          <router-link :to="{ name: 'post_edit', params: { postId: post.id }}">
+            <i v-if="post.createdBy.username === username" class="bi bi-pencil-square ms-auto d-table" style="font-size: 1.25rem"></i>
+          </router-link>
         </div>
       </div>
     </div>
@@ -33,11 +38,17 @@
 <script>
 import MiniProfile from "../Partials/MiniProfile"
 import UserAvatar from "../User/UserAvatar"
+import {mapGetters} from "vuex";
 
 export default {
   name: "post",
   props: ['post'],
-  components: {MiniProfile, UserAvatar}
+  components: {MiniProfile, UserAvatar},
+  computed: {
+    ...mapGetters([
+      'username',
+    ]),
+  }
 }
 </script>
 

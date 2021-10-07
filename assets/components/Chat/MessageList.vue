@@ -2,9 +2,9 @@
   <div class="flex-grow-1 d-flex flex-column">
     <div class="messages-container d-flex flex-column h-100 overflow-auto px-2" id="messages-root">
       <div v-if="true === loadedMessages" class="d-flex flex-column align-items-center my-1"
-           v-for="(message,index) in messages(conversationId)" :key="index">
+           v-for="(message,index) in getMessages" :key="index">
         <span class="text-muted"
-              v-if="0 === index || ((new Date(message.sentAt).getTime() - new Date(messages(conversationId)[index - 1].sentAt).getTime())/1000) >= 60"
+              v-if="0 === index || ((new Date(message.sentAt).getTime() - new Date(getMessages[index - 1].sentAt).getTime())/1000) >= 60"
               v-b-tooltip.hover :title="new Date(message.sentAt).toLocaleString()">
         {{ message.sentAt | momentAgo }}
         </span>
@@ -62,9 +62,11 @@ export default {
   computed: {
     ...mapGetters([
         'username',
-        'messages',
         'lastSeenMessage',
     ]),
+    getMessages(){
+      return this.$store.getters.messages(this.conversationId)
+    },
     getUrl() {
       return this.$Routing.generate('message_sending_front')
     },
@@ -101,7 +103,7 @@ export default {
       this.fetchMessages()
       this.$store.commit('resetUnreadConversation', this.conversationId)
     },
-    messages: function () {
+    getMessages: function() {
       this.scrollDown()
     },
   }

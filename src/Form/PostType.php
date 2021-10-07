@@ -42,19 +42,12 @@ class PostType extends AbstractType
                 'label_html' => true,
             ])
             ->add('postImages', CollectionType::class, [
-                'mapped' => false,
-                'entry_type' => FileType::class,
-                'entry_options' => [
-                    'constraints' => new Image(['mimeTypes' => ['image/jpg', 'image/jpeg', 'image/png']]),
-                    'attr' => [
-                        'class' => 'post-image-input'
-                    ]
-                ],
+                'entry_type' => PostImageType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
             ])
             ->add('submit', SubmitType::class, [
-                'label' => 'Create',
+                'label' => null === $builder->getData() ? 'Create': 'Edit',
                 'attr' => [
                     'class' => 'btn btn-success d-block mx-auto px-3'
                 ]

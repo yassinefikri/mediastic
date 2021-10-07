@@ -12,8 +12,7 @@
             data-widget-tags="{{ '<li></li>'|e }}"
             data-widget-counter="{{ form.postImages|length }}">
             {% for postImageField in form.postImages %}
-                <li>
-                    {{ form_errors(postImageField) }}
+                <li class="d-none" id="post-image-{{ postImageField.vars.value.id }}">
                     {{ form_widget(postImageField) }}
                 </li>
             {% endfor %}
@@ -27,3 +26,17 @@
 {{ form_widget(form.submit) }}
 {{ form_widget(form._token) }}
 {{ form_end(form, {'render_rest': false}) }}
+
+{% if form.vars.value is not same as(null) %}
+<p>Current Images</p>
+<div class="d-flex flex-wrap">
+    {% for postImageField in form.postImages %}
+        <div id="preview-post-image-{{ postImageField.vars.value.id }}" class="post-edit-image-container m-1 position-relative">
+            <img src="{{ postImageField.vars.value | publicUrl }}" alt="post-image" class="w-100 h-100"/>
+            <button type="button" class="btn btn-danger post-image-delete-button" data-id="{{ postImageField.vars.value.id }}">
+                <i class="bi bi-trash post-image-delete-button-icon" data-id="{{ postImageField.vars.value.id }}"></i>
+            </button>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}

@@ -1,10 +1,10 @@
 <template>
   <div ref="this-form" class="container">
     <my-form
-        :getUrl="$Routing.generate('post_add_front')"
-        :postUrl="$Routing.generate('post_add')"
-        :message="'Your post has been published'"
-        :clearFormAfterSubmit="true"
+        :getUrl="getUrl"
+        :postUrl="postUrl"
+        :message="message"
+        :clearFormAfterSubmit="undefined === postId"
         @form-posted="formPosted"
     />
   </div>
@@ -14,9 +14,16 @@
 import MyForm from "../Partials/MyForm"
 
 export default {
-  name: "new-post-form",
+  name: "post-form",
   components: {MyForm,},
-  props: ['getUrl', 'postUrl'],
+  props: ['postId'],
+  data(){
+    return {
+      getUrl: (undefined !== this.postId) ? this.$Routing.generate('post_edit_front', {'id': this.postId}) : this.$Routing.generate('post_add_front'),
+      postUrl: (undefined !== this.postId) ? this.$Routing.generate('post_edit', {'id': this.postId}) : this.$Routing.generate('post_add'),
+      message: (undefined !== this.postId) ? 'Your post has been updated' : 'Your post has been published'
+    }
+  },
   mounted() {
     this.$refs['this-form'].addEventListener('click', function (e) {
       if (e.target.classList.contains('add-another-collection-widget')) {
@@ -56,10 +63,14 @@ export default {
   },
   methods: {
     formPosted(){
-      let imagesList = this.$refs['this-form'].querySelector(this.$refs['this-form'].querySelector('.add-another-collection-widget').getAttribute('data-list-selector'))
-      imagesList.setAttribute('data-widget-counter', 0)
-      imagesList.innerHTML = ''
-      this.$emit('new-post')
+      if(undefined ===this.postId) {
+        let imagesList = this.$refs['this-form'].querySelector(this.$refs['this-form'].querySelector('.add-another-collection-widget').getAttribute('data-list-selector'))
+        imagesList.setAttribute('data-widget-counter', 0)
+        imagesList.innerHTML = ''
+        this.$emit('new-post')
+      } else {
+        this.$router.push({name: 'post_view', params: {'id': this.postId}})
+      }
     }
   }
 }
