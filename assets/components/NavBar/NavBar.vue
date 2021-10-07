@@ -27,16 +27,14 @@
                 <navbar-search/>
               </div>
               <div id="navbar-icons-container">
-                <button id="navbar-friendships-button" class="button-unstyled position-relative mx-2">
-                  <i class="bi bi-people-fill bi-25 "></i>
-                  <span v-if="getFriendshipsCount> 0"
-                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{
-                      getFriendshipsCount
-                    }}</span>
-                </button>
-                <b-popover target="navbar-friendships-button" triggers="click blur" placement="bottomright">
-                  <navbar-friendship-list :list="getFriendships"/>
-                </b-popover>
+                <router-link
+                    :to="{name: 'friendships'}"
+                    custom
+                    v-slot="{ href, route, navigate, isActive, isExactActive }">
+                  <nav-icon-link :active="isActive" :href="href" @click="navigate" icon="bi-people-fill"
+                                 :count="getFriendshipsCount">{{ route.fullPath }}
+                  </nav-icon-link>
+                </router-link>
                 <router-link
                     :to="{name: 'chat'}"
                     custom
@@ -88,7 +86,6 @@
 <script>
 import NavLink from './NavLink'
 import NavbarProfileLink from './NavbarProfileLink'
-import NavbarFriendshipList from "./Friendship/NavbarFriendshipList"
 import axios from "axios"
 import NavbarSearch from "./Search/NavbarSearch"
 import NavIconLink from "./NavIconLink"
@@ -96,7 +93,7 @@ import {mapGetters} from "vuex"
 
 export default {
   name: 'navbar',
-  components: {NavLink, NavbarProfileLink, NavbarSearch, NavbarFriendshipList, NavIconLink},
+  components: {NavLink, NavbarProfileLink, NavbarSearch, NavIconLink},
   mounted() {
     axios
         .get(this.$Routing.generate('friendships', {'page': 1}))

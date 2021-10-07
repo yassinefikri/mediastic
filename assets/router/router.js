@@ -15,6 +15,7 @@ import AccountPassword from '../components/Account/AccountPassword'
 import Chat from '../components/Chat'
 import PostEdit from '../components/Post/PostEdit'
 import PostView from '../components/Post/PostView'
+import FriendshipList from '../components/Friendship/FriendshipList'
 
 Vue.use(VueRouter)
 
@@ -100,6 +101,11 @@ const routes = [
         path: '/post/:postId/edit',
         component: PostEdit,
         props: true,
+    },
+    {
+        name: 'friendships',
+        path: '/friendships/',
+        component: FriendshipList,
     }
 ]
 

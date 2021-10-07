@@ -64,15 +64,15 @@ class FriendshipController extends AbstractController
     }
 
     /**
-     * @Route("/friendships/{page}", name="friendships", options={"expose"=true}, requirements={"page"="^[1-9]\d*$"})
+     * @Route("/friendships/{page}", name="friendships", options={"expose"=true})
      */
-    public function getUserFriendships(FriendshipRepository $friendshipRepository, int $page): JsonResponse
+    public function getUserFriendships(FriendshipRepository $friendshipRepository): JsonResponse
     {
         /**
          * @var User $currentUser
          */
         $currentUser = $this->getUser();
-        $friendships = $friendshipRepository->getUserFriendships($currentUser, $page);
+        $friendships = $friendshipRepository->getUserFriendships($currentUser);
 
         return $this->json($friendships, Response::HTTP_OK, [], ['groups' => 'friendship']);
     }
