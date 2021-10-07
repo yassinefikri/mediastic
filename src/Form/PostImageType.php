@@ -6,6 +6,7 @@ use App\Entity\PostImage;
 use App\Manager\ImagesManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -56,7 +57,15 @@ class PostImageType extends AbstractType
 
     public function validateImage(?UploadedFile $value, ExecutionContextInterface $context): void
     {
-        $postImage = $context->getObject()->getParent()->getData();
+        /**
+         * @var Form $imageFormInterface
+         */
+        $imageFormInterface = $context->getObject();
+        /**
+         * @var Form $postImageFormInterface
+         */
+        $postImageFormInterface = $imageFormInterface->getParent();
+        $postImage              = $postImageFormInterface->getData();
         if (null === $postImage->getImageName()) {
             if (null === $value) {
                 $this->throwViolation($context);
