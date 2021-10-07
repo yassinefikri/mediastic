@@ -12,7 +12,7 @@
             data-widget-tags="{{ '<li></li>'|e }}"
             data-widget-counter="{{ form.postImages|length }}">
             {% for postImageField in form.postImages %}
-                <li class="d-none">
+                <li class="d-none" id="post-image-{{ postImageField.vars.value.id }}">
                     {{ form_widget(postImageField) }}
                 </li>
             {% endfor %}
@@ -31,8 +31,11 @@
 <p>Current Images</p>
 <div class="d-flex flex-wrap">
     {% for postImageField in form.postImages %}
-        <div class="post-edit-image-container m-1">
+        <div id="preview-post-image-{{ postImageField.vars.value.id }}" class="post-edit-image-container m-1 position-relative">
             <img src="{{ postImageField.vars.value | publicUrl }}" alt="post-image" class="w-100 h-100"/>
+            <button type="button" class="btn btn-danger post-image-delete-button" data-id="{{ postImageField.vars.value.id }}">
+                <i class="bi bi-trash post-image-delete-button-icon" data-id="{{ postImageField.vars.value.id }}"></i>
+            </button>
         </div>
     {% endfor %}
 </div>
