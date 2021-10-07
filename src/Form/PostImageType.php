@@ -29,6 +29,7 @@ class PostImageType extends AbstractType
     {
         $builder
             ->add('image', FileType::class, [
+                'mapped'      => false,
                 'label'       => false,
                 'constraints' => [
                     new Image(['mimeTypes' => ['image/jpg', 'image/jpeg', 'image/png']]),

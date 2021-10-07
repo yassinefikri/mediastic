@@ -31,8 +31,6 @@ class PostImage
      */
     private ?string $imageName;
 
-    private ?UploadedFile $image;
-
     public function __construct()
     {
         $this->imageName = null;
@@ -63,18 +61,6 @@ class PostImage
     public function setImageName(string $imageName): self
     {
         $this->imageName = $imageName;
-
-        return $this;
-    }
-
-    public function getImage(): ?UploadedFile
-    {
-        return $this->image;
-    }
-
-    public function setImage(?UploadedFile $image): self
-    {
-        $this->image = $image;
 
         return $this;
     }
