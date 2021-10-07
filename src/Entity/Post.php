@@ -50,7 +50,7 @@ class Post
     private string $confidentiality;
 
     /**
-     * @ORM\OneToMany(targetEntity=PostImage::class, mappedBy="post", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=PostImage::class, mappedBy="post", orphanRemoval=true, cascade={"persist", "remove"})
      * @Groups("json")
      */
     private Collection $postImages;

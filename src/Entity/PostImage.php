@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\PostImageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
@@ -28,11 +29,13 @@ class PostImage
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private string $imageName;
+    private ?string $imageName;
 
-    public function __construct(string $imageName)
+    private ?UploadedFile $image;
+
+    public function __construct()
     {
-        $this->imageName = $imageName;
+        $this->imageName = null;
     }
 
     public function getId(): ?int
@@ -52,7 +55,7 @@ class PostImage
         return $this;
     }
 
-    public function getImageName(): string
+    public function getImageName(): ?string
     {
         return $this->imageName;
     }
@@ -60,6 +63,18 @@ class PostImage
     public function setImageName(string $imageName): self
     {
         $this->imageName = $imageName;
+
+        return $this;
+    }
+
+    public function getImage(): ?UploadedFile
+    {
+        return $this->image;
+    }
+
+    public function setImage(?UploadedFile $image): self
+    {
+        $this->image = $image;
 
         return $this;
     }

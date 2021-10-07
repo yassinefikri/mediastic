@@ -19,7 +19,7 @@
           </div>
         </div>
         <hr/>
-        <new-post-form @new-post="initAndFetchPosts"/>
+        <post-form @new-post="initAndFetchPosts"/>
       </div>
       <div v-else>
         <profile-friendship :username="username" ref="profile-friendship-form"/>
@@ -37,14 +37,14 @@
 import PostList from "./Post/PostList"
 import axios from "axios"
 import CoverAvatar from "./Partials/CoverAvatar"
-import NewPostForm from "./Post/NewPostForm"
+import PostForm from "./Post/PostForm"
 import MiniProfileInfos from "./Partials/MiniProfileInfos"
 import NavLink from "./NavBar/NavLink"
 import ProfileFriendship from "./Partials/ProfileFriendship"
 
 export default {
   name: "profile",
-  components: {CoverAvatar, MiniProfileInfos, NewPostForm, PostList, NavLink, ProfileFriendship},
+  components: {CoverAvatar, MiniProfileInfos, PostForm, PostList, NavLink, ProfileFriendship},
   props: ['username'],
   data() {
     return {

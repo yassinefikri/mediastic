@@ -1,7 +1,7 @@
-import Vue from 'vue';
+import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-import Routing from '../../vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js/router.min.js';
+import Routing from '../../vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js/router.min.js'
 const FOSroutes = require('../../public/js/fos_js_routes.json')
 Routing.setRoutingData(FOSroutes)
 Vue.prototype.$Routing = Routing
@@ -13,6 +13,8 @@ import AccountGeneral from '../components/Account/AccountGeneral'
 import AccountAvatar from '../components/Account/AccountAvatar'
 import AccountPassword from '../components/Account/AccountPassword'
 import Chat from '../components/Chat'
+import PostEdit from '../components/Post/PostEdit'
+import PostView from '../components/Post/PostView'
 
 Vue.use(VueRouter)
 
@@ -86,6 +88,18 @@ const routes = [
         component: Chat,
         props: true,
         meta: {'label': 'Chat'},
+    },
+    {
+        name: 'post_view',
+        path: '/post/:postId',
+        component: PostView,
+        props: true,
+    },
+    {
+        name: 'post_edit',
+        path: '/post/:postId/edit',
+        component: PostEdit,
+        props: true,
     }
 ]
 

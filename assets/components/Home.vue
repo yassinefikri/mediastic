@@ -1,6 +1,6 @@
 <template>
   <div class="container mt-3">
-    <new-post-form @new-post="initAndFetchPosts"/>
+    <post-form @new-post="initAndFetchPosts"/>
     <hr/>
     <div class="my-container-800 mx-auto">
       <post-list
@@ -13,11 +13,11 @@
 
 <script>
 import PostList from "./Post/PostList"
-import NewPostForm from "./Post/NewPostForm"
+import PostForm from "./Post/PostForm"
 
 export default {
   name: 'home',
-  components: {NewPostForm, PostList},
+  components: {PostForm, PostList},
   data() {
     return {
       page: 1,
