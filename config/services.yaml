@@ -37,3 +37,12 @@ services:
     App\Manager\ImagesManager:
         arguments:
             $targetDirectories: '%targetDirectories%'
+
+    App\EventListener\PostImageDeleteListener:
+        tags:
+            -
+                name: 'doctrine.orm.entity_listener'
+                event: 'postRemove'
+                entity: 'App\Entity\PostImage'
+        arguments:
+            $targetDirectory: '%posts_directory%'
