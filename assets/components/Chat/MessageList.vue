@@ -1,6 +1,6 @@
 <template>
   <div class="flex-grow-1 d-flex flex-column">
-    <div class="messages-container d-flex flex-column h-100 overflow-auto px-2" id="messages-root">
+    <div class="messages-container d-flex flex-column h-100 overflow-auto px-2" ref="messages-root">
       <div v-if="true === loadedMessages" class="d-flex flex-column align-items-center my-1"
            v-for="(message,index) in getMessages" :key="index">
         <span class="text-muted"
@@ -41,7 +41,7 @@
 import MyForm from "../Partials/MyForm"
 import UserAvatar from "../User/UserAvatar"
 import axios from "axios"
-import { mapGetters } from 'vuex'
+import {mapGetters} from 'vuex'
 
 export default {
   name: "message-list",
@@ -51,18 +51,27 @@ export default {
     return {
       loadedMessages: false,
       page: 1,
+      lastPage: false,
     }
+  },
+  created() {
+    this.scrollToBottom = true
   },
   mounted() {
     this.$store.commit('initMessages', this.conversationId)
     this.fetchMessages()
+    this.$refs['messages-root'].onscroll = () => {
+      if (0 === this.$refs['messages-root'].scrollTop && false === this.lastPage) {
+        this.fetchMessages(false)
+      }
+    }
   },
   computed: {
     ...mapGetters([
-        'username',
-        'lastSeenMessage',
+      'username',
+      'lastSeenMessage',
     ]),
-    getMessages(){
+    getMessages() {
       return this.$store.getters.messages(this.conversationId)
     },
     getUrl() {
@@ -73,34 +82,40 @@ export default {
     },
   },
   methods: {
-    fetchMessages() {
+    fetchMessages(scrollToBottom = true) {
+      this.scrollToBottom = scrollToBottom
       axios
           .get(this.$Routing.generate('get_conversation_messages', {id: this.conversationId, page: this.page}))
           .then(response => {
             this.$store.commit('addMessages', response.data)
             this.loadedMessages = true
             this.page++
+            if (response.data.length < 15) {
+              this.lastPage = true
+            }
           })
           .catch(error => {
             console.log(error)
           })
           .finally(() => {
-            this.scrollDown()
+            this.scrollToBottom = true
           })
     },
     scrollDown() {
-      let container = this.$el.querySelector("#messages-root")
-      container.scrollTop = container.scrollHeight
+      this.$refs['messages-root'].scrollTop = this.$refs['messages-root'].scrollHeight
     },
   },
   updated() {
-    this.scrollDown()
+    if (true === this.scrollToBottom) {
+      this.scrollDown()
+    }
   },
   watch: {
     '$route.params.conversationId': function () {
       this.$store.commit('initMessages', this.conversationId)
       this.loadedMessages = false
       this.page = 1
+      this.scrollToBottom = true
       this.fetchMessages()
       this.$store.commit('resetUnreadConversation', this.conversationId)
     },
