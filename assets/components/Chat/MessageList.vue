@@ -95,6 +95,9 @@ export default {
       container.scrollTop = container.scrollHeight
     },
   },
+  updated() {
+    this.scrollDown()
+  },
   watch: {
     '$route.params.conversationId': function () {
       this.$store.commit('initMessages', this.conversationId)
@@ -102,9 +105,6 @@ export default {
       this.page = 1
       this.fetchMessages()
       this.$store.commit('resetUnreadConversation', this.conversationId)
-    },
-    getMessages: function() {
-      this.scrollDown()
     },
   }
 }
