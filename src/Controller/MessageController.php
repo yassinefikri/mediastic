@@ -42,17 +42,16 @@ class MessageController extends AbstractController
      */
     public function sendMessage(Conversation $conversation, Request $request, EventDispatcherInterface $eventDispatcher): JsonResponse
     {
-        $form = $this->createForm(MessageFormType::class);
+        $message = new Message();
+        $form    = $this->createForm(MessageFormType::class, $message);
         $form->handleRequest($request);
         if (true === $form->isSubmitted() && true === $form->isValid()) {
             /**
              * @var User $user
              */
-            $user    = $this->getUser();
-            $message = new Message();
-            $message->setConversation($conversation);
+            $user = $this->getUser();
             $message->setSender($user);
-            $message->setContent($form->get('content')->getData());
+            $message->setConversation($conversation);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($message);
             $conversation->setUpdatedAt(new DateTimeImmutable());

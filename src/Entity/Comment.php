@@ -6,6 +6,7 @@ use App\Repository\CommentRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=CommentRepository::class)
@@ -23,6 +24,7 @@ class Comment
     /**
      * @ORM\Column(type="text")
      * @Groups("comment")
+     * @Assert\NotBlank
      */
     private string $content;
 

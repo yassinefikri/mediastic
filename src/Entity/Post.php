@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Mapping\ConfidentialityMapping;
 
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
@@ -46,6 +47,7 @@ class Post
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups("json")
+     * @Assert\Choice(choices=ConfidentialityMapping::confs, message="Choose a valid conf.")
      */
     private string $confidentiality;
 
