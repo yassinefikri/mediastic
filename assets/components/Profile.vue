@@ -12,7 +12,7 @@
       />
       <div v-if="userInfos['username'] === $store.getters.username">
         <div class="my-container-600 mx-auto">
-          <div class="mx-auto d-flex justify-content-center align-items-center profile-sett btn btn-secondary"
+          <div class="mx-auto d-flex justify-content-center align-items-center profile-sett link-style-none btn btn-secondary"
                id="profile-setting-btn">
             <i class="bi bi-gear-fill me-2" style="font-size: 1.25rem"></i>
             <router-link :to="{ name: 'user_account'}">Account</router-link>

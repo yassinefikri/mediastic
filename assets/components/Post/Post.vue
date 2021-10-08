@@ -1,7 +1,7 @@
 <template>
   <div class="bg-light p-4 my-3 post-radius">
-    <div class="post-owner mb-4">
-      <div class="d-flex" >
+    <div class="post-owner link-style-none mb-4">
+      <div class="d-flex">
         <div class="d-flex" :id="'post-'+post.id">
           <b-popover :target="'post-'+post.id" triggers="hover" :placement="'left'">
             <mini-profile :user="post.createdBy"/>
@@ -13,7 +13,8 @@
             <router-link :to="{ name: 'user_profile', params: { username: post.createdBy.username }}">
               {{ post.createdBy.firstName }} {{ post.createdBy.lastName }}
             </router-link>
-            <i class="bi" style="font-size: 1.25rem" :class="[post.confidentiality === 'public' ? 'bi bi-globe' : post.confidentiality === 'friends' ? 'bi-people-fill' : 'bi-shield-lock-fill']"></i>
+            <i class="bi" style="font-size: 1.25rem"
+               :class="[post.confidentiality === 'public' ? 'bi bi-globe' : post.confidentiality === 'friends' ? 'bi-people-fill' : 'bi-shield-lock-fill']"></i>
           </div>
         </div>
         <div class="d-flex flex-column ms-auto">
@@ -21,7 +22,8 @@
             {{ post.createdAt | momentAgo }}
           </span>
           <router-link :to="{ name: 'post_edit', params: { postId: post.id }}">
-            <i v-if="post.createdBy.username === username" class="bi bi-pencil-square ms-auto d-table" style="font-size: 1.25rem"></i>
+            <i v-if="post.createdBy.username === username" class="bi bi-pencil-square ms-auto d-table"
+               style="font-size: 1.25rem; cursor: pointer;"></i>
           </router-link>
         </div>
       </div>
@@ -32,13 +34,19 @@
         <img :src="$Routing.generate('post_image', {'id': image.id})" alt="post-image" class="w-100 h-100"/>
       </figure>
     </div>
+    <div v-if="'post_view' !== $route.name">
+      <hr class="mb-4"/>
+      <router-link :to="{ name: 'post_view', params: { 'postId': post.id }}" class="nav-link text-center p-0">
+        <i class="bi bi-chat-left-text-fill"></i> Comments
+      </router-link>
+    </div>
   </div>
 </template>
 
 <script>
 import MiniProfile from "../Partials/MiniProfile"
 import UserAvatar from "../User/UserAvatar"
-import {mapGetters} from "vuex";
+import {mapGetters} from "vuex"
 
 export default {
   name: "post",

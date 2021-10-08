@@ -1,5 +1,5 @@
 <template>
-  <div class="conversation-container h-100">
+  <div class="conversation-container h-100 link-style-none">
     <new-conversation-form/>
     <hr/>
     <ul class="list-group overflow-auto">

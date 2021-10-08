@@ -1,30 +1,14 @@
 <template>
   <div class="flex-grow-1 d-flex flex-column">
     <div class="messages-container d-flex flex-column h-100 overflow-auto px-2" ref="messages-root">
-      <div v-if="true === loadedMessages" class="d-flex flex-column align-items-center my-1"
+      <div v-if="true === loadedMessages" class="d-flex flex-column my-1"
            v-for="(message,index) in getMessages" :key="index">
-        <span class="text-muted"
+        <span class="text-muted align-self-center"
               v-if="0 === index || ((new Date(message.sentAt).getTime() - new Date(getMessages[index - 1].sentAt).getTime())/1000) >= 60"
               v-b-tooltip.hover :title="new Date(message.sentAt).toLocaleString()">
         {{ message.sentAt | momentAgo }}
         </span>
-        <div class="d-flex align-items-center justify-content-end"
-             :class="[message.sender.username === username ? 'align-self-end' : 'align-self-start flex-row-reverse']">
-          <div class="alert message mb-0 mx-2 multi-line-content"
-               :class="[message.sender.username === username ? 'alert-info' : 'alert-secondary']"
-               role="alert">{{ message.content }}</div>
-          <div class="message-sender-avatar rounded-circle">
-            <user-avatar :user="message.sender"/>
-          </div>
-        </div>
-        <div class="seen-container d-flex"
-             :class="[message.sender.username === username ? 'align-self-end' : 'align-self-start']">
-          <div v-for="(person,secondIndex) in message.seenBy"
-               v-if="person.username !== username && lastSeenMessage(conversationId)[person.username] === message.id"
-               :key="secondIndex" class="img-container">
-            <user-avatar :user="person"/>
-          </div>
-        </div>
+        <message :message="message"/>
       </div>
     </div>
     <hr/>
@@ -39,13 +23,12 @@
 
 <script>
 import MyForm from "../Partials/MyForm"
-import UserAvatar from "../User/UserAvatar"
 import axios from "axios"
-import {mapGetters} from 'vuex'
+import Message from "./Message"
 
 export default {
   name: "message-list",
-  components: {MyForm, UserAvatar},
+  components: {MyForm, Message},
   props: ['conversationId'],
   data() {
     return {
@@ -67,10 +50,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'username',
-      'lastSeenMessage',
-    ]),
     getMessages() {
       return this.$store.getters.messages(this.conversationId)
     },

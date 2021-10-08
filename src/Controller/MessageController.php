@@ -5,19 +5,17 @@ namespace App\Controller;
 use App\Entity\Conversation;
 use App\Entity\Message;
 use App\Entity\User;
+use App\Event\MessageSentEvent;
 use App\Form\MessageFormType;
 use App\Manager\SeenManager;
-use App\Resolver\UserTopicsResolver;
 use DateTimeImmutable;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mercure\HubInterface;
-use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @Route("/message")
@@ -42,36 +40,24 @@ class MessageController extends AbstractController
      * @Route("/sendMessage/{id}", name="message_sending", options={"expose"=true})
      * @IsGranted("SEND_MESSAGE", subject="conversation")
      */
-    public function sendMessage(
-        Conversation        $conversation,
-        Request             $request,
-        HubInterface        $hub,
-        UserTopicsResolver  $topicsResolver,
-        SerializerInterface $serializer
-    ): JsonResponse {
-        $form = $this->createForm(MessageFormType::class);
+    public function sendMessage(Conversation $conversation, Request $request, EventDispatcherInterface $eventDispatcher): JsonResponse
+    {
+        $message = new Message();
+        $form    = $this->createForm(MessageFormType::class, $message);
         $form->handleRequest($request);
         if (true === $form->isSubmitted() && true === $form->isValid()) {
             /**
              * @var User $user
              */
-            $user    = $this->getUser();
-            $message = new Message();
-            $message->setConversation($conversation);
+            $user = $this->getUser();
             $message->setSender($user);
-            $message->setContent($form->get('content')->getData());
+            $message->setConversation($conversation);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($message);
             $conversation->setUpdatedAt(new DateTimeImmutable());
             $entityManager->flush();
 
-            $messageData = $serializer->serialize($message, 'json', ['groups' => 'message']);
-            $data        = ['status' => 'newMessage', 'message' => $messageData];
-            $topics      = [];
-            foreach ($conversation->getParticipants() as $participant) {
-                $topics[] = $topicsResolver->getChatTopic($participant);
-            }
-            $hub->publish(new Update($topics, (string)json_encode($data), true, null, 'chat'));
+            $eventDispatcher->dispatch(new MessageSentEvent($message));
 
             return $this->json($message, Response::HTTP_OK, [], ['groups' => 'message']);
         }

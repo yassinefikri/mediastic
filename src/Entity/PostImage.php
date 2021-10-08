@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use App\Repository\PostImageRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**

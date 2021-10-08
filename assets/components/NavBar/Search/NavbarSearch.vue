@@ -4,7 +4,7 @@
     <input type="text" form="navbar-search-form" id="navbar_search_query" name="navbar_search[query]"
            class="form-control" placeholder="search" v-model:is="username" autocomplete="off">
     <b-popover :show.sync="show" target="navbar_search_query" triggers="input focus" placement="bottom">
-      <div class="search_results">
+      <div class="search_results link-style-none">
         <ul class="list-group">
           <li v-for="(user,index) in result" class="list-group-item">
             <navbar-search-link-container :user="user" :key="index"/>

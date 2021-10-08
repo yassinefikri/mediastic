@@ -1,5 +1,5 @@
 <template>
-  <div class="container my-container-800 mx-auto">
+  <div class="container my-container-600 mx-auto p-0">
     <post v-for="(post,index) in posts" :key="index" :post="post"/>
     <hr class="my-4"/>
   </div>
