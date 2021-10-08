@@ -152,5 +152,13 @@ export default {
         obj = {...state.lastSeenMessage}
         delete obj[conversationId]
         state.lastSeenMessage = obj
+    },
+    updateMessage(state, message) {
+        let obj = {...state.messages}
+        let index = obj[message.conversation.id].findIndex((temp) => (temp.id === message.id))
+        if (-1 !== index) {
+            obj[message.conversation.id][index] = message
+            state.messages = obj
+        }
     }
 }

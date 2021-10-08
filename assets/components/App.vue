@@ -94,6 +94,8 @@ export default {
     handleMercureChat(data) {
       if ('newMessage' === data.status) {
         this.handleNewMessage(data)
+      } else if ('editedMessage' === data.status) {
+        this.updateMessage(data)
       }
     },
     handleMercureNotification(data) {
@@ -158,6 +160,10 @@ export default {
               })
         }
       }
+    },
+    updateMessage(data) {
+      let message = JSON.parse(data.message)
+      this.$store.commit('updateMessage', message)
     },
     toast(user, content, time, variant = 'light') {
       const myToastClass = Vue.extend(MyToast)

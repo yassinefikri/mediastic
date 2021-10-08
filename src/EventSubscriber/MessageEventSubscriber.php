@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\EventSubscriber;
 
 use App\Entity\Conversation;
+use App\Event\AbstractMessageEvent;
+use App\Event\MessageEditedEvent;
 use App\Event\MessageSentEvent;
 use App\Resolver\UserTopicsResolver;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -33,19 +35,21 @@ class MessageEventSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            MessageSentEvent::class => 'handleMessageSent'
+            MessageSentEvent::class   => 'handleMessageSentOrEdited',
+            MessageEditedEvent::class => 'handleMessageSentOrEdited'
         ];
     }
 
-    public function handleMessageSent(MessageSentEvent $event): void
+    public function handleMessageSentOrEdited(AbstractMessageEvent $event): void
     {
+        $status  = ($event instanceof MessageSentEvent) ? 'newMessage' : 'editedMessage';
         $message = $event->getMessage();
         /**
          * @var Conversation $conversation
          */
         $conversation = $message->getConversation();
         $messageData  = $this->serializer->serialize($message, 'json', ['groups' => 'message']);
-        $data         = ['status' => 'newMessage', 'message' => $messageData];
+        $data         = ['status' => $status, 'message' => $messageData];
         $topics       = [];
         foreach ($conversation->getParticipants() as $participant) {
             $topics[] = $this->topicsResolver->getChatTopic($participant);
