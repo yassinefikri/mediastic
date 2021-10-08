@@ -1,12 +1,18 @@
 # Installation
-## Setting up containers
+## Setting up containers & Accessing packages managers
+### For Linux
 ```
 HOST_UID=${UID} docker-compose up
+source commands.sh
+```
+### For Windows
+```
+docker-compose up
+cmd.exe /K commands.cmd
 ```
 
-## Accessing packages managers && installing dependencies
+## Installing dependencies
 ```
-source commands.sh
 composer install
 console doctrine:migrations:migrate
 yarn
