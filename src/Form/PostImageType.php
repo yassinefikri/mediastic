@@ -36,7 +36,8 @@ class PostImageType extends AbstractType
                     new Callback([$this, 'validateImage']),
                 ],
                 'attr'        => [
-                    'class' => 'post-image-input'
+                    'class'  => 'post-image-input',
+                    'accept' => 'image/png, image/jpeg'
                 ],
             ]);
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
