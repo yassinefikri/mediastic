@@ -74,6 +74,12 @@ class CommentController extends AbstractController
     public function getPostComments(PostRepository $postRepository, int $id): JsonResponse
     {
         $post = $postRepository->getPostWithComments($id);
+        if (null === $post) {
+            throw new NotFoundHttpException();
+        }
+        /**
+         * @var Post $post
+         */
         $this->denyAccessUnlessGranted('POST_VIEW', $post);
 
         return $this->json($post->getComments(), Response::HTTP_OK, [], ['groups' => 'comment']);
