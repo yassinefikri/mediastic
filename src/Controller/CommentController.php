@@ -5,10 +5,12 @@ namespace App\Controller;
 use App\Entity\Comment;
 use App\Entity\Post;
 use App\Entity\User;
+use App\Event\CommentPostedEvent;
 use App\Form\CommentType;
 use App\Repository\PostRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,7 +47,7 @@ class CommentController extends AbstractController
     /**
      * @Route("/add/{id}", name="add_comment", options={"expose"=true}, requirements={"id"="^[1-9]\d*$"})
      */
-    public function addComment(Request $request, Post $post): JsonResponse
+    public function addComment(Request $request, Post $post, EventDispatcherInterface $eventDispatcher): JsonResponse
     {
         $comment = new Comment();
         $form    = $this->createForm(CommentType::class, $comment);
@@ -61,6 +63,8 @@ class CommentController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($comment);
             $entityManager->flush();
+
+            $eventDispatcher->dispatch(new CommentPostedEvent($comment));
 
             return $this->json($comment, Response::HTTP_OK, [], ['groups' => ['json', 'comment']]);
         }
