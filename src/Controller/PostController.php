@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Post;
-use App\Entity\PostImage;
 use App\Entity\User;
 use App\Form\PostType;
 use App\Manager\ImagesManager;

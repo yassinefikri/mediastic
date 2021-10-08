@@ -33,7 +33,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *      minMessage = "Your username must be at least {{ limit }} characters long",
      *      maxMessage = "Your username cannot be longer than {{ limit }} characters"
      * )
-     * @Groups({"json","friendship","message"})
+     * @Groups({"json","friendship","message","comment"})
      */
     private string $username;
 
@@ -59,13 +59,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"json","friendship","message"})
+     * @Groups({"json","friendship","message","comment"})
      */
     private string $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"json","friendship","message"})
+     * @Groups({"json","friendship","message","comment"})
      */
     private string $lastName;
 
@@ -109,6 +109,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private Collection $seenMessages;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="owner", orphanRemoval=true)
+     */
+    private Collection $comments;
+
     public function __construct()
     {
         $this->posts               = new ArrayCollection();
@@ -117,6 +122,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->conversations       = new ArrayCollection();
         $this->messages            = new ArrayCollection();
         $this->seenMessages        = new ArrayCollection();
+        $this->comments            = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -435,6 +441,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->seenMessages->removeElement($seenMessage)) {
             $seenMessage->removeSeenBy($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getOwner() === $this) {
+                $comment->setOwner(null);
+            }
         }
 
         return $this;

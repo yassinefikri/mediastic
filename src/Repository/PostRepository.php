@@ -8,6 +8,7 @@ use App\Entity\Post;
 use App\Entity\User;
 use App\Mapping\ConfidentialityMapping;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Security;
 
@@ -81,5 +82,21 @@ class PostRepository extends ServiceEntityRepository
             ->setMaxResults(self::PAGE_SIZE)
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return Post|null
+     * @throws NonUniqueResultException
+     */
+    public function getPostWithComments(int $id): ?Post
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.id = :id')
+            ->leftJoin('p.comments', 'c')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }

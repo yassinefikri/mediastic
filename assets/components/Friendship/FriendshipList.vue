@@ -3,7 +3,7 @@
     <div class="form-group mb-3">
       <input v-model="query" class="form-control" type="text" placeholder="search">
     </div>
-    <div id="search_results">
+    <div id="search_results" class="link-style-none">
       <ul class="list-group" v-if="Object.keys(friendships).length > 0">
         <li v-for="(friendship,index) in friendships" v-if="'' === query || true === filterResult(friendship)" class="list-group-item d-flex align-content-center">
           <navbar-search-link-container :user="getFriendshipUser(friendship)" :key="index" class="flex-grow-1"/>

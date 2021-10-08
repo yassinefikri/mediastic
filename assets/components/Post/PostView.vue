@@ -1,20 +1,31 @@
 <template>
-  <div class="container my-container-800 mx-auto my-5">
-    <post v-if="post" :post="post"/>
+  <div v-if="post" class="container my-container-600 mx-auto my-5">
+    <post :post="post"/>
+    <hr/>
+    <my-form
+        :get-url="$Routing.generate('comment_form_front')"
+        :post-url="$Routing.generate('add_comment', {'id': this.postId})"
+        @form-posted="commentPosted"
+        :clearFormAfterSubmit="true"
+    />
+    <hr/>
+    <comment-list :post-id="post.id" ref="comment-list"/>
   </div>
 </template>
 
 <script>
-import Post from './Post'
-import axios from "axios";
+import axios from 'axios'
+import MyForm from '../Partials/MyForm'
+import Post from "./Post"
+import CommentList from "../Comment/CommentList"
 
 export default {
   name: "post-view",
-  components: {Post},
+  components: {MyForm, Post, CommentList},
   props: ['postId'],
   data() {
     return {
-      post: null
+      post: null,
     }
   },
   mounted() {
@@ -26,6 +37,11 @@ export default {
         .catch(error => {
           console.log(error)
         })
+  },
+  methods: {
+    commentPosted(comment) {
+      this.$refs['comment-list'].addComment(comment)
+    }
   }
 }
 </script>

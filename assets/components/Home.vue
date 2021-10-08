@@ -2,7 +2,7 @@
   <div class="container mt-3">
     <post-form @new-post="initAndFetchPosts"/>
     <hr/>
-    <div class="my-container-800 mx-auto">
+    <div class="my-container-600 mx-auto">
       <post-list
           ref="child-list"
           @finished-fetching="handleFetch"

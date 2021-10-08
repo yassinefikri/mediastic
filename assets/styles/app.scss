@@ -155,7 +155,7 @@ button.close:hover {
   padding: 0;
 }
 
-.post-owner a, .profile-sett a, a.navlink-icon, .search_results a, .conversation-container a, .navbar-search-link {
+.link-style-none a, a.navlink-icon, .navbar-search-link {
   color: inherit;
   text-decoration: none;
 }
@@ -274,4 +274,9 @@ button.close:hover {
 
 .multi-line-content {
   white-space: pre;
+}
+
+.post-comment .post-avatar {
+  width: 40px;
+  height: 40px;
 }
