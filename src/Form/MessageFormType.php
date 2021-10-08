@@ -15,7 +15,7 @@ class MessageFormType extends AbstractType
         $builder
             ->add('content')
             ->add('submit', SubmitType::class, [
-                'label' => 'Send',
+                'label' => null === $builder->getData() ? 'Send' : 'Edit',
                 'attr' => [
                     'class' => 'btn btn-primary h-100'
                 ]

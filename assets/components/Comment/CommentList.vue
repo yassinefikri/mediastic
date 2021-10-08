@@ -4,11 +4,14 @@
     <div v-else>
       <div class="d-flex">
         <span class="h5">Comments</span>
-        <div class="flex-grow-1 d-flex justify-content-end">
-          <button @click="toggleSort(true)" class="btn me-1" :class="[sortAsc ? 'btn-info' : 'btn-outline-info']"><i
-              class="bi bi-sort-down"></i></button>
-          <button @click="toggleSort(false)" class="btn" :class="[sortAsc ? 'btn-outline-info' : 'btn-info']"><i
-              class="bi bi-sort-up"></i></button>
+        <div v-if=" this.list.length > 1" class="flex-grow-1 d-flex justify-content-end">
+          <button @click="toggleSort(true)" class="btn me-1"
+                  :class="[sortAsc ? 'btn-info disabled' : 'btn-outline-info']">
+            <i class="bi bi-sort-down"></i>
+          </button>
+          <button @click="toggleSort(false)" class="btn" :class="[sortAsc ? 'btn-outline-info' : 'btn-info disabled']">
+            <i class="bi bi-sort-up"></i>
+          </button>
         </div>
       </div>
       <comment v-for="(comment,index) in list" :key="index" :comment="comment" @comment-updated="updateComment"/>
@@ -42,7 +45,7 @@ export default {
   },
   methods: {
     addComment(comment) {
-      if(this.sortAsc) {
+      if (this.sortAsc) {
         this.list.push(comment)
       } else {
         this.list.unshift(comment)
