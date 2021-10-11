@@ -20,7 +20,7 @@ class Post
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups("json")
+     * @Groups({"json","notif"})
      */
     private ?int $id = null;
 
@@ -62,11 +62,17 @@ class Post
      */
     private Collection $comments;
 
+    /**
+     * @ORM\OneToMany(targetEntity=CommentNotification::class, mappedBy="post", orphanRemoval=true)
+     */
+    private Collection $commentNotifications;
+
     public function __construct()
     {
         $this->postImages = new ArrayCollection();
         $this->createdAt  = new DateTimeImmutable();
         $this->comments   = new ArrayCollection();
+        $this->commentNotifications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -176,6 +182,36 @@ class Post
             // set the owning side to null (unless already changed)
             if ($comment->getPost() === $this) {
                 $comment->setPost(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CommentNotification[]
+     */
+    public function getCommentNotifications(): Collection
+    {
+        return $this->commentNotifications;
+    }
+
+    public function addCommentNotification(CommentNotification $commentNotification): self
+    {
+        if (!$this->commentNotifications->contains($commentNotification)) {
+            $this->commentNotifications[] = $commentNotification;
+            $commentNotification->setPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentNotification(CommentNotification $commentNotification): self
+    {
+        if ($this->commentNotifications->removeElement($commentNotification)) {
+            // set the owning side to null (unless already changed)
+            if ($commentNotification->getPost() === $this) {
+                $commentNotification->setPost(null);
             }
         }
 

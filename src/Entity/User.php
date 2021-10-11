@@ -114,6 +114,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private Collection $comments;
 
+    /**
+     * @ORM\OneToMany(targetEntity=AbstractNotification::class, mappedBy="user", orphanRemoval=true)
+     */
+    private Collection $abstractNotifications;
+
     public function __construct()
     {
         $this->posts               = new ArrayCollection();
@@ -123,6 +128,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->messages            = new ArrayCollection();
         $this->seenMessages        = new ArrayCollection();
         $this->comments            = new ArrayCollection();
+        $this->abstractNotifications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -470,6 +476,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($comment->getOwner() === $this) {
                 $comment->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|AbstractNotification[]
+     */
+    public function getAbstractNotifications(): Collection
+    {
+        return $this->abstractNotifications;
+    }
+
+    public function addAbstractNotification(AbstractNotification $abstractNotification): self
+    {
+        if (!$this->abstractNotifications->contains($abstractNotification)) {
+            $this->abstractNotifications[] = $abstractNotification;
+            $abstractNotification->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAbstractNotification(AbstractNotification $abstractNotification): self
+    {
+        if ($this->abstractNotifications->removeElement($abstractNotification)) {
+            // set the owning side to null (unless already changed)
+            if ($abstractNotification->getUser() === $this) {
+                $abstractNotification->setUser(null);
             }
         }
 

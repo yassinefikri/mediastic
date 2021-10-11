@@ -8,6 +8,7 @@ use App\Entity\Conversation;
 use App\Event\AbstractMessageEvent;
 use App\Event\MessageEditedEvent;
 use App\Event\MessageSentEvent;
+use App\Mapping\MercureEventTypesMapping;
 use App\Resolver\UserTopicsResolver;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Mercure\HubInterface;
@@ -54,6 +55,6 @@ class MessageEventSubscriber implements EventSubscriberInterface
         foreach ($conversation->getParticipants() as $participant) {
             $topics[] = $this->topicsResolver->getChatTopic($participant);
         }
-        $this->hub->publish(new Update($topics, (string)json_encode($data), true, null, 'chat'));
+        $this->hub->publish(new Update($topics, (string)json_encode($data), true, null, MercureEventTypesMapping::CHAT_TYPE));
     }
 }

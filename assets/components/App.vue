@@ -13,9 +13,12 @@ import Account from './Account'
 import MyToast from './MyBootrsrap/MyToast'
 import Vue from 'vue'
 import {mapGetters} from 'vuex'
+import mercureTypesMapping from "../mapping/mercureTypesMapping"
+import friendshipMapping from "../mapping/friendshipMapping"
+import messageMapping from "../mapping/messageMapping"
 
 export default {
-  name: "app",
+  name      : "app",
   components: {Navbar, Home, Account, MyToast},
   data() {
     return {
@@ -60,46 +63,50 @@ export default {
             withCredentials: true
           })
 
-          eventSource.addEventListener('chat', function (event) {
+          eventSource.addEventListener(mercureTypesMapping.chat, function (event) {
             this.handleMercureChat(JSON.parse(event.data))
           }.bind(this), false)
 
-          eventSource.addEventListener('friendship', function (event) {
+          eventSource.addEventListener(mercureTypesMapping.friendship, function (event) {
             this.handleMercureFriendship(JSON.parse(event.data))
           }.bind(this), false)
 
-          eventSource.addEventListener('seen', function (event) {
+          eventSource.addEventListener(mercureTypesMapping.seen, function (event) {
             this.handleNewMessageSeen(JSON.parse(event.data))
+          }.bind(this), false)
+
+          eventSource.addEventListener(mercureTypesMapping.notification, function (event) {
+            this.handleMercureNotification(JSON.parse(event.data))
           }.bind(this), false)
         })
         .catch(error => {
           console.log(error)
         })
   },
-  methods: {
+  methods : {
     goBack() {
       window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/')
     },
     handleMercureFriendship(data) {
-      if ('newFriendship' === data.status) {
+      if (friendshipMapping.new === data.status) {
         this.handleNewFriendship(data)
-      } else if ('refusedFriendship' === data.status) {
+      } else if (friendshipMapping.refused === data.status) {
         this.handleRefusedFriendship(data)
-      } else if ('acceptedFriendship' === data.status) {
+      } else if (friendshipMapping.accepted === data.status) {
         this.handleAcceptedFriendship(data)
-      } else if ('removedFriendship' === data.status) {
+      } else if (friendshipMapping.removed === data.status) {
         this.handleRemovedFriendship(data)
       }
     },
     handleMercureChat(data) {
-      if ('newMessage' === data.status) {
+      if (messageMapping.new === data.status) {
         this.handleNewMessage(data)
-      } else if ('editedMessage' === data.status) {
+      } else if (messageMapping.edited === data.status) {
         this.updateMessage(data)
       }
     },
     handleMercureNotification(data) {
-      //console.log(data)
+      console.log(data)
     },
     handleNewMessageSeen(data) {
       if ('chat_user' === this.getCurrentRoute.name && "" + this.getCurrentRoute.params.conversationId === Object.keys(data)[0]) {
