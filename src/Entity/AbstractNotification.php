@@ -22,6 +22,7 @@ abstract class AbstractNotification
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("notif")
      */
     private ?int $id = null;
 
@@ -43,9 +44,16 @@ abstract class AbstractNotification
      */
     private string $content;
 
+    /**
+     * @ORM\Column(type="boolean")
+     * @Groups("notif")
+     */
+    private bool $seen;
+
     public function __construct()
     {
         $this->createdAt = new DateTimeImmutable();
+        $this->seen = false;
     }
 
     public function getId(): ?int
@@ -85,6 +93,18 @@ abstract class AbstractNotification
     public function setContent(string $content): self
     {
         $this->content = $content;
+
+        return $this;
+    }
+
+    public function getSeen(): ?bool
+    {
+        return $this->seen;
+    }
+
+    public function setSeen(bool $seen): self
+    {
+        $this->seen = $seen;
 
         return $this;
     }
