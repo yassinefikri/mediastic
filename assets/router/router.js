@@ -16,96 +16,102 @@ import Chat from '../components/Chat'
 import PostEdit from '../components/Post/PostEdit'
 import PostView from '../components/Post/PostView'
 import FriendshipList from '../components/Friendship/FriendshipList'
+import NotificationsList from '../components/Notification/NotificationsList'
 
 Vue.use(VueRouter)
 
 const routes = [
     {
-        name: 'default',
-        path: '/',
+        name     : 'default',
+        path     : '/',
         component: Home,
-        meta: {'label': 'App'}
+        meta     : {'label': 'App'}
     },
     {
-        name: 'user_account',
-        path: '/account',
+        name     : 'user_account',
+        path     : '/account',
         component: Account,
-        meta: {'label': 'Account'},
-        children: [
+        meta     : {'label': 'Account'},
+        children : [
             {
-                path: 'general',
-                name: 'user_account_general',
+                path     : 'general',
+                name     : 'user_account_general',
                 component: AccountGeneral,
-                props: {
-                    getUrl: Routing.generate('user_account_general_front'),
+                props    : {
+                    getUrl : Routing.generate('user_account_general_front'),
                     postUrl: Routing.generate('user_account_general'),
                 },
-                meta: {'label': 'General'},
+                meta     : {'label': 'General'},
             },
             {
-                path: 'password',
-                name: 'user_account_password',
+                path     : 'password',
+                name     : 'user_account_password',
                 component: AccountPassword,
-                props: {
-                    getUrl: Routing.generate('user_account_password_front'),
+                props    : {
+                    getUrl : Routing.generate('user_account_password_front'),
                     postUrl: Routing.generate('user_account_password'),
                 },
-                meta: {'label': 'Password'},
+                meta     : {'label': 'Password'},
             },
             {
-                path: 'avatar',
-                name: 'user_account_avatar',
+                path     : 'avatar',
+                name     : 'user_account_avatar',
                 component: AccountAvatar,
-                meta: {'label': 'Avatar'},
-                props: {
-                    getUrl: Routing.generate('user_account_avatar_front'),
+                meta     : {'label': 'Avatar'},
+                props    : {
+                    getUrl : Routing.generate('user_account_avatar_front'),
                     postUrl: Routing.generate('user_account_avatar'),
                 },
             }
         ]
     },
     {
-        name: 'profile',
-        path: '/profile',
+        name     : 'profile',
+        path     : '/profile',
         component: Profile,
-        meta: {'label': 'Profile'}
+        meta     : {'label': 'Profile'}
     },
     {
-        name: 'user_profile',
-        path: '/profile/:username',
+        name     : 'user_profile',
+        path     : '/profile/:username',
         component: Profile,
-        props: true,
-        meta: {'label': 'Profile'}
+        props    : true,
+        meta     : {'label': 'Profile'}
     },
     {
-        name: 'chat',
-        path: '/chat',
+        name     : 'chat',
+        path     : '/chat',
         component: Chat,
-        meta: {'label': 'Chat'},
+        meta     : {'label': 'Chat'},
     },
     {
-        name: 'chat_user',
-        path: '/chat/:conversationId',
+        name     : 'chat_user',
+        path     : '/chat/:conversationId',
         component: Chat,
-        props: true,
-        meta: {'label': 'Chat'},
+        props    : true,
+        meta     : {'label': 'Chat'},
     },
     {
-        name: 'post_view',
-        path: '/post/:postId',
+        name     : 'post_view',
+        path     : '/post/:postId',
         component: PostView,
-        props: true,
+        props    : true,
     },
     {
-        name: 'post_edit',
-        path: '/post/:postId/edit',
+        name     : 'post_edit',
+        path     : '/post/:postId/edit',
         component: PostEdit,
-        props: true,
+        props    : true,
     },
     {
-        name: 'friendships',
-        path: '/friendships/',
+        name     : 'friendships',
+        path     : '/friendships/',
         component: FriendshipList,
+    },
+    {
+        name     : 'notifications',
+        path     : '/notifications/',
+        component: NotificationsList,
     }
 ]
 

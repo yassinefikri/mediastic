@@ -14,7 +14,7 @@ export default new Vuex.Store({
         messages: {},
         conversations: [],
         unreadConversations: {},
-        notifications: {},
+        notifications: [],
         lastSeenMessage: {}
     },
     mutations,

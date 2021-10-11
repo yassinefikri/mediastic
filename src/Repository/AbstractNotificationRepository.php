@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\AbstractNotification;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @method AbstractNotification|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,37 +15,22 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class AbstractNotificationRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    use RepositoryTrait;
+
+    private const PAGE_SIZE = 10;
+
+    private Security $security;
+
+    public function __construct(ManagerRegistry $registry, Security $security)
     {
         parent::__construct($registry, AbstractNotification::class);
+        $this->security = $security;
     }
 
-    // /**
-    //  * @return AbstractNotification[] Returns an array of AbstractNotification objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function getNotificationsByPage(int $page)
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $this->validatePageNumber($page);
 
-    /*
-    public function findOneBySomeField($value): ?AbstractNotification
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $this->findBy(['user' => $this->security->getUser()], ['createdAt' => 'DESC'], self::PAGE_SIZE, self::PAGE_SIZE * ($page - 1));
     }
-    */
 }

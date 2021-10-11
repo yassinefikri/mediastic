@@ -106,7 +106,7 @@ export default {
       }
     },
     handleMercureNotification(data) {
-      this.$store.commit('handleNotification', [JSON.parse(data)])
+      this.$store.commit('handleNotification', {data: [data], end: false})
     },
     handleNewMessageSeen(data) {
       if ('chat_user' === this.getCurrentRoute.name && "" + this.getCurrentRoute.params.conversationId === Object.keys(data)[0]) {

@@ -99,7 +99,7 @@ class CommentEventSubscriber implements EventSubscriberInterface
         $post   = $notification->getPost();
         $data   = $this->serializer->serialize($notification, 'json', ['groups' => 'notif']);
         $topic  = $this->topicsResolver->getNotificationsTopic($post->getCreatedBy());
-        $update = new Update($topic, (string)json_encode($data), true, null, MercureEventTypesMapping::NOTIFICATION_TYPE);
+        $update = new Update($topic, $data, true, null, MercureEventTypesMapping::NOTIFICATION_TYPE);
 
         $this->hub->publish($update);
     }

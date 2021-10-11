@@ -161,11 +161,21 @@ export default {
             state.messages = obj
         }
     },
-    handleNotification(state, notifications) {
-        let obj = {...state.notifications}
+    handleNotification(state, payload) {
+        let arr = [...state.notifications]
+        let notifications = payload.data
         notifications.forEach(function (notification) {
-            obj[notification.id] = notification
+            let index = arr.findIndex((notif) => notif.id === notification.id)
+            if (-1 === index) {
+                if (false === payload.end) {
+                    arr.unshift(notification)
+                } else {
+                    arr.push(notification)
+                }
+            } else {
+                arr[index] = notification
+            }
         })
-        state.notifications = obj
+        state.notifications = arr
     }
 }

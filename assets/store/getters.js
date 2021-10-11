@@ -39,12 +39,6 @@ export default {
         return state.notifications
     },
     unreadNotificationsCount(state) {
-        let count = 0
-        for (const id in state.notifications) {
-            if(false === state.notifications[id].seen) {
-                count++
-            }
-        }
-        return count
+        return state.notifications.filter((notif) => false === notif.seen).length
     }
 }
