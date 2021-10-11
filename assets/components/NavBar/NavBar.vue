@@ -115,6 +115,16 @@ export default {
         .catch(error => {
           console.log(error)
         })
+    axios
+        .get(this.$Routing.generate('getAllNotification'))
+        .then(response => {
+          if (200 === response.status) {
+            this.$store.commit('handleNotification', response.data)
+          }
+        })
+        .catch(error => {
+          console.log(error)
+        })
   },
   computed: {
     ...mapGetters([

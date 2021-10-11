@@ -160,5 +160,12 @@ export default {
             obj[message.conversation.id][index] = message
             state.messages = obj
         }
+    },
+    handleNotification(state, notifications) {
+        let obj = {...state.notifications}
+        notifications.forEach(function (notification) {
+            obj[notification.id] = notification
+        })
+        state.notifications = obj
     }
 }
