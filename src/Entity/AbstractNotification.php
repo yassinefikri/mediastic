@@ -50,6 +50,13 @@ abstract class AbstractNotification
      */
     private bool $seen;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="triggeredNotifications")
+     * @ORM\JoinColumn(nullable=false)
+     * @Groups("notif")
+     */
+    private ?User $triggerer;
+
     public function __construct()
     {
         $this->createdAt = new DateTimeImmutable();
@@ -105,6 +112,18 @@ abstract class AbstractNotification
     public function setSeen(bool $seen): self
     {
         $this->seen = $seen;
+
+        return $this;
+    }
+
+    public function getTriggerer(): ?User
+    {
+        return $this->triggerer;
+    }
+
+    public function setTriggerer(?User $triggerer): self
+    {
+        $this->triggerer = $triggerer;
 
         return $this;
     }

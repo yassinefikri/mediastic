@@ -72,13 +72,13 @@ class CommentEventSubscriber implements EventSubscriberInterface
             if (null === $notification) {
                 $notification = new CommentNotification();
                 $notification->setPost($post);
-
                 $notification->setUser($postOwner);
             } else {
                 $notification->setCreatedAt(new DateTimeImmutable());
                 $notification->setSeen(false);
             }
-            $notification->setContent("{$currentUser->getFirstName()} {$currentUser->getLastName()} (@{$currentUser->getUserIdentifier()}) commented on your post");
+            $notification->setTriggerer($event->getComment()->getOwner());
+            $notification->setContent("commented on your post");
             $this->entityManager->persist($notification);
             $this->entityManager->flush();
 

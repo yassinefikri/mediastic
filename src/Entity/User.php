@@ -33,7 +33,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *      minMessage = "Your username must be at least {{ limit }} characters long",
      *      maxMessage = "Your username cannot be longer than {{ limit }} characters"
      * )
-     * @Groups({"json","friendship","message","comment"})
+     * @Groups({"json","friendship","message","comment","notif"})
      */
     private string $username;
 
@@ -59,13 +59,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"json","friendship","message","comment"})
+     * @Groups({"json","friendship","message","comment","notif"})
      */
     private string $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"json","friendship","message","comment"})
+     * @Groups({"json","friendship","message","comment","notif"})
      */
     private string $lastName;
 
@@ -119,16 +119,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private Collection $abstractNotifications;
 
+    /**
+     * @ORM\OneToMany(targetEntity=AbstractNotification::class, mappedBy="triggerer", orphanRemoval=true)
+     */
+    private Collection $triggeredNotifications;
+
     public function __construct()
     {
-        $this->posts               = new ArrayCollection();
-        $this->sentFriendships     = new ArrayCollection();
-        $this->receivedFriendships = new ArrayCollection();
-        $this->conversations       = new ArrayCollection();
-        $this->messages            = new ArrayCollection();
-        $this->seenMessages        = new ArrayCollection();
-        $this->comments            = new ArrayCollection();
-        $this->abstractNotifications = new ArrayCollection();
+        $this->posts                  = new ArrayCollection();
+        $this->sentFriendships        = new ArrayCollection();
+        $this->receivedFriendships    = new ArrayCollection();
+        $this->conversations          = new ArrayCollection();
+        $this->messages               = new ArrayCollection();
+        $this->seenMessages           = new ArrayCollection();
+        $this->comments               = new ArrayCollection();
+        $this->abstractNotifications  = new ArrayCollection();
+        $this->triggeredNotifications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -506,6 +512,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($abstractNotification->getUser() === $this) {
                 $abstractNotification->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|AbstractNotification[]
+     */
+    public function getTriggeredNotifications(): Collection
+    {
+        return $this->triggeredNotifications;
+    }
+
+    public function addTriggeredNotification(AbstractNotification $triggeredNotification): self
+    {
+        if (!$this->triggeredNotifications->contains($triggeredNotification)) {
+            $this->triggeredNotifications[] = $triggeredNotification;
+            $triggeredNotification->setTriggerer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTriggeredNotification(AbstractNotification $triggeredNotification): self
+    {
+        if ($this->triggeredNotifications->removeElement($triggeredNotification)) {
+            // set the owning side to null (unless already changed)
+            if ($triggeredNotification->getTriggerer() === $this) {
+                $triggeredNotification->setTriggerer(null);
             }
         }
 
