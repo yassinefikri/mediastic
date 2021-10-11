@@ -27,7 +27,12 @@ class AbstractNotificationRepository extends ServiceEntityRepository
         $this->security = $security;
     }
 
-    public function getNotificationsByPage(int $page)
+    /**
+     * @param int $page
+     *
+     * @return AbstractNotification[]
+     */
+    public function getNotificationsByPage(int $page): array
     {
         $this->validatePageNumber($page);
 

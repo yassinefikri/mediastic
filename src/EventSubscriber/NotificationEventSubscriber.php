@@ -34,7 +34,7 @@ class NotificationEventSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onNotificationSeen(NotificationSeenEvent $event)
+    public function onNotificationSeen(NotificationSeenEvent $event): void
     {
         $notification = $event->getNotification();
         $data         = $this->serializer->serialize($notification, 'json', ['groups' => 'notif']);
