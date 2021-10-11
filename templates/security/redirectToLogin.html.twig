@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="h-100 d-flex justify-content-center align-items-center flex-column">
+    <span class="h3">In order to use the application, you have to login =)
+    </span>
+    <a class="btn btn-primary mt-3" href="{{ path('app_login') }}">Log in</a>
+</div>
+{% endblock %}
