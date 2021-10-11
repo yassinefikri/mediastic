@@ -11,6 +11,8 @@ use App\Form\AnswerFriendFormType;
 use App\Form\PendingFriendFormType;
 use App\Form\RemoveFriendFormType;
 use App\Mapping\FriendshipMapping;
+use App\Mapping\MercureEventTypesMapping;
+use App\Mapping\MercureFriendshipStatuses;
 use App\Resolver\UserTopicsResolver;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Form;
@@ -148,7 +150,7 @@ class FriendshipManager
      */
     private function publishNewFriendshipUpdate(Friendship $friendship): void
     {
-        $this->publishUpdates($this->buildUpdates($friendship, ['status' => 'newFriendship']));
+        $this->publishUpdates($this->buildUpdates($friendship, ['status' => MercureFriendshipStatuses::NEW_FRIENDSHIP_STATUS]));
     }
 
     /**
@@ -156,7 +158,7 @@ class FriendshipManager
      */
     private function publishRefusedFriendshipUpdate(Friendship $friendship): void
     {
-        $this->publishUpdates($this->buildUpdates($friendship, ['status' => 'refusedFriendship']));
+        $this->publishUpdates($this->buildUpdates($friendship, ['status' => MercureFriendshipStatuses::REFUSED_FRIENDSHIP_STATUS]));
     }
 
     /**
@@ -164,7 +166,7 @@ class FriendshipManager
      */
     private function publishAcceptedFriendshipUpdate(Friendship $friendship): void
     {
-        $this->publishUpdates($this->buildUpdates($friendship, ['status' => 'acceptedFriendship']));
+        $this->publishUpdates($this->buildUpdates($friendship, ['status' => MercureFriendshipStatuses::ACCEPTED_FRIENDSHIP_STATUS]));
     }
 
     /**
@@ -172,7 +174,7 @@ class FriendshipManager
      */
     private function publishRemovedFriendshipUpdate(Friendship $friendship): void
     {
-        $this->publishUpdates($this->buildUpdates($friendship, ['status' => 'removedFriendship']));
+        $this->publishUpdates($this->buildUpdates($friendship, ['status' => MercureFriendshipStatuses::REMOVED_FRIENDSHIP_STATUS]));
     }
 
     /**
@@ -211,7 +213,7 @@ class FriendshipManager
     {
         $topic         = $this->topicsResolver->getFriendshipTopic($user);
 
-        return new Update($topic, (string)json_encode($data), true, null, 'friendship');
+        return new Update($topic, (string)json_encode($data), true, null, MercureEventTypesMapping::FRIENDSHIP_TYPE);
     }
 
     /**

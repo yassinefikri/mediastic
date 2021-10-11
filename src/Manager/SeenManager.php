@@ -7,6 +7,7 @@ namespace App\Manager;
 use App\Entity\Conversation;
 use App\Entity\Message;
 use App\Entity\User;
+use App\Mapping\MercureEventTypesMapping;
 use App\Resolver\UserTopicsResolver;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
@@ -69,7 +70,7 @@ class SeenManager
                 }
             }
 
-            $update = new Update($topics, (string)json_encode($data), true, null, 'seen');
+            $update = new Update($topics, (string)json_encode($data), true, null, MercureEventTypesMapping::SEEN_TYPE);
             $this->hub->publish($update);
         }
     }

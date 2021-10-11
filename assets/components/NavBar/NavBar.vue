@@ -43,13 +43,14 @@
                                  :count="unreadConversation">{{ route.fullPath }}
                   </nav-icon-link>
                 </router-link>
-                <button class="button-unstyled position-relative mx-2">
-                  <i class="bi bi-bell-fill bi-25"></i>
-                  <span v-if="unreadNotificationsCount > 0"
-                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{
-                      unreadNotificationsCount
-                    }}</span>
-                </button>
+                <router-link
+                    :to="{name: 'notifications'}"
+                    custom
+                    v-slot="{ href, route, navigate, isActive, isExactActive }">
+                  <nav-icon-link :active="isActive" :href="href" @click="navigate" icon="bi-bell-fill"
+                                 :count="unreadNotificationsCount">{{ route.fullPath }}
+                  </nav-icon-link>
+                </router-link>
               </div>
             </div>
             <hr/>
@@ -110,6 +111,16 @@ export default {
         .then(response => {
           if (200 === response.status) {
             this.$store.commit('setUnreadConversation', response.data)
+          }
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    axios
+        .get(this.$Routing.generate('getNotifications'))
+        .then(response => {
+          if (200 === response.status) {
+            this.$store.commit('handleNotification', {data: response.data, end: true})
           }
         })
         .catch(error => {

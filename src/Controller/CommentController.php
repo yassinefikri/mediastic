@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Comment;
 use App\Entity\Post;
 use App\Entity\User;
+use App\Event\CommentEditedEvent;
 use App\Event\CommentPostedEvent;
 use App\Form\CommentType;
 use App\Repository\PostRepository;
@@ -93,12 +94,13 @@ class CommentController extends AbstractController
      * @Route("/edit/{id}", name="edit_comment", options={"expose"=true}, requirements={"id"="^[1-9]\d*$"})
      * @IsGranted("COMMENT_EDIT", subject="comment")
      */
-    public function editComment(Request $request, Comment $comment): JsonResponse
+    public function editComment(Request $request, Comment $comment, EventDispatcherInterface $eventDispatcher): JsonResponse
     {
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
         if (true === $form->isSubmitted() && true === $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
+            $eventDispatcher->dispatch(new CommentEditedEvent($comment));
 
             return $this->json($comment, Response::HTTP_OK, [], ['groups' => ['json', 'comment']]);
         }

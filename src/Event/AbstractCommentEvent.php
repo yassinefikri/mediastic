@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace App\Event;
 
 use App\Entity\Comment;
+use Symfony\Contracts\EventDispatcher\Event;
 
-abstract class AbstractCommentEvent
+abstract class AbstractCommentEvent extends Event
 {
     private Comment $comment;
 

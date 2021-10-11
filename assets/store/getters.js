@@ -26,7 +26,7 @@ export default {
     alert(state) {
         return state.alert
     },
-    messages: (state) => (id) => {
+    messages       : (state) => (id) => {
         return state.messages[id]
     },
     lastSeenMessage: (state) => (id) => {
@@ -35,7 +35,10 @@ export default {
     friendships(state) {
         return state.friendships
     },
+    notifications(state) {
+        return state.notifications
+    },
     unreadNotificationsCount(state) {
-        return state.unreadNotificationsCount
+        return state.notifications.filter((notif) => false === notif.seen).length
     }
 }
