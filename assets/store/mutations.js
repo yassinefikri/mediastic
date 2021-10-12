@@ -20,15 +20,16 @@ export default {
     removeFriend(state, friend) {
         this.commit('removeFromObject', {object: 'friends', data: friend, key: 'username'})
     },
-    addMessages(state, messages) {
+    addMessages(state, payload) {
         let obj = {...state.messages}
+        let messages = payload.data
         messages.forEach(function (message) {
             if (undefined === obj[message.conversation.id]) {
                 obj[message.conversation.id] = []
             }
             message.seenBy.push(message.sender)
             let arr = [...obj[message.conversation.id]]
-            if (messages.length === 1) {
+            if (true === payload.end) {
                 arr.push(message)
             } else {
                 arr.unshift(message)
@@ -52,16 +53,10 @@ export default {
         })
         state.lastSeenMessage = obj
     },
-    removeMessage(state, messages) {
-        this.commit('removeFromObject', {object: 'messages', data: messages, key: 'id'})
-    },
     addConversation(state, conversations) {
         let arr = [...state.conversations]
         arr = conversations.concat(arr)
         state.conversations = arr
-    },
-    removeConversation(state, specificConversation) {
-        state.conversations = state.conversations.filter((conversation) => conversation.id !== specificConversation.id)
     },
     updateOrAddConversation(state, specificConversation) {
         let index = state.conversations.findIndex((conversation) => conversation.id === specificConversation.id)
@@ -93,9 +88,6 @@ export default {
         delete obj[payload.data[payload.key]]
         state[payload.object] = obj
     },
-    resetObject(state, payload) {
-        state[payload.name] = {}
-    },
     addUnreadConversation(state, conversation) {
         let obj = {...state.unreadConversations}
         if (undefined === obj[conversation.id]) {
@@ -116,15 +108,6 @@ export default {
         let obj = {...state.unreadConversations}
         delete obj[conversationId]
         state.unreadConversations = obj
-    },
-    incrementUnreadNotificationsCount(state) {
-        state.unreadNotificationsCount++
-    },
-    setUnreadNotificationsCount(state, value) {
-        state.unreadNotificationsCount = value
-    },
-    resetUnreadNotificationsCount(state) {
-        state.unreadNotificationsCount = 0
     },
     setMessageSeen(state, seens) {
         let obj = {...state.lastSeenMessage}
@@ -177,5 +160,8 @@ export default {
             }
         })
         state.notifications = arr
+    },
+    removeNotification(state, id) {
+        state.notifications = state.notifications.filter((notification) => id !== notification.id)
     }
 }

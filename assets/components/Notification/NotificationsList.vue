@@ -1,13 +1,21 @@
 <template>
   <div class=" my-5 my-container-500 mx-auto link-style-none">
-    <router-link
-        v-for="(notif, index) in notifications"
-        :key="index"
-        :to="{name: 'post_view', params: {postId: notif.post.id}}"
-        custom
-        v-slot="{ href, route, navigate, isActive, isExactActive }">
-      <notification-link :active="isActive" :href="href" @click="navigate" :notif="notif"/>
-    </router-link>
+    <div v-if="notifications.length > 0">
+      <router-link
+          v-for="(notif, index) in notifications"
+          :key="index"
+          :to="{name: 'post_view', params: {postId: notif.post.id}}"
+          custom
+          v-slot="{ href, route, navigate, isActive, isExactActive }">
+        <notification-link :active="isActive" :href="href" @click="navigate" :notif="notif"/>
+      </router-link>
+    </div>
+    <div v-else class="list-group">
+      <div class="list-group-item d-flex align-content-center">
+        <i class="bi bi-bell-slash me-2" style="font-size: 25px"></i>
+        <span class="fs-6 my-auto">No notifications found</span>
+      </div>
+    </div>
   </div>
 </template>
 
