@@ -5,7 +5,6 @@
     <my-form
         :get-url="$Routing.generate('comment_form_front')"
         :post-url="$Routing.generate('add_comment', {'id': this.postId})"
-        @form-posted="commentPosted"
         :clearFormAfterSubmit="true"
     />
     <hr/>
@@ -18,6 +17,7 @@ import axios from 'axios'
 import MyForm from '../Partials/MyForm'
 import Post from "./Post"
 import CommentList from "../Comment/CommentList"
+import mercureTypesMapping from "../../mapping/mercureTypesMapping";
 
 export default {
   name: "post-view",
@@ -26,6 +26,7 @@ export default {
   data() {
     return {
       post: null,
+      eventSource: null
     }
   },
   mounted() {
@@ -33,15 +34,28 @@ export default {
         .get(this.$Routing.generate('post_view', {'id': this.postId}))
         .then(response => {
           this.post = response.data
+
+          // Extract the hub URL from the Link header
+          const hubUrl = response.headers['link'].match(/<([^>]+)>;\s+rel=(?:mercure|"[^"]*mercure[^"]*")/)[1]
+
+          // Append the topic(s) to subscribe as query parameter
+          const hub = new URL(hubUrl, window.origin)
+          hub.searchParams.append('topic', '/post/' + this.post.id)
+
+          // Subscribe to updates
+          this.eventSource = new EventSource(hub, {
+            withCredentials: true
+          })
+          this.eventSource.addEventListener(mercureTypesMapping.comment, function (event) {
+            this.$refs['comment-list'].addOrUpdateComment(JSON.parse(event.data))
+          }.bind(this), false)
         })
         .catch(error => {
           console.log(error)
         })
   },
-  methods: {
-    commentPosted(comment) {
-      this.$refs['comment-list'].addComment(comment)
-    }
+  destroyed() {
+    this.eventSource.close()
   }
 }
 </script>

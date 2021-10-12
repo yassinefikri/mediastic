@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
+use App\Entity\Comment;
 use App\Entity\CommentNotification;
 use App\Entity\Post;
 use App\Entity\User;
@@ -82,16 +83,17 @@ class CommentEventSubscriber implements EventSubscriberInterface
             $this->entityManager->persist($notification);
             $this->entityManager->flush();
 
-            $this->sendUpdateToClient($notification);
+            $this->sendNotificationUpdateToClient($notification);
         }
+        $this->sendCommentUpdate2Clients($event->getComment());
     }
 
     public function handleEditedComment(CommentEditedEvent $event): void
     {
-        // TODO implement method
+        $this->sendCommentUpdate2Clients($event->getComment());
     }
 
-    private function sendUpdateToClient(CommentNotification $notification): void
+    private function sendNotificationUpdateToClient(CommentNotification $notification): void
     {
         /**
          * @var Post $post
@@ -100,6 +102,14 @@ class CommentEventSubscriber implements EventSubscriberInterface
         $data   = $this->serializer->serialize($notification, 'json', ['groups' => 'notif']);
         $topic  = $this->topicsResolver->getNotificationsTopic($post->getCreatedBy());
         $update = new Update($topic, $data, true, null, MercureEventTypesMapping::NOTIFICATION_TYPE);
+
+        $this->hub->publish($update);
+    }
+
+    private function sendCommentUpdate2Clients(Comment $comment): void
+    {
+        $data   = $this->serializer->serialize($comment, 'json', ['groups' => 'comment']);
+        $update = new Update('/post/'.$comment->getPost()->getId(), $data, true, null, MercureEventTypesMapping::COMMENT_TYPE);
 
         $this->hub->publish($update);
     }

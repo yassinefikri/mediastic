@@ -62,8 +62,15 @@ export default {
       let index = arr.findIndex((temp) => (temp.id === comment.id))
       if (-1 !== index) {
         arr[index] = comment
+        this.list = arr
+        return true
       }
-      this.list = arr
+      return false
+    },
+    addOrUpdateComment(comment){
+      if(false === this.updateComment(comment)){
+        this.addComment(comment)
+      }
     }
   }
 }

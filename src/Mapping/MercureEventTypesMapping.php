@@ -10,4 +10,5 @@ class MercureEventTypesMapping
     public const SEEN_TYPE         = 'seen';
     public const NOTIFICATION_TYPE = 'notification';
     public const FRIENDSHIP_TYPE   = 'friendship';
+    public const COMMENT_TYPE      = 'comment';
 }
