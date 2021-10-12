@@ -46,7 +46,7 @@ class CommentController extends AbstractController
     }
 
     /**
-     * @Route("/add/{id}", name="add_comment", options={"expose"=true}, requirements={"id"="^[1-9]\d*$"})
+     * @Route("/add/{id}", name="add_comment", options={"expose"=true}, methods={"POST"}, requirements={"id"="^[1-9]\d*$"})
      */
     public function addComment(Request $request, Post $post, EventDispatcherInterface $eventDispatcher): JsonResponse
     {
@@ -91,7 +91,7 @@ class CommentController extends AbstractController
     }
 
     /**
-     * @Route("/edit/{id}", name="edit_comment", options={"expose"=true}, requirements={"id"="^[1-9]\d*$"})
+     * @Route("/edit/{id}", name="edit_comment", options={"expose"=true}, methods={"POST"}, requirements={"id"="^[1-9]\d*$"})
      * @IsGranted("COMMENT_EDIT", subject="comment")
      */
     public function editComment(Request $request, Comment $comment, EventDispatcherInterface $eventDispatcher): JsonResponse

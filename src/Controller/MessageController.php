@@ -47,7 +47,7 @@ class MessageController extends AbstractController
     }
 
     /**
-     * @Route("/sendMessage/{id}", name="message_sending", options={"expose"=true})
+     * @Route("/sendMessage/{id}", name="message_sending", options={"expose"=true}, methods={"POST"}, requirements={"id"="^[1-9]\d*$"})
      * @IsGranted("SEND_MESSAGE", subject="conversation")
      */
     public function sendMessage(Conversation $conversation, Request $request, EventDispatcherInterface $eventDispatcher): JsonResponse
@@ -76,7 +76,7 @@ class MessageController extends AbstractController
     }
 
     /**
-     * @Route("/seen/{id}", name="set_message_seen", options={"expose"=true}, requirements={"id"="^[1-9]\d*$"})
+     * @Route("/seen/{id}", name="set_message_seen", options={"expose"=true}, methods={"POST"}, requirements={"id"="^[1-9]\d*$"})
      */
     public function setMessageSeen(Message $message, SeenManager $manager): JsonResponse
     {
@@ -103,7 +103,7 @@ class MessageController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="edit_message", options={"expose"=true}, requirements={"id"="^[1-9]\d*$"})
+     * @Route("/{id}/edit", name="edit_message", options={"expose"=true}, methods={"POST"}, requirements={"id"="^[1-9]\d*$"})
      * @IsGranted("MESSAGE_EDIT", subject="message")
      */
     public function editMessage(Request $request, Message $message, EventDispatcherInterface $eventDispatcher): JsonResponse

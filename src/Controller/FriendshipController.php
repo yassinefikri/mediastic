@@ -17,7 +17,7 @@ class FriendshipController extends AbstractController
     use ControllerTrait;
 
     /**
-     * @Route("/friendship/{username}", name="friendship", options={"expose"=true})
+     * @Route("/friendship/{username}", name="friendship", methods={"POST"}, options={"expose"=true})
      */
     public function index(User $user, Request $request, FriendshipManager $friendshipManager): JsonResponse
     {

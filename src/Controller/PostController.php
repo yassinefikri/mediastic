@@ -25,8 +25,8 @@ class PostController extends AbstractController
     use ControllerTrait;
 
     /**
-     * @Route("/add", name="post_add", options={"expose"=true})
-     * @Route("/edit/{id}", name="post_edit", options={"expose"=true}, requirements={"id"="^[1-9]\d*$"})
+     * @Route("/add", name="post_add", options={"expose"=true}, methods={"POST"})
+     * @Route("/edit/{id}", name="post_edit", options={"expose"=true}, methods={"POST"}, requirements={"id"="^[1-9]\d*$"})
      */
     public function index(Request $request, ImagesManager $imagesManager, string $_route, Post $post = null): Response
     {

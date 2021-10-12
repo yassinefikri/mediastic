@@ -23,7 +23,7 @@ class UserController extends AbstractController
     use ControllerTrait;
 
     /**
-     * @Route("/general", name="user_account_general", options={"expose"=true})
+     * @Route("/general", name="user_account_general", options={"expose"=true}, methods={"POST"})
      */
     public function general(Request $request): Response
     {
@@ -40,7 +40,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/password", name="user_account_password", options={"expose"=true})
+     * @Route("/password", name="user_account_password", options={"expose"=true}, methods={"POST"})
      */
     public function password(Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
@@ -66,7 +66,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/avatar", name="user_account_avatar", options={"expose"=true})
+     * @Route("/avatar", name="user_account_avatar", options={"expose"=true}, methods={"POST"})
      */
     public function avatar(Request $request, ImagesManager $imagesManager): Response
     {

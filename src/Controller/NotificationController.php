@@ -26,7 +26,7 @@ class NotificationController extends AbstractController
     }
 
     /**
-     * @Route("/setSeen/{id}", name="setNotificationSeen", options={"expose"=true}, methods={"POST"})
+     * @Route("/setSeen/{id}", name="setNotificationSeen", options={"expose"=true}, methods={"POST"}, requirements={"id"="^[1-9]\d*$"})
      * @IsGranted("NOTIFICATION_UPDATE_SEEN", subject="notification")
      */
     public function setSeen(AbstractNotification $notification, EventDispatcherInterface $eventDispatcher): JsonResponse
@@ -40,7 +40,7 @@ class NotificationController extends AbstractController
     }
 
     /**
-     * @Route("/remove/{id}", name="removeNotification", options={"expose"=true}, methods={"POST"})
+     * @Route("/remove/{id}", name="removeNotification", options={"expose"=true}, methods={"POST"}, requirements={"id"="^[1-9]\d*$"})
      * @IsGranted("NOTIFICATION_REMOVE", subject="notification")
      */
     public function removeNotification(AbstractNotification $notification): JsonResponse
