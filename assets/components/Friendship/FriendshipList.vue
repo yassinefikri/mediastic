@@ -1,5 +1,5 @@
 <template>
-  <div class="my-container-600 mx-auto py-5">
+  <div class="my-container-500 mx-auto py-5">
     <div class="form-group mb-3">
       <input v-model="query" class="form-control" type="text" placeholder="search">
     </div>

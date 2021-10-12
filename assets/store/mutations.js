@@ -177,5 +177,8 @@ export default {
             }
         })
         state.notifications = arr
+    },
+    removeNotification(state, id) {
+        state.notifications = state.notifications.filter((notification) => id !== notification.id)
     }
 }

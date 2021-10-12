@@ -106,7 +106,7 @@ export default {
       }
     },
     handleMercureNotification(data) {
-      this.toast(data.triggerer, data.content, data.createdAt, 'secondary')
+      if(false === data.seen) this.toast(data.triggerer, data.content, data.createdAt, 'secondary')
       this.$store.commit('handleNotification', {data: [data], end: false})
     },
     handleNewMessageSeen(data) {
