@@ -6,12 +6,15 @@ use App\Entity\Post;
 use App\Entity\User;
 use App\Form\PostType;
 use App\Manager\ImagesManager;
+use App\Resolver\UserTopicsResolver;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Mercure\Authorization;
+use Symfony\Component\Mercure\Discovery;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -84,8 +87,17 @@ class PostController extends AbstractController
      * @Route("/view/{id}", name="post_view", options={"expose"=true}, requirements={"id"="^[1-9]\d*$"})
      * @IsGranted("POST_VIEW", subject="post")
      */
-    public function viewPost(Post $post): JsonResponse
+    public function viewPost(Post $post, UserTopicsResolver $topicsResolver, Request $request, Authorization $authorization, Discovery $discovery): JsonResponse
     {
-        return $this->json($post, Response::HTTP_OK, [], ['groups' => 'json']);
+        $discovery->addLink($request);
+        $userTopics = $topicsResolver->getUserTopics();
+        $userTopics[] = '/post/' . $post->getId();
+
+        $response = $this->json($post, Response::HTTP_OK, [], ['groups' => 'json']);
+        $response->headers->setCookie(
+            $authorization->createCookie($request, $userTopics)
+        );
+
+        return $response;
     }
 }

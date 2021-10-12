@@ -18,12 +18,18 @@ class AvatarCoverType extends AbstractType
             ->add('avatar', FileType::class, [
                 'required' => false,
                 'mapped' => false,
-                'constraints' => new Image(['mimeTypes' => ['image/jpg', 'image/jpeg', 'image/png']])
+                'constraints' => new Image(['mimeTypes' => ['image/jpg', 'image/jpeg', 'image/png']]),
+                'attr' => [
+                    'accept' => 'image/png, image/jpeg'
+                ]
             ])
             ->add('cover', FileType::class, [
                 'required' => false,
                 'mapped' => false,
-                'constraints' => new Image(['mimeTypes' => ['image/jpg', 'image/jpeg', 'image/png']])
+                'constraints' => new Image(['mimeTypes' => ['image/jpg', 'image/jpeg', 'image/png']]),
+                'attr' => [
+                    'accept' => 'image/png, image/jpeg'
+                ]
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Upload',

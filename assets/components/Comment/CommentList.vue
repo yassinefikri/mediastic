@@ -54,7 +54,7 @@ export default {
     toggleSort(order) {
       if (this.sortAsc !== order) {
         this.sortAsc = order
-        this.list.sort((commentA, commentB) => (this.sortAsc) ? commentA.createdAt > commentB.createdAt : commentA.createdAt < commentB.createdAt)
+        this.list.sort((commentA, commentB) => (new Date(commentA.createdAt) - new Date(commentB.createdAt)) * Math.pow(-1, !this.sortAsc))
       }
     },
     updateComment(comment) {
@@ -62,8 +62,15 @@ export default {
       let index = arr.findIndex((temp) => (temp.id === comment.id))
       if (-1 !== index) {
         arr[index] = comment
+        this.list = arr
+        return true
       }
-      this.list = arr
+      return false
+    },
+    addOrUpdateComment(comment){
+      if(false === this.updateComment(comment)){
+        this.addComment(comment)
+      }
     }
   }
 }
