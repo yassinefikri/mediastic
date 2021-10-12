@@ -54,7 +54,7 @@ export default {
     toggleSort(order) {
       if (this.sortAsc !== order) {
         this.sortAsc = order
-        this.list.sort((commentA, commentB) => (this.sortAsc) ? commentA.createdAt > commentB.createdAt : commentA.createdAt < commentB.createdAt)
+        this.list.sort((commentA, commentB) => (new Date(commentA.createdAt) - new Date(commentB.createdAt)) * Math.pow(-1, !this.sortAsc))
       }
     },
     updateComment(comment) {
