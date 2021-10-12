@@ -66,7 +66,7 @@ export default {
       axios
           .get(this.$Routing.generate('get_conversation_messages', {id: this.conversationId, page: this.page}))
           .then(response => {
-            this.$store.commit('addMessages', response.data)
+            this.$store.commit('addMessages', {data: response.data, end: false})
             this.loadedMessages = true
             this.page++
             if (response.data.length < 15) {

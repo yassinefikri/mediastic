@@ -156,12 +156,12 @@ export default {
         this.$store.commit('moveConversationToStart', message.conversation)
       }
       if (message.sender.username === this.username) {
-        this.$store.commit('addMessages', [message])
+        this.$store.commit('addMessages', {data: [message], end: true})
       } else {
         if ('chat_user' !== this.getCurrentRoute.name || parseInt(this.getCurrentRoute.params.conversationId) !== message.conversation.id) {
           this.$store.commit('addUnreadConversation', message.conversation)
         } else {
-          this.$store.commit('addMessages', [message])
+          this.$store.commit('addMessages', {data: [message], end: true})
           axios.post(this.$Routing.generate('set_message_seen', {'id': message.id}))
               .catch(error => {
                 console.log(error)
