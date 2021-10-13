@@ -108,8 +108,12 @@ class CommentEventSubscriber implements EventSubscriberInterface
 
     private function sendCommentUpdate2Clients(Comment $comment): void
     {
+        /**
+         * @var Post $post
+         */
+        $post = $comment->getPost();
         $data   = $this->serializer->serialize($comment, 'json', ['groups' => 'comment']);
-        $update = new Update('/post/'.$comment->getPost()->getId(), $data, true, null, MercureEventTypesMapping::COMMENT_TYPE);
+        $update = new Update('/post/'.$post->getId(), $data, true, null, MercureEventTypesMapping::COMMENT_TYPE);
 
         $this->hub->publish($update);
     }
