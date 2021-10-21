@@ -34,8 +34,7 @@
         <img :src="$Routing.generate('post_image', {'id': image.id})" alt="post-image" class="w-100 h-100"/>
       </figure>
     </div>
-    <div v-if="'post_view' !== $route.name">
-      <hr class="mb-4"/>
+    <div v-if="'post_view' !== $route.name" class="mt-4">
       <router-link :to="{ name: 'post_view', params: { 'postId': post.id }}" class="nav-link text-center p-0">
         <i class="bi bi-chat-left-text-fill"></i> Comments
       </router-link>
