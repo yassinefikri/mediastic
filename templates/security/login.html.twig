@@ -9,5 +9,8 @@
     {{ form_start(form) }}
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
     {{ form_end(form) }}
+    <hr/>
+    <p class="small text-center">or Login via <a class="d-inline-block" href="{{ path('connect_discord') }}"><span class="badge bg-secondary">Discord</span></a></p>
+    <hr/>
     <p class="small text-center">Don't have an account ? - <a href="{{ path('app_register') }}">Register now</a></p>
 {% endblock %}

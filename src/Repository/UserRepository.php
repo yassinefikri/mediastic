@@ -10,6 +10,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use Wohali\OAuth2\Client\Provider\DiscordResourceOwner;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -56,5 +57,29 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $query->setParameter('query', $search, Types::STRING);
 
         return $query->getResult();
+    }
+
+    public function persistNewUserFromDiscord(DiscordResourceOwner $userData): User
+    {
+        /**
+         * @var string $email
+         */
+        $email = $userData->getEmail();
+        /**
+         * @var string $username
+         */
+        $username = $userData->getUsername();
+
+        $user = new User();
+        $user->setUsername('user-' . uniqid());
+        $user->setEmail($email);
+        $user->setDiscordId($userData->getId());
+        $user->setFirstName($username);
+
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        return $user;
     }
 }

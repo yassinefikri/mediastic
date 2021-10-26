@@ -44,10 +44,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private array $roles = [];
 
     /**
-     * @var string The hashed password
-     * @ORM\Column(type="string")
+     * @var string|null The hashed password
+     * @ORM\Column(type="string", nullable=true)
      */
-    private string $password;
+    private ?string $password = null;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -58,16 +58,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private string $email;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups({"json","friendship","message","comment","notif"})
+     * @Assert\NotBlank()
      */
-    private string $firstName;
+    private ?string $firstName;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups({"json","friendship","message","comment","notif"})
+     * @Assert\NotBlank()
      */
-    private string $lastName;
+    private ?string $lastName;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -123,6 +125,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\OneToMany(targetEntity=AbstractNotification::class, mappedBy="triggerer", orphanRemoval=true)
      */
     private Collection $triggeredNotifications;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private ?string $discordId = null;
 
     public function __construct()
     {
@@ -192,7 +199,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see PasswordAuthenticatedUserInterface
      */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
@@ -544,6 +551,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $triggeredNotification->setTriggerer(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDiscordId(): ?string
+    {
+        return $this->discordId;
+    }
+
+    public function setDiscordId(?string $discordId): self
+    {
+        $this->discordId = $discordId;
 
         return $this;
     }

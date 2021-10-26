@@ -7,7 +7,25 @@ import axios from "axios"
 
 export default {
   name: "my-form",
-  props: ['getUrl', 'postUrl', 'message', 'clearFormAfterSubmit'],
+  props: {
+    getUrl: {
+      type: String,
+      required: true
+    },
+    postUrl: {
+      type: String,
+      required: true
+    },
+    message: {
+      type: String,
+      required: false
+    },
+    clearFormAfterSubmit: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+  },
   data() {
     return {
       form: null

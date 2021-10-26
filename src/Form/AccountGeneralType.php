@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\User;
+use App\Service\AccountFormService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -12,6 +13,13 @@ use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 
 class AccountGeneralType extends AbstractType
 {
+	private AccountFormService $formService;
+
+	public function __construct(AccountFormService $accountFormService)
+	{
+		$this->formService = $accountFormService;
+	}
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -30,6 +38,7 @@ class AccountGeneralType extends AbstractType
                 ]
             ])
         ;
+	    $this->formService->checkPasswordField($builder);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

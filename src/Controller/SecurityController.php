@@ -5,7 +5,9 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\LoginFormType;
 use App\Form\RegistrationFormType;
+use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -77,5 +79,13 @@ class SecurityController extends AbstractController
         return $this->render('security/register.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/connect/discord", name="connect_discord")
+     */
+    public function discordOAuthConnect(ClientRegistry $clientRegistry): RedirectResponse
+    {
+        return $clientRegistry->getClient('discord')->redirect(['identify', 'email'], []);
     }
 }
