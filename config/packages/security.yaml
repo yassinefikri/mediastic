@@ -21,7 +21,12 @@ security:
         main:
             lazy: true
             provider: app_user_provider
-            custom_authenticator: App\Security\AppFormAuthenticator
+            entry_point: App\Security\AppFormAuthenticator
+            custom_authenticators:
+                - App\Security\AppFormAuthenticator
+            guard:
+                authenticators:
+                    - App\Security\DiscordAuthenticator
             logout:
                 path: app_logout
                 target: app_login
@@ -36,4 +41,5 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/(login|register)$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/connect/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/, roles: ROLE_USER }
