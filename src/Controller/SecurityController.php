@@ -80,12 +80,4 @@ class SecurityController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-
-    /**
-     * @Route("/connect/discord", name="connect_discord")
-     */
-    public function discordOAuthConnect(ClientRegistry $clientRegistry): RedirectResponse
-    {
-        return $clientRegistry->getClient('discord')->redirect(['identify', 'email'], []);
-    }
 }

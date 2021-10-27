@@ -7,6 +7,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use League\OAuth2\Client\Provider\GoogleUser;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
@@ -75,6 +76,37 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $user->setEmail($email);
         $user->setDiscordId($userData->getId());
         $user->setFirstName($username);
+
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        return $user;
+    }
+
+    public function persistNewUserFromGoogle(GoogleUser $userData): User
+    {
+        /**
+         * @var string $email
+         */
+        $email = $userData->getEmail();
+
+        /**
+         * @var string $firstName
+         */
+        $firstName = $userData->getFirstName();
+
+        /**
+         * @var string $lastName
+         */
+        $lastName = $userData->getLastName();
+
+        $user = new User();
+        $user->setUsername('user-' . uniqid());
+        $user->setEmail($email);
+        $user->setGoogleId($userData->getId());
+        $user->setFirstName($firstName);
+        $user->setLastName($lastName);
 
         $entityManager = $this->getEntityManager();
         $entityManager->persist($user);
