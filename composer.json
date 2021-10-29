@@ -15,6 +15,7 @@
         "doctrine/orm": "^2.9",
         "friendsofsymfony/jsrouting-bundle": "^2.7",
         "knpuniversity/oauth2-client-bundle": "^2.8",
+        "league/oauth2-google": "^4.0",
         "phpdocumentor/reflection-docblock": "^5.2",
         "sensio/framework-extra-bundle": "^6.1",
         "symfony/asset": "5.3.*",

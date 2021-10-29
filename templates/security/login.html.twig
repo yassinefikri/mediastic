@@ -10,7 +10,13 @@
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
     {{ form_end(form) }}
     <hr/>
-    <p class="small text-center">or Login via <a class="d-inline-block" href="{{ path('connect_discord') }}"><span class="badge bg-secondary">Discord</span></a></p>
+    <p class="small text-center">
+        or Login via
+    </p>
+    <div class="text-center">
+        <a class="d-inline-block h5" href="{{ path('connect_google') }}"><span class="badge bg-light text-dark">Google</span></a>
+        <a class="d-inline-block h5" href="{{ path('connect_discord') }}"><span class="badge bg-secondary">Discord</span></a>
+    </div>
     <hr/>
     <p class="small text-center">Don't have an account ? - <a href="{{ path('app_register') }}">Register now</a></p>
 {% endblock %}

@@ -27,6 +27,7 @@ security:
             guard:
                 authenticators:
                     - App\Security\DiscordAuthenticator
+                    - App\Security\GoogleAuthenticator
             logout:
                 path: app_logout
                 target: app_login

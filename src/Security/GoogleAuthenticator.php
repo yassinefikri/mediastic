@@ -6,17 +6,17 @@ namespace App\Security;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use League\OAuth2\Client\Provider\GoogleUser;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Wohali\OAuth2\Client\Provider\DiscordResourceOwner;
 
-class DiscordAuthenticator extends AbstractOAuthAuthenticator
+class GoogleAuthenticator extends AbstractOAuthAuthenticator
 {
-    protected const CLIENT = 'discord';
+    protected const CLIENT = 'google';
 
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
         /**
-         * @var DiscordResourceOwner $userData
+         * @var GoogleUser $userData
          */
         $userData = $this->getClient()->fetchUserFromToken($credentials);
 
@@ -24,9 +24,9 @@ class DiscordAuthenticator extends AbstractOAuthAuthenticator
          * @var UserRepository $userRepository
          */
         $userRepository = $this->entityManager->getRepository(User::class);
-        $user           = $userRepository->findOneBy(['discordId' => $userData->getId()]);
+        $user           = $userRepository->findOneBy(['googleId' => $userData->getId()]);
         if (null === $user) {
-            $user = $userRepository->persistNewUserFromDiscord($userData);
+            $user = $userRepository->persistNewUserFromGoogle($userData);
         }
 
         return $user;

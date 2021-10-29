@@ -131,6 +131,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private ?string $discordId = null;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private ?string $googleId = null;
+
     public function __construct()
     {
         $this->posts                  = new ArrayCollection();
@@ -563,6 +568,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setDiscordId(?string $discordId): self
     {
         $this->discordId = $discordId;
+
+        return $this;
+    }
+
+    public function getGoogleId(): ?string
+    {
+        return $this->googleId;
+    }
+
+    public function setGoogleId(?string $googleId): self
+    {
+        $this->googleId = $googleId;
 
         return $this;
     }
