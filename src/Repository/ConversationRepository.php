@@ -65,7 +65,7 @@ class ConversationRepository extends ServiceEntityRepository
     {
         $count = count($users);
         if ($count < 2) {
-            throw new LogicException('array should have exactly 2 users');
+            throw new LogicException('array should contain at least 2 users');
         }
 
         $entityManager = $this->getEntityManager();
