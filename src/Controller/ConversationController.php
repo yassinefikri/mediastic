@@ -100,7 +100,7 @@ class ConversationController extends AbstractController
         foreach ($messages as $message) {
             if ($message->getSender() !== $user && false === $message->getSeenBy()->contains($user)) {
                 $message->addSeenBy($user);
-                $messagesToUpdateSeenInFront[] = $message;
+                array_unshift($messagesToUpdateSeenInFront, $message);
             }
         }
         $entityManager->flush();
