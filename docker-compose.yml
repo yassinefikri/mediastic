@@ -5,6 +5,7 @@ services:
         image: dunglas/mercure
         restart: unless-stopped
         hostname: app-mercure
+        container_name: mediastic_mercure
         environment:
             SERVER_NAME: ':80'
             MERCURE_PUBLISHER_JWT_KEY: '!ChangeMe!'
@@ -22,6 +23,7 @@ services:
         image: mysql
         restart: unless-stopped
         hostname: app-mysql
+        container_name: mediastic_mysql
         environment:
             MYSQL_ROOT_PASSWORD: root
             MYSQL_DATABASE: symfony-vue
@@ -38,6 +40,7 @@ services:
             args:
                 - HOST_UID=${HOST_UID}
         hostname: app-apache
+        container_name: mediastic_php_apache2
         restart: unless-stopped
         ports:
             - "8082:80"
@@ -46,6 +49,7 @@ services:
     phpmyadmin:
         image: phpmyadmin
         restart: unless-stopped
+        container_name: mediastic_phpmyadmin
         ports:
             - 8083:80
         environment:
@@ -60,6 +64,7 @@ services:
             args:
                 - HOST_UID=${HOST_UID}
         restart: unless-stopped
+        container_name: mediastic_webpack
         volumes:
             - ./:/var/www/html
 
