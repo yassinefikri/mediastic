@@ -133,6 +133,9 @@
     "league/oauth2-client": {
         "version": "2.6.0"
     },
+    "league/oauth2-google": {
+        "version": "4.0.0"
+    },
     "monolog/monolog": {
         "version": "2.3.2"
     },
@@ -688,6 +691,9 @@
     },
     "webmozart/assert": {
         "version": "1.10.0"
+    },
+    "willdurand/jsonp-callback-validator": {
+        "version": "v1.1.0"
     },
     "wohali/oauth2-discord-new": {
         "version": "1.1.0"
